@@ -1,0 +1,8 @@
+[2026-07-23 10:05:40] production.ERROR: Maximum execution time of 30 seconds exceeded {"userId":2,"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Maximum execution time of 30 seconds exceeded at C:\\PROJECT\\Php\\laravel-core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:421)
+[stacktrace]
+#0 {main}
+"} 
+[2026-07-23 10:06:35] production.ERROR: Maximum execution time of 30 seconds exceeded {"userId":2,"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Maximum execution time of 30 seconds exceeded at C:\\PROJECT\\Php\\laravel-core\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:421)
+[stacktrace]
+#0 {main}
+"} 
