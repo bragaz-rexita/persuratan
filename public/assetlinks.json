@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.duidev.simaster",
+    "sha256_cert_fingerprints":
+    ["88:0D:B5:6B:96:5B:32:9B:05:BB:73:BA:F9:E8:4E:2C:9D:A7:97:1A:B2:4A:1F:64:7A:CB:3F:A9:6D:7E:BC:FD"]
+  }
+}]
