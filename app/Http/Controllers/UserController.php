@@ -2007,8 +2007,8 @@ class UserController extends Controller
 				$ceksertifikatpribadi 	= $serttte.'.crt';
 				$sertifikatpribadi 		= $serttte.'.csr';
 				$kelompok 				= $penerima;
-				if (file_exists(base_path().'/public_html/tte/'.$ceksertifikatpribadi)){
-					$certificate 	= 'file://'.base_path().'/public_html/tte/'.$ceksertifikatpribadi;
+				if (file_exists(base_path().'/public/tte/'.$ceksertifikatpribadi)){
+					$certificate 	= 'file://'.base_path().'/public/tte/'.$ceksertifikatpribadi;
 				} else if (file_exists(public_path().'/tte/'.$ceksertifikatpribadi)){
 					$certificate 	= 'file://'.public_path().'/tte/'.$ceksertifikatpribadi;
 				} else {
@@ -2038,8 +2038,8 @@ class UserController extends Controller
 					openssl_pkey_export($privkey, $pkeyout);
 					Storage::disk('local')->put('/tte/'.$ceksertifikatpribadi, $pkeyout);
 					file_put_contents(public_path()."/tte/".$ceksertifikatpribadi, $certout, FILE_APPEND | LOCK_EX);
-					if (file_exists(base_path().'/public_html/tte/'.$ceksertifikatpribadi)){
-						$certificate 	= 'file://'.base_path().'/public_html/tte/'.$ceksertifikatpribadi;
+					if (file_exists(base_path().'/public/tte/'.$ceksertifikatpribadi)){
+						$certificate 	= 'file://'.base_path().'/public/tte/'.$ceksertifikatpribadi;
 					} else if (file_exists(public_path().'/tte/'.$ceksertifikatpribadi)){
 						$certificate 	= 'file://'.public_path().'/tte/'.$ceksertifikatpribadi;
 					}
@@ -2126,8 +2126,8 @@ class UserController extends Controller
 							}
 						} else {
 							SendMail::genQRCodefile($marking,$penerima,$penerima,$tanggalesign,$alamatweb);
-							if (File::exists(base_path() ."/public_html/scan/generate/bg-". $marking.".png")) {
-								$bgbssn 	= base_path('/public_html/scan/generate/bg-'.$marking.'.png');
+							if (File::exists(base_path() ."/public/scan/generate/bg-". $marking.".png")) {
+								$bgbssn 	= base_path('/public/scan/generate/bg-'.$marking.'.png');
 							}
 							if (File::exists(public_path() ."/scan/generate/bg-". $marking.".png")) {
 								$bgbssn 	= public_path('/scan/generate/bg-'.$marking.'.png');
