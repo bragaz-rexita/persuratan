@@ -571,6 +571,9 @@ Route::get('/debug-url', function () {
         'request_root' => request()->root(),
     ];
 });
+Route::get('/server-info', function () {
+    return request()->server->all();
+});
 
 Route::get('/aipkiportal', [AIPKIController::class, 'viewIndex']);
 Route::get('/rsphportal', [AIPKIController::class, 'viewIndexRSPH'])->name('ptdpm');
