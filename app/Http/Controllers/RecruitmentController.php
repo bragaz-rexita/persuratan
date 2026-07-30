@@ -215,8 +215,8 @@ class RecruitmentController extends Controller
 				$data['pengumumans'][$x]['icon']        =   'fa-bullhorn';
 				$data['pengumumans'][$x]['urutanwerno'] =   'red';
 			}
-			// $qrcode 			= base64_encode(QrCode::format('png')->size(100)->generate($lamanapps01));
-			// $data['qrcode'] 	= $qrcode;
+			$qrcode 			= base64_encode(QrCode::format('png')->size(100)->generate($lamanapps01));
+			$data['qrcode'] 	= $qrcode;
         	return view('rekrutmen.login', $data);
         }
     }
