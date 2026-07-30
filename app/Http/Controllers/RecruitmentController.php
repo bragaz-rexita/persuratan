@@ -173,6 +173,7 @@ class RecruitmentController extends Controller
         } else {
 			$urutanwerno= array('red','green','blue','yellow','navy','teal','orange','maroon','black','aqua');
 			$groups     = MasterPS::where('kodeps', 'aktif')->orderBy('tanggal', 'DESC')->limit(30)->get();
+            dd($groups);
 			$y      	= 0;
 			$x      	= 0;
 			foreach ($groups as $rowpeng) {
