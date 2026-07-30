@@ -9130,7 +9130,7 @@ class AuthController extends Controller
 		Auth::logout();
         $request->session()->regenerate();
         $request->session()->flush();
-		return redirect('/rsphporal');
+		return redirect('/rsphportal');
     }
 	public function authenticatekhusus($id){
 		$data		= [];
