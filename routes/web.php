@@ -31,7 +31,7 @@ use App\Http\Controllers\BankSoalController;
 
 ///////////////// NON LOGIN PAGE ////////////////////////
 
-Route::get('/e-office', [AuthController::class, 'viewAuth']);
+Route::get('/', [AuthController::class, 'viewAuth']);
 Route::get('landingpage', [AuthController::class, 'viewAuth']);
 // Route::get('frontpage', [FrontpageController::class, 'FrontPageindex']);
 // Route::get('landingapps/{id}', [FrontpageController::class, 'viewLandingApps']);
