@@ -257,6 +257,6 @@
     </li>
 @else    
     <li class="nav-item">
-        <a class="nav-link" href="/" role="button"><i class="fa fa-dashboard"></i> Dashboard</a>
+        <a class="nav-link" href="/e-office" role="button"><i class="fa fa-dashboard"></i> Dashboard</a>
     </li>
 @endif
