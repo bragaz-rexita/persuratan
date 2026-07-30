@@ -546,6 +546,7 @@ Route::group(['middleware' => 'project.ipg'], function() {
 Route::get('/aipkiportal', [AIPKIController::class, 'viewIndex']);
 Route::get('/rsphportal', [AIPKIController::class, 'viewIndexRSPH'])->name('ptdpm');
 // PERSURATAN NEW ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Route::get('/e-office/rsphportal', [AIPKIController::class, 'viewIndexRSPH'])->name('ptdpm');
 Route::get('/ptdpm', [AIPKIController::class, 'viewIndexRSPH'])->name('ptdpm');
 Route::get('/rsphm', [AIPKIController::class, 'viewIndexRSPH'])->name('rsphm');
 Route::get('/rsphs', [AIPKIController::class, 'viewIndexRSPH'])->name('rsphs');

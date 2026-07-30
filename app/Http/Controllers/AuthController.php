@@ -193,8 +193,8 @@ class AuthController extends Controller
         //  OLD  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //  NEW  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if ($domain == 'e-office.rs-primahusada.id' OR $domain == 'www.e-office.rs-primahusada.id') {
-			$url = 'https://e-office.rs-primahusada.id/ptdpm';
+        else if ($domain == 'https://app.rs-primahusada.id' OR $domain == 'www.app.rs-primahusada.id') {
+			$url = 'https://app.rs-primahusada.id/e-office/rsphportal';
 			return Redirect::to($url);
 		}
         // else if ($domain == 'e-office.rs-primahusada.id' OR $domain == 'www.e-office.rs-primahusada.id') {
