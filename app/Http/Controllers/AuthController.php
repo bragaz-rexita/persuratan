@@ -150,16 +150,16 @@ function timeAgo($time_ago) {
 		}
 	}
 }
-define( 'namaapps01', 'SIMASTER' );
-define( 'domainapps01', 'Sistem Informasi Manajemen Terpadu' );
-define( 'subdomainapps01', 'DUIDEV' );
-define( 'subsubdomainapps01', 'CV SWANDHANA' );
-define( 'addressapps01', 'Jalan Sebuku X/18 Bunulrejo Blimbing' );
-define( 'kota01', 'Malang' );
-define( 'emailapps01', 'swandhana17@gmail.com' );
-define( 'lamanapps01', 'https://duidev.com/' );
-define( 'logofrontapps01', 'https://duidev.com/public/duidev-softwarehouse.png' );
-define( 'API_ACCESS_ADMIN', 'AAAA6YBXh1k:APA91bFL0q7QAXQGohXMpTwHco79f13C8PFk1Oo8kKhg1JerOulT9-37dxyP8X5ibABI0NuQ4ZsVxKQKCt7HuR7lUdJJuB-hTVnBmOUIBYfBlHb-Lcp6aGkj4erfF7J__A5hufXjF8Vt' );
+// define( 'namaapps01', 'SIMASTER' );
+// define( 'domainapps01', 'Sistem Informasi Manajemen Terpadu' );
+// define( 'subdomainapps01', 'DUIDEV' );
+// define( 'subsubdomainapps01', 'CV SWANDHANA' );
+// define( 'addressapps01', 'Jalan Sebuku X/18 Bunulrejo Blimbing' );
+// define( 'kota01', 'Malang' );
+// define( 'emailapps01', 'swandhana17@gmail.com' );
+// define( 'lamanapps01', 'https://duidev.com/' );
+// define( 'logofrontapps01', 'https://duidev.com/public/duidev-softwarehouse.png' );
+// define( 'API_ACCESS_ADMIN', 'AAAA6YBXh1k:APA91bFL0q7QAXQGohXMpTwHco79f13C8PFk1Oo8kKhg1JerOulT9-37dxyP8X5ibABI0NuQ4ZsVxKQKCt7HuR7lUdJJuB-hTVnBmOUIBYfBlHb-Lcp6aGkj4erfF7J__A5hufXjF8Vt' );
 
 class AuthController extends Controller
 {
