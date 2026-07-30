@@ -543,6 +543,13 @@ Route::group(['middleware' => 'project.ipg'], function() {
 // Route::get('/leapuaelog/{id}', [LeapNetworkController::class, 'getLogLeapUAEData'])->name('getLogLeapUAEData');
 
 ///////////////// AIPKI ////////////////////////
+Route::get('/test-asset', function () {
+    dd([
+        'app_url' => config('app.url'),
+        'url' => url('/'),
+        'asset' => asset('adminlte3/dist/css/adminlte.min.css'),
+    ]);
+});
 Route::get('/server-test', function () {
     dd([
         'REQUEST_URI'      => request()->server('REQUEST_URI'),
