@@ -135,6 +135,7 @@ class RecruitmentController extends Controller
 		}
 		$lamanapps01	= url("/");
 		$getdomainid 	= DB::table('app_menu')->where('domain', $domain)->first();
+        dd($getdomainid);
 		if (isset($getdomainid->id)){
 			$ceklaman 					= $getdomainid->sequence;
 			if ($ceklaman == 2){
