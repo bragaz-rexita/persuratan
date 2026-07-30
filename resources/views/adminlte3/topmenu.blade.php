@@ -1,6 +1,6 @@
 @if(Session('fakultas') == 'RSPHMLG' OR Session('fakultas') == 'DPM' OR Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'PDP')
     <li class="nav-item">
-        <a class="nav-link" href="/e-office/" role="button"><i class="fa fa-dashboard"></i> Dashboard</a>
+        <a class="nav-link" href="/" role="button"><i class="fa fa-dashboard"></i> Dashboard</a>
     </li>
     <li class="nav-item dropdown">
         <a id="suratmenu" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Main Menu</a>
@@ -257,6 +257,6 @@
     </li>
 @else    
     <li class="nav-item">
-        <a class="nav-link" href="/e-office/rsphportal" role="button"><i class="fa fa-dashboard"></i> Dashboard</a>
+        <a class="nav-link" href="/" role="button"><i class="fa fa-dashboard"></i> Dashboard</a>
     </li>
 @endif
