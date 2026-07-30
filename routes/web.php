@@ -562,6 +562,15 @@ Route::get('/server-test', function () {
         'fullUrl'          => request()->fullUrl(),
     ]);
 });
+Route::get('/debug-url', function () {
+    return [
+        'APP_URL' => env('APP_URL'),
+        'config_app_url' => config('app.url'),
+        'asset' => asset('adminlte3/dist/css/adminlte.min.css'),
+        'url' => url('/'),
+        'request_root' => request()->root(),
+    ];
+});
 
 Route::get('/aipkiportal', [AIPKIController::class, 'viewIndex']);
 Route::get('/rsphportal', [AIPKIController::class, 'viewIndexRSPH'])->name('ptdpm');
