@@ -26,7 +26,7 @@
         <div class="wrapper">
             <nav class="main-header navbar navbar-expand-md navbar-light navbar-blue">
                 <div class="container">
-                <a href="/" class="navbar-brand">
+                <a href="/e-office/rsphportal" class="navbar-brand">
                     <img src="@if (isset($logo01)){{ $logo01 }}@else{{ asset('duidev-softwarehouse.png') }}@endif" alt="Duidev Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                     <span class="brand-text font-weight-light">
                     @if (isset($namaapps01)){{ $namaapps01 }}@else{{ config('global.swandhananama') }}@endif
