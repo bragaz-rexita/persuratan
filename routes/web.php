@@ -543,13 +543,19 @@ Route::group(['middleware' => 'project.ipg'], function() {
 // Route::get('/leapuaelog/{id}', [LeapNetworkController::class, 'getLogLeapUAEData'])->name('getLogLeapUAEData');
 
 ///////////////// AIPKI ////////////////////////
-Route::get('/test-asset', function () {
+Route::get('/server-test', function () {
     dd([
-        'app_url' => config('app.url'),
-        'url' => url('/'),
-        'asset' => asset('adminlte3/dist/css/adminlte.min.css'),
+        'REQUEST_URI'      => request()->server('REQUEST_URI'),
+        'SCRIPT_NAME'      => request()->server('SCRIPT_NAME'),
+        'PHP_SELF'         => request()->server('PHP_SELF'),
+        'DOCUMENT_ROOT'    => request()->server('DOCUMENT_ROOT'),
+        'REQUEST_SCHEME'   => request()->server('REQUEST_SCHEME'),
+        'HTTP_HOST'        => request()->server('HTTP_HOST'),
+        'root'             => request()->root(),
+        'fullUrl'          => request()->fullUrl(),
     ]);
 });
+
 Route::get('/aipkiportal', [AIPKIController::class, 'viewIndex']);
 Route::get('/rsphportal', [AIPKIController::class, 'viewIndexRSPH'])->name('ptdpm');
 // PERSURATAN NEW ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
