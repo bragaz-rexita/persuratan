@@ -171,8 +171,8 @@ class AuthController extends Controller
 			$domain	= $cekteks[0];
 		}
         //  OLD  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-       	if ($domain == 'http://127.0.0.1:8000/ptdpm' OR $domain == '127.0.0.1') {
-			$url = 'http://127.0.0.1:8000/ptdpm';
+       	if ($domain == 'http://127.0.0.1:8000/ptdpm' OR $domain == 'ptdpm') {
+			$url = 'http://127.0.0.1:8000/rsphportal';
 			return Redirect::to($url);
 		} else if ($domain == 'disaprimamedika.site' OR $domain == 'www.disaprimamedika.site') {
 			$url = 'https://disaprimamedika.site/rsphportal';
@@ -193,8 +193,8 @@ class AuthController extends Controller
         //  OLD  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //  NEW  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if ($domain == 'https://app.rs-primahusada.id' OR $domain == 'www.app.rs-primahusada.id') {
-			$url = 'https://app.rs-primahusada.id/e-office/rsphportal';
+        else if ($domain == 'https://surat-ptdpm.rs-primahusada.id' OR $domain == 'www.surat-ptdpm.rs-primahusada.id') {
+			$url = 'https://surat-ptdpm.rs-primahusada.id/rsphportal';
 			return Redirect::to($url);
 		}
         else if ($domain == 'https://app.rs-primahusada.id/e-office' OR $domain == 'www.app.rs-primahusada.id/e-office') {
@@ -9013,7 +9013,8 @@ class AuthController extends Controller
 
 			return response()->json($response, 200);
 		} else {
-			$user 		= User::where('email', $email)->orWhere('username', $email)->where('fakultas', $fakultas)->first();       
+			$user 		= User::where('email', $email)->orWhere('username', $email)->where('fakultas', $fakultas)->first();
+            // dd($user->toJson(JSON_PRETTY_PRINT));
 			if ($user) {
 				if (!Hash::check($password, $user->password)) {
 					return response()->json([
@@ -9030,6 +9031,7 @@ class AuthController extends Controller
 						'message' => 'User telah di block. Silahkan hubungi administrator',
 					], 500);
 				}
+                die($user->fakultas.'-'.$fakultas);
 				if($user->fakultas != $fakultas){
 					return response()->json([
 						'message' => 'User tidak ditemukan dalam database '.$fakultas.' '.$subdomainapps01.'. Silahkan hubungi administrator',
