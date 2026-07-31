@@ -193,14 +193,14 @@ class AuthController extends Controller
         //  OLD  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //  NEW  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if ($domain == 'https://surat-ptdpm.rs-primahusada.id' OR $domain == 'www.surat-ptdpm.rs-primahusada.id') {
-			$url = 'https://surat-ptdpm.rs-primahusada.id/rsphportal';
+        else if ($domain == 'http://surat-ptdpm.rs-primahusada.id' OR $domain == 'www.surat-ptdpm.rs-primahusada.id') {
+			$url = 'http://surat-ptdpm.rs-primahusada.id/rsphportal';
 			return Redirect::to($url);
 		}
-        else if ($domain == 'https://app.rs-primahusada.id/e-office' OR $domain == 'www.app.rs-primahusada.id/e-office') {
-			$url = 'https://app.rs-primahusada.id/e-office/rsphportal';
-			return Redirect::to($url);
-		}
+        // else if ($domain == 'https://app.rs-primahusada.id/e-office' OR $domain == 'www.app.rs-primahusada.id/e-office') {
+		// 	$url = 'https://app.rs-primahusada.id/e-office/rsphportal';
+		// 	return Redirect::to($url);
+		// }
         // else if ($domain == 'e-office.rs-primahusada.id' OR $domain == 'www.e-office.rs-primahusada.id') {
 		// 	$url = 'https://e-office.rs-primahusada.id/rsphm';
 		// 	return Redirect::to($url);
