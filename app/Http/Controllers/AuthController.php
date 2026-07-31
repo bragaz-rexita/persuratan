@@ -9039,7 +9039,6 @@ class AuthController extends Controller
 						'message' => 'User telah di block. Silahkan hubungi administrator',
 					], 500);
 				}
-                die($user->fakultas.'-'.$fakultas);
 				if($user->fakultas != $fakultas){
 					return response()->json([
 						'message' => 'User tidak ditemukan dalam database '.$fakultas.' '.$subdomainapps01.'. Silahkan hubungi administrator',
