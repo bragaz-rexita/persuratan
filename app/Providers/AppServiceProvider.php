@@ -33,10 +33,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        URL::forceRootUrl(config('app.url'));
+        // URL::forceRootUrl(config('app.url'));
 
-        if (request()->header('X-Forwarded-Proto') === 'https') {
-            URL::forceScheme('https');
-        }
+        // if (request()->header('X-Forwarded-Proto') === 'https') {
+        //     URL::forceScheme('https');
+        // }
     }
 }
