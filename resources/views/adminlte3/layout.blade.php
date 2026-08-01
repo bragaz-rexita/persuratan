@@ -54,7 +54,7 @@
         <div class="wrapper">
             <nav class="main-header navbar navbar-expand-md navbar-light navbar-blue">
                 <div class="container">
-                <a href="/e-office/dashboardagendaris" class="navbar-brand">
+                <a href="/" class="navbar-brand">
                     <img src="
                             @if (isset($logo01))
                             {{ asset($logo01) }}
