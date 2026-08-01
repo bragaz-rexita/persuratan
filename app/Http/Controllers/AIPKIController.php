@@ -230,7 +230,6 @@ class AIPKIController extends Controller
         }
     }
 	public function viewIndexRSPH () {
-        $hostUrl = url()->current();
         $data			= [];
         $domain 		= parse_url(request()->root())['host'];
 		$cekteks 		= explode("/", $domain);
@@ -240,7 +239,6 @@ class AIPKIController extends Controller
         
         $lamanapps01	= url("/");
         $getdomainid 	= DB::table('app_menu')->where('domain', $domain)->first();
-        // $getdomainid 	= DB::table('app_menu')->where('domain', $hostUrl)->first();
 		if (isset($getdomainid->id)){
 			$ceklaman 					= $getdomainid->sequence;
 			if ($ceklaman == 2){
@@ -259,7 +257,6 @@ class AIPKIController extends Controller
 			$data['kota01']  			= $getdomainid->kota;
 			$data['emailapps01']  		= $getdomainid->emailapps;
 			$data['lamanapps01']  		= $getdomainid->route;
-            $data['host']               = $hostUrl;
 			$data['logofrontapps01']  	= $getdomainid->logofrontapps;
 			$data['lamanportal']		= $lamanportal;
 		} else {

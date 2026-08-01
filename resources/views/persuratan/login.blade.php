@@ -192,7 +192,7 @@
                         </div>
                         <div class="card-body">
                             <strong><i class="fa fa-book mr-1"></i> Website</strong>
-                            <p class="text-muted"><a href="{!! $host !!}" target="_blank">{!! $host !!}</a></p>
+                            <p class="text-muted"><a href="{!! $lamanapps01 !!}" target="_blank">{!! $lamanapps01 !!}</a></p>
                             <hr>
                             <strong><i class="fa fa-phone mr-1"></i> Alamat</strong>
                             <p class="text-muted"> {!! $addressapps01 !!}</p>
