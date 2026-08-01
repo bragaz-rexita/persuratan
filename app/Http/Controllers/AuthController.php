@@ -209,6 +209,10 @@ class AuthController extends Controller
 			$url = 'http://rekrutmen.rs-primahusada.id/rekrutmen';
 			return Redirect::to($url);
 		}
+        else if ($domain == 'surat-pdp.rs-primahusada.id' OR $domain == 'www.surat-pdp.rs-primahusada.id') {
+			$url = 'http://surat-pdp.rs-primahusada.id/rsphportal';
+			return Redirect::to($url);
+		}
         //  NEW  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         else if ($domain == 'project.duidev.com') {
