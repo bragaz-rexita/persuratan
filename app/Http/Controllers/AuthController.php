@@ -193,35 +193,18 @@ class AuthController extends Controller
         //  OLD  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //  NEW  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else if ($domain == 'http://surat-ptdpm.rs-primahusada.id' OR $domain == 'www.surat-ptdpm.rs-primahusada.id') {
+        else if ($domain == 'http://surat-ptdpm.rs-primahusada.id' OR $domain == 'surat-ptdpm.rs-primahusada.id') {
 			$url = 'http://surat-ptdpm.rs-primahusada.id/rsphportal';
 			return Redirect::to($url);
 		}
-        else if ($domain == 'http://surat-rsphs.rs-primahusada.id' OR $domain == 'www.surat-rsphs.rs-primahusada.id') {
+        else if ($domain == 'http://surat-rsphs.rs-primahusada.id' OR $domain == 'surat-rsphs.rs-primahusada.id') {
 			$url = 'http://surat-rsphs.rs-primahusada.id/rsphportal';
 			return Redirect::to($url);
 		}
-        else if ($domain == 'http://surat-rsphm.rs-primahusada.id' OR $domain == 'www.surat-rsphm.rs-primahusada.id') {
+        else if ($domain == 'http://surat-rsphm.rs-primahusada.id' OR $domain == 'surat-rsphm.rs-primahusada.id') {
 			$url = 'http://surat-rsphm.rs-primahusada.id/rsphportal';
 			return Redirect::to($url);
 		}
-        // else if ($domain == 'https://app.rs-primahusada.id/e-office' OR $domain == 'www.app.rs-primahusada.id/e-office') {
-		// 	$url = 'https://app.rs-primahusada.id/e-office/rsphportal';
-		// 	return Redirect::to($url);
-		// }
-        // else if ($domain == 'e-office.rs-primahusada.id' OR $domain == 'www.e-office.rs-primahusada.id') {
-		// 	$url = 'https://e-office.rs-primahusada.id/rsphm';
-		// 	return Redirect::to($url);
-		// } else if ($domain == 'e-office.rs-primahusada.id' OR $domain == 'www.e-office.rs-primahusada.id') {
-		// 	$url = 'https://e-office.rs-primahusada.id/rsphs';
-		// 	return Redirect::to($url);
-		// } else if ($domain == 'e-office.rs-primahusada.id' OR $domain == 'www.e-office.rs-primahusada.id') {
-		// 	$url = 'https://e-office.rs-primahusada.id/rsdh';
-		// 	return Redirect::to($url);
-		// } else if ($domain == 'e-office.rs-primahusada.id' OR $domain == 'www.e-office.rs-primahusada.id') {
-		// 	$url = 'https://e-office.rs-primahusada.id/rsck';
-		// 	return Redirect::to($url);
-		// }
         //  NEW  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         else if ($domain == 'project.duidev.com') {
