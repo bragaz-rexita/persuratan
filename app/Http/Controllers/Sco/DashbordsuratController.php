@@ -226,7 +226,7 @@ class DashbordsuratController extends Controller
 	public function viewSertifikat($id) {
 		$cekid				= explode("-", $id);
 		$homebase			= url("/");
-		$certificate 		= 'file://'.base_path().'/public_html/sco.crt';
+		$certificate 		= 'file://'.base_path().'public/sco.crt';
 		$sco 				= Session('fakpanjang');
 		$swandhanafak       = Session('domainapps01');
 		$swandhanaalamat    = Session('addressapps01');
@@ -597,7 +597,7 @@ class DashbordsuratController extends Controller
 						PDFCREATOR::reset();
 						Storage::disk('local')->put('/scan/generate/'.$marking.'.pdf', $pdfdoc);
 						$file =  public_path('scan/generate/'.$marking.'.pdf');
-						File::delete(base_path() ."/public_html/scan/generate/qrimg-". $marking.'.png');
+						File::delete(base_path() ."public/scan/generate/qrimg-". $marking.'.png');
 					}
 					return response(file_get_contents($file),200)->header('Content-Type','application/pdf');
 				} catch (\Exception $e) {
@@ -1649,7 +1649,7 @@ class DashbordsuratController extends Controller
 						$perihal	= '<small class="badge badge-info">'.$perihal.'</small>';
 						$tglsurat	= '<small class="badge badge-info">'.$tglsurat.'</small>';
 					} else {
-						if (File::exists(public_path() ."/scan/files/". $hasil->marking.'.pdf') OR File::exists(base_path() ."/public/scan/files/".$hasil->marking.'.pdf') OR File::exists(base_path() ."/public_html/scan/files/".$hasil->marking.'.pdf')) {
+						if (File::exists(public_path() ."/scan/files/". $hasil->marking.'.pdf') OR File::exists(base_path() ."/public/scan/files/".$hasil->marking.'.pdf') OR File::exists(base_path() ."public/scan/files/".$hasil->marking.'.pdf')) {
 							$isisurat	= '<a href="'.$homebase.'/trackingid/srtklr-'.$hasil->marking.'" target="_blank"><small class="badge pull-left badge-danger">Belum di Setujui, Klik Untuk Melihat</small></a>';	
 							$tlsnomor	= '<small class="badge badge-success">'.$nomor.'</small>';
 							$tulisorg	= '<small class="badge badge-success">'.$tulisorg.'</small>';
@@ -1672,7 +1672,7 @@ class DashbordsuratController extends Controller
 						}
 					}
 				} else {
-					if (File::exists(public_path() ."/scan/files/". $hasil->marking.'.pdf') OR File::exists(base_path() ."/public/scan/files/".$hasil->marking.'.pdf') OR File::exists(base_path() ."/public_html/scan/files/".$hasil->marking.'.pdf')) {
+					if (File::exists(public_path() ."/scan/files/". $hasil->marking.'.pdf') OR File::exists(base_path() ."/public/scan/files/".$hasil->marking.'.pdf') OR File::exists(base_path() ."public/scan/files/".$hasil->marking.'.pdf')) {
 						if ($hasil->tandatangan == 'Antri TTE'){
 							$isisurat	= '<a href="'.$homebase.'/trackingid/srtklr-'.$hasil->marking.'" target="_blank"><small class="badge pull-left badge-info">Proses TTE</small></a>';	
 							$tlsnomor	= '<a href="'.$homebase.'/trackingid/srtklr-'.$hasil->marking.'" target="_blank"><small class="badge badge-info">'.$nomor.'</small></a>';
@@ -1871,7 +1871,7 @@ class DashbordsuratController extends Controller
 				}
 				
 				if ($getdatasrt->tandatangan == 'Tandatangan Manual'){
-					if (File::exists(public_path() ."/scan/files/". $getdatasrt->scansurat) OR File::exists(base_path() ."/public/scan/files/". $getdatasrt->scansurat) OR File::exists(base_path() ."/public_html/scan/files/". $getdatasrt->scansurat)) {
+					if (File::exists(public_path() ."/scan/files/". $getdatasrt->scansurat) OR File::exists(base_path() ."/public/scan/files/". $getdatasrt->scansurat) OR File::exists(base_path() ."public/scan/files/". $getdatasrt->scansurat)) {
 						$status		= '<a href="'.$homebase.'/trackingid/srtklr-'.$getdatasrt->marking.'" target="_blank"><small class="badge pull-left badge-info">Tandatangan Manual</small></a>';	
 						$tlsnomor	= '<a href="'.$homebase.'/viewsurat/SKPP-'.$getdatasrt->id.'" target="_blank"><small class="badge badge-info">'.$tlsnomor.'</small></a>';
 						$tlstanggal	= '<small class="badge badge-info">'.$getdatasrt->tanggal.'</small>';
@@ -1897,13 +1897,13 @@ class DashbordsuratController extends Controller
 					$tlsjudul	= '<small class="badge badge-info">'.$getdatasrt->judul.'</small>';
 					$tlskelompok= '<small class="badge badge-info">'.$tlskelompok.'</small>';
 				} else {
-					if (File::exists(public_path() ."/scan/files/". $getdatasrt->marking.".pdf") OR File::exists(public_path() ."/public/scan/files/". $getdatasrt->marking.".pdf") OR File::exists(base_path() ."/public/scan/files/". $getdatasrt->marking.".pdf") OR File::exists(base_path() ."/public_html/scan/files/". $getdatasrt->marking.".pdf")) {
+					if (File::exists(public_path() ."/scan/files/". $getdatasrt->marking.".pdf") OR File::exists(public_path() ."/public/scan/files/". $getdatasrt->marking.".pdf") OR File::exists(base_path() ."/public/scan/files/". $getdatasrt->marking.".pdf") OR File::exists(base_path() ."public/scan/files/". $getdatasrt->marking.".pdf")) {
 						$status		= '<a href="'.$homebase.'/trackingid/srtklr-'.$getdatasrt->marking.'" target="_blank"><small class="badge pull-left badge-success">'.$getdatasrt->tandatangan.'</small></a>';	
 						$tlsnomor	= '<a href="'.$homebase.'/viewsurat/SKPP-'.$getdatasrt->id.'" target="_blank"><small class="badge badge-success">'.$tlsnomor.'</small></a>';
 						$tlstanggal	= '<small class="badge badge-success">'.$getdatasrt->tanggal.'</small>';
 						$tlsjudul	= '<small class="badge badge-success">'.$getdatasrt->judul.'</small>';
 						$tlskelompok= '<small class="badge badge-success">'.$tlskelompok.'</small>';
-					} else if (File::exists(public_path() ."/scan/files/". $getdatasrt->scansurat) OR File::exists(public_path() ."/public/scan/files/". $getdatasrt->scansurat) OR File::exists(base_path() ."/public/scan/files/". $getdatasrt->scansurat) OR File::exists(base_path() ."/public_html/scan/files/". $getdatasrt->scansurat)) {
+					} else if (File::exists(public_path() ."/scan/files/". $getdatasrt->scansurat) OR File::exists(public_path() ."/public/scan/files/". $getdatasrt->scansurat) OR File::exists(base_path() ."/public/scan/files/". $getdatasrt->scansurat) OR File::exists(base_path() ."public/scan/files/". $getdatasrt->scansurat)) {
 						if ($getdatasrt->tandatangan == ''){
 							$status		= '<a href="'.$homebase.'/trackingid/srtklr-'.$getdatasrt->marking.'" target="_blank"><small class="badge pull-left badge-warning">Proses TTE</small></a>';	
 							$tlsnomor	= '<a href="'.$homebase.'/viewsurat/SKPP-'.$getdatasrt->id.'" target="_blank"><small class="badge badge-warning">'.$tlsnomor.'</small></a>';
@@ -14066,8 +14066,8 @@ class DashbordsuratController extends Controller
 					$alamatweb		= $homebase.'/trackingid/srtklr-'.$marking;
 					$bgbssn			= '';
 					SendMail::genQRCodefile($marking,$nmttd,$konseptor,$tanggalesign, $alamatweb);
-					if (File::exists(base_path() ."/public_html/scan/generate/bg-". $marking.".png")) {
-						$bgbssn 	= base_path('/public_html/scan/generate/bg-'.$marking.'.png');
+					if (File::exists(base_path() ."public/scan/generate/bg-". $marking.".png")) {
+						$bgbssn 	= base_path('public/scan/generate/bg-'.$marking.'.png');
 					}
 					if (File::exists(public_path() ."/scan/generate/bg-". $marking.".png")) {
 						$bgbssn 	= public_path('/scan/generate/bg-'.$marking.'.png');
@@ -14077,8 +14077,8 @@ class DashbordsuratController extends Controller
 						$ceksertifikatpribadi 	= $serttte.'.crt';
 						$sertifikatpribadi 		= $serttte.'.csr';
 						$certificate			= '';
-						if (file_exists(base_path().'/public_html/tte/'.$ceksertifikatpribadi)){
-							$certificate 	= 'file://'.base_path().'/public_html/tte/'.$ceksertifikatpribadi;
+						if (file_exists(base_path().'public/tte/'.$ceksertifikatpribadi)){
+							$certificate 	= 'file://'.base_path().'public/tte/'.$ceksertifikatpribadi;
 						}
 						if (file_exists(public_path().'/tte/'.$ceksertifikatpribadi)){
 							$certificate 	= 'file://'.public_path().'/tte/'.$ceksertifikatpribadi;
@@ -14104,8 +14104,8 @@ class DashbordsuratController extends Controller
 							openssl_pkey_export($privkey, $pkeyout);
 							Storage::disk('local')->put('/tte/'.$serttte.'.crt', $pkeyout);
 	            			file_put_contents(public_path()."/tte/".$serttte.".crt", $certout, FILE_APPEND | LOCK_EX);
-							if (file_exists(base_path().'/public_html/tte/'.$ceksertifikatpribadi)){
-								$certificate 	= 'file://'.base_path().'/public_html/tte/'.$ceksertifikatpribadi;
+							if (file_exists(base_path().'public/tte/'.$ceksertifikatpribadi)){
+								$certificate 	= 'file://'.base_path().'public/tte/'.$ceksertifikatpribadi;
 							}
 							if (file_exists(public_path().'/tte/'.$ceksertifikatpribadi)){
 								$certificate 	= 'file://'.public_path().'/tte/'.$ceksertifikatpribadi;
@@ -14334,8 +14334,8 @@ class DashbordsuratController extends Controller
 						$alamatweb		= $homebase.'/downloaddocbyname/'.$getdata->marking.'.pdf';
 						$bgbssn			= '';
 						SendMail::genQRCodefile($getdata->marking,$getdata->asalsurat,$konseptor,$tanggalesign,$alamatweb);
-						if (File::exists(base_path() ."/public_html/scan/generate/bg-". $marking.".png")) {
-							$bgbssn 	= base_path('/public_html/scan/generate/bg-'.$marking.'.png');
+						if (File::exists(base_path() ."public/scan/generate/bg-". $marking.".png")) {
+							$bgbssn 	= base_path('public/scan/generate/bg-'.$marking.'.png');
 						}
 						if (File::exists(public_path() ."/scan/generate/bg-". $marking.".png")) {
 							$bgbssn 	= public_path('/scan/generate/bg-'.$marking.'.png');
