@@ -429,7 +429,7 @@ class SendMail extends Controller
 		}
     }
     public static function genQRCodefile($marking,$nmttd,$konseptor,$tanggalesign, $alamatweb){
-        if (File::exists(public_path() ."/scan/generate/bg-". $marking.".png") OR File::exists(base_path() ."/public/scan/generate/bg-". $marking.".png") OR File::exists(base_path() ."/public_html/scan/generate/bg-". $marking.".png")) {
+        if (File::exists(public_path() ."/scan/generate/bg-". $marking.".png") OR File::exists(base_path() ."/public/scan/generate/bg-". $marking.".png") OR File::exists(base_path() ."/public/scan/generate/bg-". $marking.".png")) {
         } else {
             $page_format	= array(
                 'MediaBox' => array ('llx' => 0, 'lly' => 0, 'urx' => 215, 'ury' => 356),

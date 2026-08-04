@@ -32,7 +32,7 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => base_path('public_html'),
+            'root' => base_path('public'),
             'throw' => false,
         ],
 

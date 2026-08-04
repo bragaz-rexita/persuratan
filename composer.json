@@ -77,7 +77,7 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true
         },
-        "cache-dir": "/home/dpmtech/public_html/cache"
+        "cache-dir": "/home/dpmtech/public/cache"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

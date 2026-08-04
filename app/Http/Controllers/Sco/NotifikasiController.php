@@ -4280,8 +4280,8 @@ class NotifikasiController extends Controller
 							$serttte 				= md5($cekttdneh->email);
 							$ceksertifikatpribadi 	= $serttte.'.crt';
 							$sertifikatpribadi 		= $serttte.'.csr';
-							if (file_exists(base_path().'/public_html/tte/'.$ceksertifikatpribadi)){
-								$certificate 	= 'file://'.base_path().'/public_html/tte/'.$ceksertifikatpribadi;
+							if (file_exists(base_path().'/public/tte/'.$ceksertifikatpribadi)){
+								$certificate 	= 'file://'.base_path().'/public/tte/'.$ceksertifikatpribadi;
 							} elseif (file_exists(public_path().'/tte/'.$ceksertifikatpribadi)){
 								$certificate 	= 'file://'.public_path().'/tte/'.$ceksertifikatpribadi;
 							} else {
@@ -4311,8 +4311,8 @@ class NotifikasiController extends Controller
 								openssl_pkey_export($privkey, $pkeyout);
 								Storage::disk('local')->put('/tte/'.$serttte.'.crt', $pkeyout);
 								file_put_contents(public_path()."/tte/".$serttte.".crt", $certout, FILE_APPEND | LOCK_EX);
-								if (file_exists(base_path().'/public_html/tte/'.$ceksertifikatpribadi)){
-									$certificate 	= 'file://'.base_path().'/public_html/tte/'.$ceksertifikatpribadi;
+								if (file_exists(base_path().'/public/tte/'.$ceksertifikatpribadi)){
+									$certificate 	= 'file://'.base_path().'/public/tte/'.$ceksertifikatpribadi;
 								}
 								if (file_exists(public_path().'/tte/'.$ceksertifikatpribadi)){
 									$certificate 	= 'file://'.public_path().'/tte/'.$ceksertifikatpribadi;
@@ -4973,7 +4973,7 @@ class NotifikasiController extends Controller
 							    return view('cetak.suratkeluar', $data);
 							}
 						} else {
-							if (File::exists(public_path() ."/scan/files/". $gceksrtklr->marking.'.pdf') OR File::exists(base_path() ."/public/scan/files/".$gceksrtklr->marking.'.pdf') OR File::exists(base_path() ."/public_html/scan/files/".$gceksrtklr->marking.'.pdf')) {
+							if (File::exists(public_path() ."/scan/files/". $gceksrtklr->marking.'.pdf') OR File::exists(base_path() ."/public/scan/files/".$gceksrtklr->marking.'.pdf') OR File::exists(base_path() ."/public/scan/files/".$gceksrtklr->marking.'.pdf')) {
 								$file =  public_path('scan/files/'.$gceksrtklr->marking.'.pdf');
 								return response(file_get_contents($file),200)->header('Content-Type','application/pdf');
 								//echo '<iframe src="'.$homebase.'/viewdocbyname/'.$gceksrtklr->marking.'.pdf" width="100%" height="780" style="border: none;" id="previewbymarking"></iframe>';
@@ -5416,8 +5416,8 @@ class NotifikasiController extends Controller
 				$serttte 				= md5($rinbox->email);
 				$ceksertifikatpribadi 	= $serttte.'.crt';
 				$sertifikatpribadi 		= $serttte.'.csr';
-				if (file_exists(base_path().'/public_html/tte/'.$ceksertifikatpribadi)){
-					$certificate 	= 'file://'.base_path().'/public_html/tte/'.$ceksertifikatpribadi;
+				if (file_exists(base_path().'/public/tte/'.$ceksertifikatpribadi)){
+					$certificate 	= 'file://'.base_path().'/public/tte/'.$ceksertifikatpribadi;
 				} elseif (file_exists(public_path().'/tte/'.$ceksertifikatpribadi)){
 					$certificate 	= 'file://'.public_path().'/tte/'.$ceksertifikatpribadi;
 				} else {
@@ -5447,8 +5447,8 @@ class NotifikasiController extends Controller
 					openssl_pkey_export($privkey, $pkeyout);
 					Storage::disk('local')->put('/tte/'.$serttte.'.crt', $pkeyout);
 					file_put_contents(public_path()."/tte/".$serttte.".crt", $certout, FILE_APPEND | LOCK_EX);
-					if (file_exists(base_path().'/public_html/tte/'.$ceksertifikatpribadi)){
-						$certificate 	= 'file://'.base_path().'/public_html/tte/'.$ceksertifikatpribadi;
+					if (file_exists(base_path().'/public/tte/'.$ceksertifikatpribadi)){
+						$certificate 	= 'file://'.base_path().'/public/tte/'.$ceksertifikatpribadi;
 					}
 					if (file_exists(public_path().'/tte/'.$ceksertifikatpribadi)){
 						$certificate 	= 'file://'.public_path().'/tte/'.$ceksertifikatpribadi;
@@ -5619,8 +5619,8 @@ class NotifikasiController extends Controller
 			$ceksertifikatpribadi 	= $serttte.'.crt';
 			$sertifikatpribadi 		= $serttte.'.csr';
 			$certificate			= '';
-			if (file_exists(base_path().'/public_html/tte/'.$ceksertifikatpribadi)){
-				$certificate 	= 'file://'.base_path().'/public_html/tte/'.$ceksertifikatpribadi;
+			if (file_exists(base_path().'/public/tte/'.$ceksertifikatpribadi)){
+				$certificate 	= 'file://'.base_path().'/public/tte/'.$ceksertifikatpribadi;
 			}
 			if (file_exists(public_path().'/tte/'.$ceksertifikatpribadi)){
 				$certificate 	= 'file://'.public_path().'/tte/'.$ceksertifikatpribadi;
@@ -5646,8 +5646,8 @@ class NotifikasiController extends Controller
 				openssl_pkey_export($privkey, $pkeyout);
 				Storage::disk('local')->put('/tte/'.$serttte.'.crt', $pkeyout);
 				file_put_contents(public_path()."/tte/".$serttte.".crt", $certout, FILE_APPEND | LOCK_EX);
-				if (file_exists(base_path().'/public_html/tte/'.$ceksertifikatpribadi)){
-					$certificate 	= 'file://'.base_path().'/public_html/tte/'.$ceksertifikatpribadi;
+				if (file_exists(base_path().'/public/tte/'.$ceksertifikatpribadi)){
+					$certificate 	= 'file://'.base_path().'/public/tte/'.$ceksertifikatpribadi;
 				}
 				if (file_exists(public_path().'/tte/'.$ceksertifikatpribadi)){
 					$certificate 	= 'file://'.public_path().'/tte/'.$ceksertifikatpribadi;
