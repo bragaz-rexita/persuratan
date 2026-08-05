@@ -96,7 +96,7 @@ Route::get('landingpage', [AuthController::class, 'viewAuth']);
 // Route::post('authenticatesiapdok', [AuthController::class, 'authenticateSIAPDOK'])->name('authenticateSIAPDOK');
 // Route::post('exsimpanpendaftaran', [AuthController::class, 'exSimpanpendaftaran'])->name('exsimpanpendaftaran');
 // Route::get('logout', [AuthController::class, 'logout'])->name('logout');
-// Route::get('trackingid/{id}', [AuthController::class, 'viewTrackingbyid']);
+Route::get('trackingid/{id}', [AuthController::class, 'viewTrackingbyid']);
 // Route::get('zis', [AuthController::class, 'zis'])->name('zis');
 // Route::get('ppdb', [AuthController::class, 'ppdb'])->name('ppdb');
 // Route::get('pip', [AuthController::class, 'pip'])->name('pip');
