@@ -217,8 +217,8 @@ class AuthController extends Controller
 			$url = 'http://172.100.0.18/rsphportal';
 			return Redirect::to($url);
 		}
-        else if ($domain == '172.100.0.19:80' OR $domain == '172.100.0.19') {
-			$url = 'http://172.100.0.19/rsphportal';
+        else if ($domain == '172.100.0.23:80' OR $domain == '172.100.0.23') {
+			$url = 'http://172.100.0.23/rsphportal';
 			return Redirect::to($url);
 		}
         else if ($domain == 'http://100.69.34.63:80' OR $domain == '100.69.34.63') {
