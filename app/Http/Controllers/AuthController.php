@@ -171,7 +171,7 @@ class AuthController extends Controller
 			$domain	= $cekteks[0];
 		}
         //  OLD  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-       	if ($domain == 'http://127.0.0.1:8000/ptdpm' OR $domain == 'ptdpm') {
+       	if ($domain == '127.0.0.1:8000/ptdpm' OR $domain == '127.0.0.1') {
 			$url = 'http://127.0.0.1:8000/rsphportal';
 			return Redirect::to($url);
 		} else if ($domain == 'disaprimamedika.site' OR $domain == 'www.disaprimamedika.site') {
@@ -211,6 +211,10 @@ class AuthController extends Controller
 		}
         else if ($domain == 'surat-pdp.rs-primahusada.id' OR $domain == 'www.surat-pdp.rs-primahusada.id') {
 			$url = 'http://surat-pdp.rs-primahusada.id/rsphportal';
+			return Redirect::to($url);
+		}
+        else if ($domain == '100.69.34.63:80' OR $domain == '100.69.34.63') {
+			$url = 'https://100.69.34.63/rsphportal';
 			return Redirect::to($url);
 		}
         //  NEW  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
