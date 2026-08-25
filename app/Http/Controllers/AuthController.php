@@ -213,7 +213,7 @@ class AuthController extends Controller
 			$url = 'http://surat-pdp.rs-primahusada.id/rsphportal';
 			return Redirect::to($url);
 		}
-        else if ($domain == '100.69.34.63:80' OR $domain == '100.69.34.63') {
+        else if ($domain == 'http://100.69.34.63:80' OR $domain == '100.69.34.63') {
 			$url = 'https://100.69.34.63/rsphportal';
 			return Redirect::to($url);
 		}
