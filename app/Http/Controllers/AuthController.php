@@ -213,8 +213,16 @@ class AuthController extends Controller
 			$url = 'http://surat-pdp.rs-primahusada.id/rsphportal';
 			return Redirect::to($url);
 		}
+        else if ($domain == 'http://172.100.0.18:80' OR $domain == '172.100.0.18') {
+			$url = 'http://172.100.0.18/rsphportal';
+			return Redirect::to($url);
+		}
+        else if ($domain == 'http://172.100.0.19:80' OR $domain == '172.100.0.19') {
+			$url = 'http://172.100.0.19/rsphportal';
+			return Redirect::to($url);
+		}
         else if ($domain == 'http://100.69.34.63:80' OR $domain == '100.69.34.63') {
-			$url = 'https://100.69.34.63/rsphportal';
+			$url = 'http://100.69.34.63/rsphportal';
 			return Redirect::to($url);
 		}
         //  NEW  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
