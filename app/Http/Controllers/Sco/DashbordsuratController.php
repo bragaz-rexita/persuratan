@@ -10180,7 +10180,7 @@ class DashbordsuratController extends Controller
 							} catch (\Exception $e) {
 							}
 							$namafile	= $getsurat->marking.'.pdf';
-                            dd([
+                            die([
                                 'user' => get_current_user(),
                                 'php_user' => function_exists('posix_geteuid') ? posix_getpwuid(posix_geteuid()) : 'posix unavailable',
                                 'destination' => public_path('scan/files'),
