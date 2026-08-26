@@ -11869,20 +11869,6 @@ class DashbordsuratController extends Controller
 											Storage::disk('local')->delete($output_file);
 										}
 										$namafile		= $marking.'.'.$request->file('file')->getClientOriginalExtension();
-                                        dd([
-                                            'php_user' => get_current_user(),
-                                            'posix_uid' => function_exists('posix_geteuid') ? posix_geteuid() : 'N/A',
-                                            'posix_gid' => function_exists('posix_getegid') ? posix_getegid() : 'N/A',
-                                            'destination' => public_path('scan/files'),
-                                            'exists' => file_exists(public_path('scan/files')),
-                                            'is_dir' => is_dir(public_path('scan/files')),
-                                            'is_writable' => is_writable(public_path('scan/files')),
-                                            'permissions' => substr(sprintf('%o', fileperms(public_path('scan/files'))), -4),
-                                            'acl_test' => @file_put_contents(
-                                                public_path('scan/files/test-from-php.txt'),
-                                                'TEST PHP'
-                                            ),
-                                        ]);
 										$request->file('file')->move(public_path('scan/files'), $namafile);
 										if ($kerjanya){
 											if ($request->input('val02') != 'BIASA'){
