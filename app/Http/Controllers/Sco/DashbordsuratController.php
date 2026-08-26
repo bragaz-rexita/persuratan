@@ -10180,6 +10180,21 @@ class DashbordsuratController extends Controller
 							} catch (\Exception $e) {
 							}
 							$namafile	= $getsurat->marking.'.pdf';
+                            dd([
+                                'user' => get_current_user(),
+                                'php_user' => function_exists('posix_geteuid') ? posix_getpwuid(posix_geteuid()) : 'posix unavailable',
+                                'destination' => public_path('scan/files'),
+                                'exists' => file_exists(public_path('scan/files')),
+                                'is_dir' => is_dir(public_path('scan/files')),
+                                'is_writable' => is_writable(public_path('scan/files')),
+                                'permissions' => substr(sprintf('%o', fileperms(public_path('scan/files'))), -4),
+                                'file' => $request->file('file') ? true : false,
+                                'file_valid' => $request->file('file') ? $request->file('file')->isValid() : false,
+                                'file_error' => $request->file('file') ? $request->file('file')->getError() : null,
+                                'file_error_message' => $request->file('file') ? $request->file('file')->getErrorMessage() : null,
+                                'tmp_path' => $request->file('file') ? $request->file('file')->getPathname() : null,
+                                'tmp_exists' => $request->file('file') ? file_exists($request->file('file')->getPathname()) : false,
+                            ]);
 							$request->file('file')->move(public_path('scan/files'), $namafile);
 							if (file_exists(public_path($output_file))){
 								$error		= '';
