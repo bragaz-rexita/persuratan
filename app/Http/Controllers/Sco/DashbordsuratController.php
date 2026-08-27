@@ -681,9 +681,11 @@ class DashbordsuratController extends Controller
 					$penerima 		= $result->penerima;
 					$kepada 		= $result->kepada;
 					$cekdispo 		= Inboxsurat::where('pengirim', $penerima)->where('penerima', $kepada)->where('marking', $result->marking)->orderBy('id', 'DESC')->first();
+                    dd($cekdispo);
 					if (isset($cekdispo->id)){
 						$footnote 	= $cekdispo->footnote;
 					}
+                    // rexita
 					$arrayinbox[] = array(
 						'id' 				=> $result->id,
 						'idsurat' 			=> $result->idsurat,
@@ -1069,7 +1071,7 @@ class DashbordsuratController extends Controller
 					if (is_null($idsurat) OR $idsurat == '' OR $idsurat == 0){
 						Inboxsurat::where('id', $rows->id)->update([
 							'status' 		=> 'reply',
-							// 'footnote'		=> 'Missing ID Surat'
+							'footnote'		=> 'Missing ID Surat'
 						]);
 					} else {
 						$arrayiuser[] = array(
