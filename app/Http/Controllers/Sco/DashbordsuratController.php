@@ -1066,8 +1066,8 @@ class DashbordsuratController extends Controller
 							}
 						}
 					}
-                    dd($idsurat);
 					if (is_null($idsurat) OR $idsurat == '' OR $idsurat == 0){
+                        dd('masuk sini' .$idsurat);
 						Inboxsurat::where('id', $rows->id)->update([
 							'status' 		=> 'reply',
 							'footnote'		=> 'Missing ID Surat'
