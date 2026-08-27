@@ -1004,7 +1004,6 @@ class DashbordsuratController extends Controller
 			if ($sortdatafield == 'asalsurat'){ $sortdatafield = 'id'; }
 			$pagenum++;
 			$data       = $data->groupBy('marking')->orderByRaw($sortdatafield.' '.$sortorder)->paginate($limit, ['*'], 'page', $pagenum);
-            dd($data);
 			$totaldata	= $data->total();
 			if (!empty($data)){
 				foreach ($data as $rows){
@@ -1018,6 +1017,7 @@ class DashbordsuratController extends Controller
 					$asalsurat	= $rows->unit;
 					$getmark1 	= explode('-', $rows->marking);
 					$mark1 		= $getmark1[0];
+                    dd($idsurat);
 					if (is_null($idsurat) OR $idsurat == '' OR $idsurat == 0){
 						$cekdata	= Suratmasuk::where('marking', $rows->marking)->first();
 						if (isset($cekdata->id)){
