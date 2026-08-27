@@ -681,7 +681,17 @@ class DashbordsuratController extends Controller
 					$penerima 		= $result->penerima;
 					$kepada 		= $result->kepada;
 					$cekdispo 		= Inboxsurat::where('pengirim', $penerima)->where('penerima', $kepada)->where('marking', $result->marking)->orderBy('id', 'DESC')->first();
-                    dd($cekdispo);
+                    $query = Inboxsurat::where('pengirim', $penerima)
+                        ->where('penerima', $kepada)
+                        ->where('marking', $result->marking)
+                        ->orderBy('id', 'DESC');
+
+                    $sql = vsprintf(
+                        str_replace('?', "'%s'", $query->toSql()),
+                        $query->getBindings()
+                    );
+
+                    dd($sql);
 					if (isset($cekdispo->id)){
 						$footnote 	= $cekdispo->footnote;
 					}
