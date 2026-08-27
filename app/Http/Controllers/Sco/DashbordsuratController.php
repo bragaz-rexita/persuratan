@@ -1004,6 +1004,7 @@ class DashbordsuratController extends Controller
 			if ($sortdatafield == 'asalsurat'){ $sortdatafield = 'id'; }
 			$pagenum++;
 			$data       = $data->groupBy('marking')->orderByRaw($sortdatafield.' '.$sortorder)->paginate($limit, ['*'], 'page', $pagenum);
+            dd($data);
 			$totaldata	= $data->total();
 			if (!empty($data)){
 				foreach ($data as $rows){
