@@ -1017,7 +1017,6 @@ class DashbordsuratController extends Controller
 					$asalsurat	= $rows->unit;
 					$getmark1 	= explode('-', $rows->marking);
 					$mark1 		= $getmark1[0];
-                    dd($idsurat);
 					if (is_null($idsurat) OR $idsurat == '' OR $idsurat == 0){
 						$cekdata	= Suratmasuk::where('marking', $rows->marking)->first();
 						if (isset($cekdata->id)){
@@ -1067,6 +1066,7 @@ class DashbordsuratController extends Controller
 							}
 						}
 					}
+                    dd($idsurat);
 					if (is_null($idsurat) OR $idsurat == '' OR $idsurat == 0){
 						Inboxsurat::where('id', $rows->id)->update([
 							'status' 		=> 'reply',
