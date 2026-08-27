@@ -1070,7 +1070,7 @@ class DashbordsuratController extends Controller
                         dd('masuk sini' .$idsurat);
 						Inboxsurat::where('id', $rows->id)->update([
 							'status' 		=> 'reply',
-							'footnote'		=> 'Missing ID Surat'
+							'footnote'		=> 'MASUK'
 						]);
 					} else {
 						$arrayiuser[] = array(
