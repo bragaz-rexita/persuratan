@@ -5530,7 +5530,8 @@ class DashbordsuratController extends Controller
 							</div>';
 					} else {
 						try {
-							$kerjanya 	= Suratkeluar::insertGetId([
+							// $kerjanya 	= Suratkeluar::insertGetId([
+                            $kerjanya 	= Suratkeluar::insert([
 								'id' 			=>  $idnomor,
 								'marking' 		=>  $marking,
 								'jenissrt' 		=>  $jenissrt,
