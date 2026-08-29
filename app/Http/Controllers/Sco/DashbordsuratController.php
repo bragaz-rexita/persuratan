@@ -1005,9 +1005,24 @@ class DashbordsuratController extends Controller
 			$pagenum++;
 			$data       = $data->groupBy('marking')->orderByRaw($sortdatafield.' '.$sortorder)->paginate($limit, ['*'], 'page', $pagenum);
 			$totaldata	= $data->total();
+            // dd([
+            //     'jenis'     => $jenis,
+            //     'dari'      => $dari,
+            //     'email'     => Session('email'),
+            //     'fakultas'  => Session('fakultas'),
+            //     'total'     => $totaldata,
+            //     'count'     => $data->count(),
+            //     'rows'      => $data->items(),
+            // ]);
 			if (!empty($data)){
 				foreach ($data as $rows){
 					$idsurat	= $rows->idsurat;
+                    // $debug = [
+                    //     'id' => $rows->id,
+                    //     'marking' => $rows->marking,
+                    //     'idsurat_awal' => $rows->idsurat,
+                    //     'noagenda_awal' => $rows->noagenda,
+                    // ];
 					$noagenda	= $rows->noagenda;
 					$jenissrt	= $rows->jenissrt;
 					$tglsurat	= $rows->tglsurat;
@@ -1018,8 +1033,22 @@ class DashbordsuratController extends Controller
 					$getmark1 	= explode('-', $rows->marking);
 					$mark1 		= $getmark1[0];
 					if (is_null($idsurat) OR $idsurat == '' OR $idsurat == 0){
+                        
 						$cekdata	= Suratmasuk::where('marking', $rows->marking)->first();
+                        // dd([
+                        //     'inbox_id' => $rows->id,
+                        //     'marking' => $rows->marking,
+                        //     'idsurat_awal' => $idsurat,
+                        //     'cekdata_ditemukan' => !is_null($cekdata),
+                        //     'cekdata_id' => $cekdata->id ?? null,
+                        //     'cekdata_noagenda' => $cekdata->noagenda ?? null,
+                        //     'cekdata_marking' => $cekdata->marking ?? null,
+                        // ]);
+                        // $debug['cek_Suratmasuk'] = $cekdata;
 						if (isset($cekdata->id)){
+                            // $debug['status'] = 'DITEMUKAN DI SURATMASUK';
+                            // $debug['cekdata_id'] = $cekdata->id;
+                            // $debug['cekdata_idsurat'] = $cekdata->idsurat ?? null;
 							$idsurat	= $cekdata->id;
 							$noagenda	= $cekdata->noagenda;
 							$jenissrt	= $cekdata->jenissurat;
@@ -1029,7 +1058,7 @@ class DashbordsuratController extends Controller
 							$perihal	= $cekdata->perihal;
 							$asalsurat	= $cekdata->asalsurat;
 							Inboxsurat::where('id', $rows->id)->update([
-								'idsurat' 		=> $cekdata->idsurat,
+								'idsurat' 		=> $cekdata->id,
 								'noagenda' 		=> $cekdata->noagenda,
 								'tglsurat' 		=> $cekdata->tglsurat,
 								'jenissrt' 		=> $cekdata->jenissurat,
@@ -1046,7 +1075,9 @@ class DashbordsuratController extends Controller
 							]);
 						} else {
 							$ceksebelumnya = Inboxsurat::where('marking', $rows->marking)->where('idsurat', '!=', '0')->orderBy('id', 'DESC')->first();
+                            // $debug['cek_sebelumnya'] = $ceksebelumnya;
 							if (isset($ceksebelumnya->id)){
+                                // $debug['status'] = 'DITEMUKAN DATA SEBELUMNYA';
 								Inboxsurat::where('id', $rows->id)->update([
 									'idsurat' 		=> $ceksebelumnya->idsurat,
 									'noagenda' 		=> $ceksebelumnya->noagenda,
@@ -1064,14 +1095,38 @@ class DashbordsuratController extends Controller
 									'tabel' 		=> $ceksebelumnya->tabel,
 								]);
 							}
+                            // else{
+                            //     $debug['status'] = 'TIDAK DITEMUKAN SURATMASUK DAN DATA SEBELUMNYA';
+                            // }
 						}
+                        // dd($debug);
 					}
+                    // dd([
+                    //     'status' => 'IDSURAT SUDAH ADA',
+                    //     'id' => $rows->id,
+                    //     'marking' => $rows->marking,
+                    //     'idsurat' => $idsurat,
+                    // ]);
 					if (is_null($idsurat) OR $idsurat == '' OR $idsurat == 0){
+                        // dd([
+                        //     'STOP_DI_MISSING_ID_SURAT' => true,
+                        //     'inbox_id' => $rows->id,
+                        //     'marking' => $rows->marking,
+                        //     'idsurat' => $idsurat,
+                        //     'noagenda' => $noagenda,
+                        // ]);
 						Inboxsurat::where('id', $rows->id)->update([
 							'status' 		=> 'reply',
 							'footnote'		=> 'Missing ID Surat'
 						]);
 					} else {
+                        // dd([
+                        //     'MASUK_KE_ARRAY' => true,
+                        //     'inbox_id' => $rows->id,
+                        //     'marking' => $rows->marking,
+                        //     'idsurat' => $idsurat,
+                        //     'noagenda' => $noagenda,
+                        // ]);
 						$arrayiuser[] = array(
 							'id' 			=> $rows->id,
 							'marking' 		=> $rows->marking,
@@ -1096,6 +1151,11 @@ class DashbordsuratController extends Controller
 					
 				}
 			}
+            // dd([
+            //     'totaldata' => $totaldata,
+            //     'jumlah_arrayiuser' => count($arrayiuser),
+            //     'arrayiuser' => $arrayiuser,
+            // ]);
 			$response 	= [
 				'message'   => 'List Laporan',
 				'data'      => $arrayiuser,
@@ -5303,7 +5363,7 @@ class DashbordsuratController extends Controller
 					echo '<div class="alert alert-danger alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 						<h4><i class="icon fa fa-ban"></i> Error..!!</h4>
-							Sistem Error, mohon ulangi beberapa saat lagi
+							Sistem Error, mohon ulangi beberapa saat lagi 1
 					</div>';
 				}
 			} elseif ($konseptor == 'suratdinas'){
@@ -5514,7 +5574,7 @@ class DashbordsuratController extends Controller
 						echo '<div class="alert alert-danger alert-dismissable">
 								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 								<h4><i class="icon fa fa-ban"></i> Error..!!</h4>
-									Sistem Error, mohon ulangi beberapa saat lagi
+									Sistem Error, mohon ulangi beberapa saat lagi 2
 							</div>';
 					} else {
 						try {
@@ -5625,7 +5685,7 @@ class DashbordsuratController extends Controller
 							echo '<div class="alert alert-danger alert-dismissable">
 								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 								<h4><i class="icon fa fa-ban"></i> Error..!!</h4>
-									Sistem Error, mohon ulangi beberapa saat lagi<br />'.$sendstatus.'
+									Sistem Error, mohon ulangi beberapa saat lagi 3<br />'.$sendstatus.'
 							</div>';
 						}
 					}
@@ -5898,7 +5958,7 @@ class DashbordsuratController extends Controller
 							echo '<div class="alert alert-danger alert-dismissable">
 								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 								<h4><i class="icon fa fa-ban"></i> Error..!!</h4>
-									Sistem Error, mohon ulangi beberapa saat lagi
+									Sistem Error, mohon ulangi beberapa saat lagi 4
 							</div>';
 						}
 					}
@@ -6017,7 +6077,7 @@ class DashbordsuratController extends Controller
 						echo '<div class="alert alert-danger alert-dismissable">
 							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 							<h4><i class="icon fa fa-ban"></i> Error..!!</h4>
-								Sistem Error, mohon ulangi beberapa saat lagi
+								Sistem Error, mohon ulangi beberapa saat lagi 5
 						</div>';
 					}
 				} else {
@@ -9421,7 +9481,7 @@ class DashbordsuratController extends Controller
 								echo '<div class="alert alert-danger alert-dismissable">
 									<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 									<h4><i class="icon fa fa-ban"></i> Error..!!</h4>
-										Sistem Error, mohon ulangi beberapa saat lagi
+										Sistem Error, mohon ulangi beberapa saat lagi 6
 								</div>';
 							}
 						} else if ($cektanggal != 0){
@@ -9468,7 +9528,7 @@ class DashbordsuratController extends Controller
 								echo '<div class="alert alert-danger alert-dismissable">
 										<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 										<h4><i class="icon fa fa-ban"></i> Error..!!</h4>
-											Sistem Error, mohon ulangi beberapa saat lagi
+											Sistem Error, mohon ulangi beberapa saat lagi 7
 									</div>';
 							} else {
 								$getid 			= Suratkeluar::orderBy('id', 'DESC')->first();
@@ -9569,7 +9629,7 @@ class DashbordsuratController extends Controller
 									echo '<div class="alert alert-danger alert-dismissable">
 										<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 										<h4><i class="icon fa fa-ban"></i> Error..!!</h4>
-											Sistem Error, mohon ulangi beberapa saat lagi
+											Sistem Error, mohon ulangi beberapa saat lagi 8
 									</div>';
 								}
 							}
@@ -9669,7 +9729,7 @@ class DashbordsuratController extends Controller
 								echo '<div class="alert alert-danger alert-dismissable">
 									<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 									<h4><i class="icon fa fa-ban"></i> Error..!!</h4>
-										Sistem Error, mohon ulangi beberapa saat lagi
+										Sistem Error, mohon ulangi beberapa saat lagi 9
 								</div>';
 							}
 						} else if ($cektanggal == 0){
@@ -9779,7 +9839,7 @@ class DashbordsuratController extends Controller
 								echo '<div class="alert alert-danger alert-dismissable">
 									<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 									<h4><i class="icon fa fa-ban"></i> Error..!!</h4>
-										Sistem Error, mohon ulangi beberapa saat lagi
+										Sistem Error, mohon ulangi beberapa saat lagi 10
 								</div>';
 							}
 						}
@@ -9873,7 +9933,7 @@ class DashbordsuratController extends Controller
 							echo '<div class="alert alert-danger alert-dismissable">
 								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 								<h4><i class="icon fa fa-ban"></i> Error..!!</h4>
-									Sistem Error, mohon ulangi beberapa saat lagi
+									Sistem Error, mohon ulangi beberapa saat lagi 11
 							</div>';
 						}
 					} else if ($cektanggal != 0){
@@ -9922,7 +9982,7 @@ class DashbordsuratController extends Controller
 							echo '<div class="alert alert-danger alert-dismissable">
 									<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 									<h4><i class="icon fa fa-ban"></i> Error..!!</h4>
-										Sistem Error, mohon ulangi beberapa saat lagi '.$step.' Looping Pencarian
+										Sistem Error, mohon ulangi beberapa saat lagi 12'.$step.' Looping Pencarian
 								</div>';
 						} else {
 							$getid 			= Suratkeluar::orderBy('id', 'DESC')->first();
@@ -10023,7 +10083,7 @@ class DashbordsuratController extends Controller
 								echo '<div class="alert alert-danger alert-dismissable">
 									<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 									<h4><i class="icon fa fa-ban"></i> Error..!!</h4>
-										Sistem Error, mohon ulangi beberapa saat lagi
+										Sistem Error, mohon ulangi beberapa saat lagi 13
 								</div>';
 							}
 						}
