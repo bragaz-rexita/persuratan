@@ -171,8 +171,11 @@ class AuthController extends Controller
 			$domain	= $cekteks[0];
 		}
         //  OLD  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-       	if ($domain == '127.0.0.1:8000/ptdpm' OR $domain == '127.0.0.1') {
+       	if ($domain == 'http://127.0.0.1:8000' OR $domain == '127.0.0.1') {
 			$url = 'http://127.0.0.1:8000/rsphportal';
+			return Redirect::to($url);
+		} else if ($domain == 'http://localhost:8000' OR $domain == 'localhost') {
+			$url = 'http://localhost:8000/rsphportal';
 			return Redirect::to($url);
 		} else if ($domain == 'disaprimamedika.site' OR $domain == 'www.disaprimamedika.site') {
 			$url = 'https://disaprimamedika.site/rsphportal';
