@@ -177,22 +177,23 @@ class AuthController extends Controller
 		} else if ($domain == 'http://localhost:8000' OR $domain == 'localhost') {
 			$url = 'http://localhost:8000/rsphportal';
 			return Redirect::to($url);
-		} else if ($domain == 'disaprimamedika.site' OR $domain == 'www.disaprimamedika.site') {
-			$url = 'https://disaprimamedika.site/rsphportal';
-			return Redirect::to($url);
-		} else if ($domain == 'rsphskr.disaprimamedika.site' OR $domain == 'www.rsphskr.disaprimamedika.site') {
-			$url = 'https://rsphskr.disaprimamedika.site/rsphportal';
-			return Redirect::to($url);
-		} else if ($domain == 'rsphmlg.disaprimamedika.site' OR $domain == 'www.rsphmlg.disaprimamedika.site') {
-			$url = 'https://rsphmlg.disaprimamedika.site/rsphportal';
-			return Redirect::to($url);
-		} else if ($domain == 'pdp.disaprimamedika.site' OR $domain == 'www.pdp.disaprimamedika.site') {
-			$url = 'https://pdp.disaprimamedika.site/rsphportal';
-			return Redirect::to($url);
-		} else if ($domain == 'rekrutmen.disaprimamedika.site' OR $domain == 'www.rekrutmen.disaprimamedika.site') {
-			$url = 'https://rekrutmen.disaprimamedika.site/rekrutmen';
-			return Redirect::to($url);
-		} 
+		}
+        // else if ($domain == 'disaprimamedika.site' OR $domain == 'www.disaprimamedika.site') {
+		// 	$url = 'https://disaprimamedika.site/rsphportal';
+		// 	return Redirect::to($url);
+		// } else if ($domain == 'rsphskr.disaprimamedika.site' OR $domain == 'www.rsphskr.disaprimamedika.site') {
+		// 	$url = 'https://rsphskr.disaprimamedika.site/rsphportal';
+		// 	return Redirect::to($url);
+		// } else if ($domain == 'rsphmlg.disaprimamedika.site' OR $domain == 'www.rsphmlg.disaprimamedika.site') {
+		// 	$url = 'https://rsphmlg.disaprimamedika.site/rsphportal';
+		// 	return Redirect::to($url);
+		// } else if ($domain == 'pdp.disaprimamedika.site' OR $domain == 'www.pdp.disaprimamedika.site') {
+		// 	$url = 'https://pdp.disaprimamedika.site/rsphportal';
+		// 	return Redirect::to($url);
+		// } else if ($domain == 'rekrutmen.disaprimamedika.site' OR $domain == 'www.rekrutmen.disaprimamedika.site') {
+		// 	$url = 'https://rekrutmen.disaprimamedika.site/rekrutmen';
+		// 	return Redirect::to($url);
+		// } 
         //  OLD  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //  NEW  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

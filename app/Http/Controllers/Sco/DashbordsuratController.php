@@ -6956,11 +6956,11 @@ class DashbordsuratController extends Controller
 		$namasaja	= '';
 		$alamatweb	= $homebase.'/trackingid/srtklr-'.$id;
 		if (Session('fakultas') == 'DPM'){
-			$qrcode = QrCode::format('png')->merge('https://disaprimamedika.site/dist/img/pt.png', 0.2, true)->size(150)->generate($alamatweb);
+			$qrcode = QrCode::format('png')->merge('http://surat-ptdpm.rs-primahusada.id/dist/img/pt.png', 0.2, true)->size(150)->generate($alamatweb);
 		} else if (Session('fakultas') == 'PDP'){
-			$qrcode = QrCode::format('png')->merge('https://disaprimamedika.site/dist/img/pdp.png', 0.2, true)->size(150)->generate($alamatweb);
+			$qrcode = QrCode::format('png')->merge('http://surat-ptdpm.rs-primahusada.id/dist/img/pdp.png', 0.2, true)->size(150)->generate($alamatweb);
 		} else if (Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'RSPHMLG'){
-			$qrcode = QrCode::format('png')->merge('https://disaprimamedika.site/dist/img/rs.png', 0.2, true)->size(150)->generate($alamatweb);
+			$qrcode = QrCode::format('png')->merge('http://surat-ptdpm.rs-primahusada.id/dist/img/rs.png', 0.2, true)->size(150)->generate($alamatweb);
 		} else {
 			$qrcode = QrCode::format('png')->size(150)->generate($alamatweb);
 		}

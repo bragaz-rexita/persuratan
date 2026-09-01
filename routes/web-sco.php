@@ -23,7 +23,7 @@ use App\Http\Controllers\Sco\DashbordsuratController;
 // use App\Http\Controllers\Sco\HPTController;
 use App\Http\Controllers\Sco\JadwalController;
 use App\Http\Controllers\Sco\KegepawaianController;
-use App\Http\Controllers\Sco\KendaraanController;
+// use App\Http\Controllers\Sco\KendaraanController;
 // use App\Http\Controllers\Sco\LayananMahasiswaController;
 // use App\Http\Controllers\Sco\MipaController;
 use App\Http\Controllers\Sco\NotifikasiController;
@@ -739,7 +739,7 @@ Route::group(['middleware' => 'project.sco'], function() {
 	// Route::post('json/lapefikasi', [HPTController::class, 'getlapEfikasi'])->name('getlapEfikasi');
 	// Route::post('json/rincianefikasi', [HPTController::class, 'getRincianefikasi'])->name('getRincianefikasi');
 	
-	// // VOKASI
+	// VOKASI
 	// Route::get('frontpagevokasi', [VokasiController::class, 'index']);
 	// Route::get('profileuser', [VokasiController::class, 'viewProfile']);
 	// Route::get('accountmanagement', [VokasiController::class, 'viewManagement']);
@@ -768,7 +768,7 @@ Route::group(['middleware' => 'project.sco'], function() {
 	// Route::post('getlapmagangvokasi', [VokasiController::class, 'getLapmagangvokasi'])->name('getlapmagangvokasi');
 	// Route::get('viewbynim/{id}', [VokasiController::class, 'viewBiodatamhs']);
 
-	// // Program PascaSarjana UB
+	// Program PascaSarjana UB
 	// Route::get('frontpagepps', [PpsController::class, 'index']);
 	// Route::get('admincamaba', [PpsController::class, 'viewAdmincamaba']);
 	// Route::get('dashboardpps', [VokasiController::class, 'dashboard']); //dibuatglobal

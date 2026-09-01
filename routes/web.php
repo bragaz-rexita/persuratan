@@ -2,131 +2,131 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WebinarController;
-// use App\Http\Controllers\Page;
-// use App\Http\Controllers\KomplainController;
+use App\Http\Controllers\Page;
+use App\Http\Controllers\KomplainController;
 use App\Http\Controllers\FrontpageController;
 use App\Http\Controllers\AdminController;
-// use App\Http\Controllers\GuruController;
-// use App\Http\Controllers\OrtuController;
-// use App\Http\Controllers\HatiraController;
+use App\Http\Controllers\GuruController;
+use App\Http\Controllers\OrtuController;
+use App\Http\Controllers\HatiraController;
 use App\Http\Controllers\AIPKIController;
-// use App\Http\Controllers\LeapNetworkController;
+use App\Http\Controllers\LeapNetworkController;
 use App\Http\Controllers\RecruitmentController;
 // use App\Http\Controllers\SendMail;
-// use App\Http\Controllers\ProjectRITA;
+use App\Http\Controllers\ProjectRITA;
 use App\Http\Controllers\UserController;
-// use App\Http\Controllers\AlQalamController;
+use App\Http\Controllers\AlQalamController;
 use App\Http\Controllers\BankSoalController;
 // use App\Http\Controllers\ArsipdinamisController;
-// use App\Http\Controllers\PDSRPPRPIController;
-// use App\Http\Controllers\Sco\SCOUserController;
-// use App\Http\Controllers\Sco\LayananMahasiswaController;
+use App\Http\Controllers\PDSRPPRPIController;
+use App\Http\Controllers\Sco\SCOUserController;
+use App\Http\Controllers\Sco\LayananMahasiswaController;
 // use App\Http\Controllers\Api\Config_Controller;
 // use App\Http\Controllers\Api\Master_Controller;
-// use App\Http\Controllers\Api\Tr_Berita;
+use App\Http\Controllers\Api\Tr_Berita;
 // use App\Http\Controllers\Api\Tr_Hewan;
 // use App\Http\Controllers\Api\Tr_Manusia;
 // use App\Http\Controllers\Api\Tr_Print;
-// use App\Http\Controllers\Auth_User_Role\Auth_Controller;
+use App\Http\Controllers\Auth_User_Role\Auth_Controller;
 
 ///////////////// NON LOGIN PAGE ////////////////////////
 
 Route::get('/', [AuthController::class, 'viewAuth']);
 Route::get('landingpage', [AuthController::class, 'viewAuth']);
-// Route::get('frontpage', [FrontpageController::class, 'FrontPageindex']);
-// Route::get('landingapps/{id}', [FrontpageController::class, 'viewLandingApps']);
-// Route::get('allportal/{id}', [FrontpageController::class, 'AllPortal']);
-// Route::get('cekandroid/{id}', [FrontpageController::class, 'getFirebaseaccount']);
-// Route::get('siap', [FrontpageController::class, 'SiapdokIndex'])->name('siap');
-// Route::get('login', [FrontpageController::class, 'login'])->name('login');
-// Route::get('/forgotpass',[FrontpageController::class, 'forgotpass'])->name('forgotpass');
-// Route::get('portalris/{id}', [FrontpageController::class, 'risPortal']);
-// Route::get('bukutamu', [FrontpageController::class, 'bukuTamu']);
-// Route::get('tracerstudy', [FrontpageController::class, 'viewTracerstudy']);
-// Route::get('simpen', [FrontpageController::class, 'eRental']);
-// Route::get('tracking', [FrontpageController::class, 'viewTrackinguser']);
-// Route::get('vokasi', [FrontpageController::class, 'viewVokasi']);
-// Route::get('sivoka', [FrontpageController::class, 'viewVokasi']);
-// Route::get('pps', [FrontpageController::class, 'viewPpsUB']);
-// Route::get('evaluasiperkuliahanvokasi', [FrontpageController::class, 'viewEvaluasiperkuliahanvokasi']);
-// Route::get('evaluasiperkuliahanpps', [FrontpageController::class, 'viewEvaluasiperkuliahanpps']);
-// Route::get('mipa', [FrontpageController::class, 'viewMipa']);
-// Route::get('fp', [FrontpageController::class, 'viewPertanian']);
-// Route::get('ft', [FrontpageController::class, 'viewTeknik']);
-// Route::get('filkom', [FrontpageController::class, 'viewFilkom']);
-// Route::get('fh', [FrontpageController::class, 'viewHukum']);
-// Route::get('fia', [FrontpageController::class, 'viewFadministrasi']);
-// Route::get('fk', [FrontpageController::class, 'viewKedokteran']);
-// Route::get('fib', [FrontpageController::class, 'viewBudaya']);
-// Route::get('fpik', [FrontpageController::class, 'viewPerikanan']);
-// Route::get('feb', [FrontpageController::class, 'viewEkonomi']);
-// Route::get('fkg', [FrontpageController::class, 'viewKedokteranGigi']);
-// Route::get('fapet', [FrontpageController::class, 'viewPeternakan']);
-// Route::get('fisip', [FrontpageController::class, 'viewPsikologi']);
-// Route::get('fkh', [FrontpageController::class, 'viewKedokteranHewan']);
-// Route::get('ftp', [FrontpageController::class, 'viewTeknologiPertanian']);
-// Route::get('fikes', [FrontpageController::class, 'viewFikes']);
-// Route::get('ubkediri', [FrontpageController::class, 'viewUBKediri']);
-// Route::get('ubjakarta', [FrontpageController::class, 'viewUBJakarta']);
-// Route::get('/registerFT', [FrontpageController::class, 'viewRegMHSFT'])->name('viewregmhs01');
-// Route::get('/registerFILKOM', [FrontpageController::class, 'viewRegMHSFILKOM'])->name('viewregmhs02');
-// Route::get('/registerFIA', [FrontpageController::class, 'viewRegMHSFIA'])->name('viewregmhs03');
-// Route::get('/registerFK', [FrontpageController::class, 'viewRegMHSFK'])->name('viewregmhs04');
-// Route::get('/registerFIB', [FrontpageController::class, 'viewRegMHSFIB'])->name('viewregmhs05');
-// Route::get('/registerFPIK', [FrontpageController::class, 'viewRegMHSFPIK'])->name('viewregmhs06');
-// Route::get('/registerFEB', [FrontpageController::class, 'viewRegMHSFEB'])->name('viewregmhs07');
-// Route::get('/registerFKG', [FrontpageController::class, 'viewRegMHSFKG'])->name('viewregmhs08');
-// Route::get('/registerFAPET', [FrontpageController::class, 'viewRegMHSFAPET'])->name('viewregmhs09');
-// Route::get('/registerFISIP', [FrontpageController::class, 'viewRegMHSFISIP'])->name('viewregmhs10');
-// Route::get('/registerFKH', [FrontpageController::class, 'viewRegMHSFKH'])->name('viewregmhs11');
-// Route::get('/registerFTP', [FrontpageController::class, 'viewRegMHSFTP'])->name('viewregmhs12');
-// Route::get('/registerFH', [FrontpageController::class, 'viewRegMHSFH'])->name('viewregmhs13');
-// Route::get('/registerFMIPA', [FrontpageController::class, 'viewRegMHSFMIPA'])->name('registerFMIPA');
-// Route::get('/registerFP', [FrontpageController::class, 'viewRegMHSFP'])->name('registerFP');
-// Route::get('/registerPPS', [FrontpageController::class, 'viewRegMHSPPS'])->name('viewregmhs16');
-// Route::get('/registerPASCAUB', [FrontpageController::class, 'viewRegMHSPPS'])->name('viewregmhs16');
-// Route::get('/registerVokasi', [FrontpageController::class, 'viewRegMHSVokasi'])->name('viewregmhs17');
-// Route::get('/registerFIKES', [FrontpageController::class, 'viewRegMHSFIKES'])->name('viewregmhs18');
-// Route::get('/registerPSLKU', [FrontpageController::class, 'viewRegMHSPSLKU'])->name('viewregmhs19');
-// Route::get('/registerPSDKUJAKARTA', [FrontpageController::class, 'viewRegMHSPSDKUJAKARTA'])->name('viewregmhs20');
+Route::get('frontpage', [FrontpageController::class, 'FrontPageindex']);
+Route::get('landingapps/{id}', [FrontpageController::class, 'viewLandingApps']);
+Route::get('allportal/{id}', [FrontpageController::class, 'AllPortal']);
+Route::get('cekandroid/{id}', [FrontpageController::class, 'getFirebaseaccount']);
+Route::get('siap', [FrontpageController::class, 'SiapdokIndex'])->name('siap');
+Route::get('login', [FrontpageController::class, 'login'])->name('login');
+Route::get('/forgotpass',[FrontpageController::class, 'forgotpass'])->name('forgotpass');
+Route::get('portalris/{id}', [FrontpageController::class, 'risPortal']);
+Route::get('bukutamu', [FrontpageController::class, 'bukuTamu']);
+Route::get('tracerstudy', [FrontpageController::class, 'viewTracerstudy']);
+Route::get('simpen', [FrontpageController::class, 'eRental']);
+Route::get('tracking', [FrontpageController::class, 'viewTrackinguser']);
+Route::get('vokasi', [FrontpageController::class, 'viewVokasi']);
+Route::get('sivoka', [FrontpageController::class, 'viewVokasi']);
+Route::get('pps', [FrontpageController::class, 'viewPpsUB']);
+Route::get('evaluasiperkuliahanvokasi', [FrontpageController::class, 'viewEvaluasiperkuliahanvokasi']);
+Route::get('evaluasiperkuliahanpps', [FrontpageController::class, 'viewEvaluasiperkuliahanpps']);
+Route::get('mipa', [FrontpageController::class, 'viewMipa']);
+Route::get('fp', [FrontpageController::class, 'viewPertanian']);
+Route::get('ft', [FrontpageController::class, 'viewTeknik']);
+Route::get('filkom', [FrontpageController::class, 'viewFilkom']);
+Route::get('fh', [FrontpageController::class, 'viewHukum']);
+Route::get('fia', [FrontpageController::class, 'viewFadministrasi']);
+Route::get('fk', [FrontpageController::class, 'viewKedokteran']);
+Route::get('fib', [FrontpageController::class, 'viewBudaya']);
+Route::get('fpik', [FrontpageController::class, 'viewPerikanan']);
+Route::get('feb', [FrontpageController::class, 'viewEkonomi']);
+Route::get('fkg', [FrontpageController::class, 'viewKedokteranGigi']);
+Route::get('fapet', [FrontpageController::class, 'viewPeternakan']);
+Route::get('fisip', [FrontpageController::class, 'viewPsikologi']);
+Route::get('fkh', [FrontpageController::class, 'viewKedokteranHewan']);
+Route::get('ftp', [FrontpageController::class, 'viewTeknologiPertanian']);
+Route::get('fikes', [FrontpageController::class, 'viewFikes']);
+Route::get('ubkediri', [FrontpageController::class, 'viewUBKediri']);
+Route::get('ubjakarta', [FrontpageController::class, 'viewUBJakarta']);
+Route::get('/registerFT', [FrontpageController::class, 'viewRegMHSFT'])->name('viewregmhs01');
+Route::get('/registerFILKOM', [FrontpageController::class, 'viewRegMHSFILKOM'])->name('viewregmhs02');
+Route::get('/registerFIA', [FrontpageController::class, 'viewRegMHSFIA'])->name('viewregmhs03');
+Route::get('/registerFK', [FrontpageController::class, 'viewRegMHSFK'])->name('viewregmhs04');
+Route::get('/registerFIB', [FrontpageController::class, 'viewRegMHSFIB'])->name('viewregmhs05');
+Route::get('/registerFPIK', [FrontpageController::class, 'viewRegMHSFPIK'])->name('viewregmhs06');
+Route::get('/registerFEB', [FrontpageController::class, 'viewRegMHSFEB'])->name('viewregmhs07');
+Route::get('/registerFKG', [FrontpageController::class, 'viewRegMHSFKG'])->name('viewregmhs08');
+Route::get('/registerFAPET', [FrontpageController::class, 'viewRegMHSFAPET'])->name('viewregmhs09');
+Route::get('/registerFISIP', [FrontpageController::class, 'viewRegMHSFISIP'])->name('viewregmhs10');
+Route::get('/registerFKH', [FrontpageController::class, 'viewRegMHSFKH'])->name('viewregmhs11');
+Route::get('/registerFTP', [FrontpageController::class, 'viewRegMHSFTP'])->name('viewregmhs12');
+Route::get('/registerFH', [FrontpageController::class, 'viewRegMHSFH'])->name('viewregmhs13');
+Route::get('/registerFMIPA', [FrontpageController::class, 'viewRegMHSFMIPA'])->name('registerFMIPA');
+Route::get('/registerFP', [FrontpageController::class, 'viewRegMHSFP'])->name('registerFP');
+Route::get('/registerPPS', [FrontpageController::class, 'viewRegMHSPPS'])->name('viewregmhs16');
+Route::get('/registerPASCAUB', [FrontpageController::class, 'viewRegMHSPPS'])->name('viewregmhs16');
+Route::get('/registerVokasi', [FrontpageController::class, 'viewRegMHSVokasi'])->name('viewregmhs17');
+Route::get('/registerFIKES', [FrontpageController::class, 'viewRegMHSFIKES'])->name('viewregmhs18');
+Route::get('/registerPSLKU', [FrontpageController::class, 'viewRegMHSPSLKU'])->name('viewregmhs19');
+Route::get('/registerPSDKUJAKARTA', [FrontpageController::class, 'viewRegMHSPSDKUJAKARTA'])->name('viewregmhs20');
 
 ///////////////// END NON LOGIN PAGE ////////////////////////
-// Route::get('logkhusus/{id}', [AuthController::class, 'authenticatekhusus'])->name('logkhusus');
-// Route::post('authenticate', [AuthController::class, 'authenticate'])->name('authenticate');
-// Route::post('authenticatesiapdok', [AuthController::class, 'authenticateSIAPDOK'])->name('authenticateSIAPDOK');
-// Route::post('exsimpanpendaftaran', [AuthController::class, 'exSimpanpendaftaran'])->name('exsimpanpendaftaran');
-// Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('logkhusus/{id}', [AuthController::class, 'authenticatekhusus'])->name('logkhusus');
+Route::post('authenticate', [AuthController::class, 'authenticate'])->name('authenticate');
+Route::post('authenticatesiapdok', [AuthController::class, 'authenticateSIAPDOK'])->name('authenticateSIAPDOK');
+Route::post('exsimpanpendaftaran', [AuthController::class, 'exSimpanpendaftaran'])->name('exsimpanpendaftaran');
+Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('trackingid/{id}', [AuthController::class, 'viewTrackingbyid']);
-// Route::get('zis', [AuthController::class, 'zis'])->name('zis');
-// Route::get('ppdb', [AuthController::class, 'ppdb'])->name('ppdb');
-// Route::get('pip', [AuthController::class, 'pip'])->name('pip');
-// Route::get('ceking/{id}', [AuthController::class, 'cekingPembayaran']);
-// Route::get('karpes/{id}', [AuthController::class, 'viewKarpes']);
-// Route::get('observasi/{id}', [AuthController::class, 'viewObservasi']);
-// Route::get('biodatapsb/{id}', [AuthController::class, 'viewBiodatapsb']);
-// Route::get('qrbgimage/{id}', [AuthController::class, 'viewQRBGImage']);
-// Route::get('raport/{id}', [AuthController::class, 'viewRaport']);
-// Route::get('verifikasi/{id}', [AuthController::class, 'verifikasiPembayaran']);
-// Route::get('kwitansi/{id}', [AuthController::class, 'ctkKwitansi']);
-// Route::get('ctkkwt/{id}', [AdminController::class, 'exKwitansiByID']);
-// Route::get('ttdkwitansi/{id}', [AuthController::class, 'TtdKwitansi']);
-// Route::get('formkesanggupan/{id}', [AuthController::class, 'ctkFormkesanggupan']);
-// Route::post('ppdb/daftar', [AuthController::class, 'exPpdb'])->name('exPpdb');
-// Route::post('ppdb/savefileppdb', [AuthController::class, 'exSavefileppdb'])->name('exSavefileppdb');
-// Route::post('ppdb/saveberkasppdb', [AuthController::class, 'exSaveberkasppdb'])->name('exSaveberkasppdb');
-// Route::post('ppdb/ceknikppdb', [AuthController::class, 'exCeknikppdb'])->name('exCeknikppdb');
-// Route::post('ppdb/getkodependaf', [AuthController::class, 'exGetkodependaf'])->name('exGetkodependaf');
-// Route::post('ppdb/datacalonsiswa', [AuthController::class, 'jsonDatacalonsiswa'])->name('jsonDatacalonsiswa');
-// Route::post('pip/saveabsen', [AuthController::class, 'exPresensiviewPIP'])->name('exPresensiviewPIP');
-// Route::post('kwitansi/expersetujuanberkas', [AuthController::class, 'expersetujuanBerkas'])->name('expersetujuanBerkas');
-// Route::post('rapot/getstatkd', [AuthController::class, 'jsonStatistikkd'])->name('jsonStatistikkd');
-// Route::post('rapot/getstatpermuatan', [AuthController::class, 'jsonStatpermuatan'])->name('jsonStatpermuatan');
+Route::get('zis', [AuthController::class, 'zis'])->name('zis');
+Route::get('ppdb', [AuthController::class, 'ppdb'])->name('ppdb');
+Route::get('pip', [AuthController::class, 'pip'])->name('pip');
+Route::get('ceking/{id}', [AuthController::class, 'cekingPembayaran']);
+Route::get('karpes/{id}', [AuthController::class, 'viewKarpes']);
+Route::get('observasi/{id}', [AuthController::class, 'viewObservasi']);
+Route::get('biodatapsb/{id}', [AuthController::class, 'viewBiodatapsb']);
+Route::get('qrbgimage/{id}', [AuthController::class, 'viewQRBGImage']);
+Route::get('raport/{id}', [AuthController::class, 'viewRaport']);
+Route::get('verifikasi/{id}', [AuthController::class, 'verifikasiPembayaran']);
+Route::get('kwitansi/{id}', [AuthController::class, 'ctkKwitansi']);
+Route::get('ctkkwt/{id}', [AdminController::class, 'exKwitansiByID']);
+Route::get('ttdkwitansi/{id}', [AuthController::class, 'TtdKwitansi']);
+Route::get('formkesanggupan/{id}', [AuthController::class, 'ctkFormkesanggupan']);
+Route::post('ppdb/daftar', [AuthController::class, 'exPpdb'])->name('exPpdb');
+Route::post('ppdb/savefileppdb', [AuthController::class, 'exSavefileppdb'])->name('exSavefileppdb');
+Route::post('ppdb/saveberkasppdb', [AuthController::class, 'exSaveberkasppdb'])->name('exSaveberkasppdb');
+Route::post('ppdb/ceknikppdb', [AuthController::class, 'exCeknikppdb'])->name('exCeknikppdb');
+Route::post('ppdb/getkodependaf', [AuthController::class, 'exGetkodependaf'])->name('exGetkodependaf');
+Route::post('ppdb/datacalonsiswa', [AuthController::class, 'jsonDatacalonsiswa'])->name('jsonDatacalonsiswa');
+Route::post('pip/saveabsen', [AuthController::class, 'exPresensiviewPIP'])->name('exPresensiviewPIP');
+Route::post('kwitansi/expersetujuanberkas', [AuthController::class, 'expersetujuanBerkas'])->name('expersetujuanBerkas');
+Route::post('rapot/getstatkd', [AuthController::class, 'jsonStatistikkd'])->name('jsonStatistikkd');
+Route::post('rapot/getstatpermuatan', [AuthController::class, 'jsonStatpermuatan'])->name('jsonStatpermuatan');
 
-// Route::post('tamu/exbukutamu', [AdminController::class, 'exbukuTamu'])->name('exbukutamu');
-// Route::post('tamu/bukutamu', [AdminController::class, 'bukuTamu'])->name('bukuTamu');
-// Route::post('tamu/rekaptamu', [AdminController::class, 'rekapTamu'])->name('rekapTamu');
-// Route::post('tamu/carilaptamu', [AdminController::class, 'exTamucari'])->name('exTamucari');
-// ///////////////E-COMPLAIN////////////////////////
+Route::post('tamu/exbukutamu', [AdminController::class, 'exbukuTamu'])->name('exbukutamu');
+Route::post('tamu/bukutamu', [AdminController::class, 'bukuTamu'])->name('bukuTamu');
+Route::post('tamu/rekaptamu', [AdminController::class, 'rekapTamu'])->name('rekapTamu');
+Route::post('tamu/carilaptamu', [AdminController::class, 'exTamucari'])->name('exTamucari');
+/////////////////E-COMPLAIN////////////////////////
 // Route::get('datakeluhan', [KomplainController::class, 'viewLapKomplain']);
 // Route::get('komplain', [LayananMahasiswaController::class, 'viewKomplain']);
 // Route::post('komplain/savekomplain', [KomplainController::class, 'saveKomplain'])->name('savekomplain');
@@ -431,49 +431,49 @@ Route::group(['middleware' => 'project.simaster'], function() {
 
 // });
 ///////////////// WEBINAR ////////////////////////
-// Route::get('webinar', [WebinarController::class, 'viewWebinar']);
-// Route::get('loginwebinar', [WebinarController::class, 'loginwebinar'])->name('loginwebinar');
-// Route::get('logoutwebinar', [WebinarController::class, 'logoutwebinar'])->name('logoutwebinar');
-// Route::post('authenticatewebinar', [WebinarController::class, 'authenticatewebinar'])->name('loginwebinar');
-// Route::get('register/{id}', [WebinarController::class, 'goRegister']);
-// Route::get('info/{id}', [WebinarController::class, 'goLinkinfo']);
-// Route::get('presentform/{id}', [WebinarController::class, 'goAbsen']);
-// Route::get('hadir/{id}', [WebinarController::class, 'goAbsenall']);
-// Route::get('evaluasi/{id}', [WebinarController::class, 'goQuisionerall']);
-// Route::get('evform/{id}', [WebinarController::class, 'goQuisioner']);
-// Route::get('certificate/{id}', [WebinarController::class, 'goSertifikat']);
-// Route::get('cetaklinkpresensi/{id}', [WebinarController::class, 'goAbsenCetak']);
-// Route::get('cetakpresensi/{id}', [WebinarController::class, 'ctkPresensiWebinar']);
-// Route::get('contohkuis/{id}', [WebinarController::class, 'gocontohQuisioner']);
-// Route::post('webinar/expresensi', [WebinarController::class, 'exPresensi'])->name('exPresensiwebinar');
+Route::get('webinar', [WebinarController::class, 'viewWebinar']);
+Route::get('loginwebinar', [WebinarController::class, 'loginwebinar'])->name('loginwebinar');
+Route::get('logoutwebinar', [WebinarController::class, 'logoutwebinar'])->name('logoutwebinar');
+Route::post('authenticatewebinar', [WebinarController::class, 'authenticatewebinar'])->name('loginwebinar');
+Route::get('register/{id}', [WebinarController::class, 'goRegister']);
+Route::get('info/{id}', [WebinarController::class, 'goLinkinfo']);
+Route::get('presentform/{id}', [WebinarController::class, 'goAbsen']);
+Route::get('hadir/{id}', [WebinarController::class, 'goAbsenall']);
+Route::get('evaluasi/{id}', [WebinarController::class, 'goQuisionerall']);
+Route::get('evform/{id}', [WebinarController::class, 'goQuisioner']);
+Route::get('certificate/{id}', [WebinarController::class, 'goSertifikat']);
+Route::get('cetaklinkpresensi/{id}', [WebinarController::class, 'goAbsenCetak']);
+Route::get('cetakpresensi/{id}', [WebinarController::class, 'ctkPresensiWebinar']);
+Route::get('contohkuis/{id}', [WebinarController::class, 'gocontohQuisioner']);
+Route::post('webinar/expresensi', [WebinarController::class, 'exPresensi'])->name('exPresensiwebinar');
 Route::post('webinar/exkuisioner', [WebinarController::class, 'exKuisioner'])->name('exKuisionerwebinar');
 Route::post('getkalenderlistwebinar', [WebinarController::class, 'getKalenderlistwebinar'])->name('getKalenderlistwebinar');
 Route::post('webinar/getpegawairapat', [WebinarController::class, 'getPegawaiWebinar'])->name('getPegawaiWebinar');
 Route::get('eomode/{id}', [WebinarController::class, 'viewEOMode']);
 
 Route::group(['middleware' => 'project.webinar'], function() {
-	// Route::get('dashboardwebinar', [WebinarController::class, 'index']);
-	// Route::get('dashboarduser', [WebinarController::class, 'profile']);
-	// Route::get('webinarrekaponline/{id}', [WebinarController::class, 'goRekap']);
-	// Route::post('webinar/exregisterevent', [WebinarController::class, 'exRegisterevent'])->name('exRegisterevent');
+	Route::get('dashboardwebinar', [WebinarController::class, 'index']);
+	Route::get('dashboarduser', [WebinarController::class, 'profile']);
+	Route::get('webinarrekaponline/{id}', [WebinarController::class, 'goRekap']);
+	Route::post('webinar/exregisterevent', [WebinarController::class, 'exRegisterevent'])->name('exRegisterevent');
 	Route::post('webinar/saveevent', [WebinarController::class, 'exSaveevent'])->name('exSaveevent');
 	Route::post('webinar/eventlist', [WebinarController::class, 'geteventList'])->name('geteventList');
-	// Route::post('webinar/useradminlist', [WebinarController::class, 'getuserAdminlist'])->name('getuserAdminlist');
+	Route::post('webinar/useradminlist', [WebinarController::class, 'getuserAdminlist'])->name('getuserAdminlist');
 	Route::post('webinar/listpartisipan', [WebinarController::class, 'getListpartisipan'])->name('getList5partisipan');
-	// Route::post('webinar/exmailer', [WebinarController::class, 'exMailer'])->name('exMailer');
-	// Route::post('webinar/listpartisipanonline', [WebinarController::class, 'getListpartisipanok'])->name('getListpartisipanok');
-	// Route::post('webinar/listhasilevent', [WebinarController::class, 'getListhasilevent'])->name('getListhasilevent');
-	// Route::post('webinar/exaddakun', [WebinarController::class, 'exAddAkun'])->name('exAddAkun');
-	// Route::post('webinar/saveeditemail', [WebinarController::class, 'saveEditemail'])->name('saveEditemail');    
+	Route::post('webinar/exmailer', [WebinarController::class, 'exMailer'])->name('exMailer');
+	Route::post('webinar/listpartisipanonline', [WebinarController::class, 'getListpartisipanok'])->name('getListpartisipanok');
+	Route::post('webinar/listhasilevent', [WebinarController::class, 'getListhasilevent'])->name('getListhasilevent');
+	Route::post('webinar/exaddakun', [WebinarController::class, 'exAddAkun'])->name('exAddAkun');
+	Route::post('webinar/saveeditemail', [WebinarController::class, 'saveEditemail'])->name('saveEditemail');    
 });
 ///////////////// IPG ////////////////////////
-// Route::get('pasangkayu', [FrontpageController::class, 'pasangkayuindex']);
+Route::get('pasangkayu', [FrontpageController::class, 'pasangkayuindex']);
 Route::get('dashboardppp', [FrontpageController::class, 'lamonganindex']);
 Route::post('exdaftarbaru', [AuthController::class, 'exDaftarBaru'])->name('exDaftarBaru');
 Route::post('exresetpassword', [AuthController::class, 'exResetPassword'])->name('exResetPassword');
 Route::get('verifikasiemail',[AuthController::class, 'verifikasi'])->name('verifikasiemail');
 Route::post('exlogin', [AuthController::class, 'exLogin'])->name('exLogin');
-// Route::post('login-rita', [AuthController::class, 'exLogin'])->name('exLogin');
+Route::post('login-rita', [AuthController::class, 'exLogin'])->name('exLogin');
 Route::get('logoutlt3', [AuthController::class, 'exLogout'])->name('logoutlt3');
 	
 // Route::get('jsonmapdesa', [ProjectRITA::class, 'jsonMAPDesa'])->name('jsonMAPDesa');
@@ -543,48 +543,8 @@ Route::group(['middleware' => 'project.ipg'], function() {
 // Route::get('/leapuaelog/{id}', [LeapNetworkController::class, 'getLogLeapUAEData'])->name('getLogLeapUAEData');
 
 ///////////////// AIPKI ////////////////////////
-Route::get('/test-asset', function () {
-    dd([
-        'app_url' => config('app.url'),
-        'url' => url('/'),
-        'asset' => asset('adminlte3/dist/css/adminlte.min.css'),
-    ]);
-});
-Route::get('/server-test', function () {
-    dd([
-        'REQUEST_URI'      => request()->server('REQUEST_URI'),
-        'SCRIPT_NAME'      => request()->server('SCRIPT_NAME'),
-        'PHP_SELF'         => request()->server('PHP_SELF'),
-        'DOCUMENT_ROOT'    => request()->server('DOCUMENT_ROOT'),
-        'REQUEST_SCHEME'   => request()->server('REQUEST_SCHEME'),
-        'HTTP_HOST'        => request()->server('HTTP_HOST'),
-        'root'             => request()->root(),
-        'fullUrl'          => request()->fullUrl(),
-    ]);
-});
-Route::get('/debug-url', function () {
-    return [
-        'APP_URL' => env('APP_URL'),
-        'config_app_url' => config('app.url'),
-        'asset' => asset('adminlte3/dist/css/adminlte.min.css'),
-        'url' => url('/'),
-        'request_root' => request()->root(),
-    ];
-});
-Route::get('/server-info', function () {
-    return request()->server->all();
-});
-
 Route::get('/aipkiportal', [AIPKIController::class, 'viewIndex']);
-Route::get('/rsphportal', [AIPKIController::class, 'viewIndexRSPH'])->name('ptdpm');
-// PERSURATAN NEW ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Route::get('/ptdpm', [AIPKIController::class, 'viewIndexRSPH'])->name('ptdpm');
-Route::get('/rsphm', [AIPKIController::class, 'viewIndexRSPH'])->name('rsphm');
-Route::get('/rsphs', [AIPKIController::class, 'viewIndexRSPH'])->name('rsphs');
-Route::get('/rsdh', [AIPKIController::class, 'viewIndexRSPH'])->name('rsdh');
-Route::get('/rsck', [AIPKIController::class, 'viewIndexRSPH'])->name('rsck');
-// PERSURATAN NEW ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+Route::get('/rsphportal', [AIPKIController::class, 'viewIndexRSPH'])->name('rsphportal');
 Route::group(['middleware' => 'project.aipki'], function() {
 	Route::get('dashboardagendaris', [AIPKIController::class, 'dashboardagendaris'])->name('dashboardagendaris');
 	Route::get('dashboardpimpinan', [AIPKIController::class, 'dashboardpimpinan'])->name('dashboardpimpinan');
@@ -598,11 +558,11 @@ Route::group(['middleware' => 'project.aipki'], function() {
 
 ///////////////// HATIRA ////////////////////////
 // Route::get('/goodlist', [HatiraController::class, 'viewIndex']);
-// Route::group(['middleware' => 'project.hatira'], function() {
+Route::group(['middleware' => 'project.hatira'], function() {
 
-// });
+});
 ///////////////// BANKSOAL ////////////////////////
-// Route::get('welcometobanksoal', [BankSoalController::class, 'index']);
+Route::get('welcometobanksoal', [BankSoalController::class, 'index']);
 
 // Route::get('pdsrpprpi', [PDSRPPRPIController::class, 'viewPortalpdsrpprpi'])->name('pdsrpprpi');
 // Route::get('pdsrpprpipendidikan', [PDSRPPRPIController::class, 'viewPortalpdsrpprpipendidikan'])->name('pdsrpprpipendidikan');
@@ -617,28 +577,29 @@ Route::group(['middleware' => 'project.banksoal'], function() {
 	// Route::post('argoneditor', [PDSRPPRPIController::class, 'exArgonEditor'])->name('argoneditor');
 	// Route::get('argonkontenlist', [PDSRPPRPIController::class, 'viewKontenSettingList'])->name('argonkontenlist');
 	
-	// Route::get('test', [BankSoalController::class, 'viewUjianKompetensi'])->name('viewUjianKompetensi');
-	// Route::get('ujiankompetensi',[BankSoalController::class, 'viewUjianKompetensi'])->name('viewUjianKompetensi');
-    // Route::get('tryout', [BankSoalController::class, 'viewTryOut'])->name('viewTryOut');
-	// Route::post('exfirstsoal', [BankSoalController::class, 'getFirstSoal'])->name('getFirstSoal');
-	// Route::post('exfirstdataujian', [BankSoalController::class, 'getFirstDataUjian'])->name('getFirstDataUjian');
+	Route::get('test', [BankSoalController::class, 'viewUjianKompetensi'])->name('viewUjianKompetensi');
+	Route::get('ujiankompetensi',[BankSoalController::class, 'viewUjianKompetensi'])->name('viewUjianKompetensi');
+    Route::get('tryout', [BankSoalController::class, 'viewTryOut'])->name('viewTryOut');
+	Route::post('exfirstsoal', [BankSoalController::class, 'getFirstSoal'])->name('getFirstSoal');
+	Route::post('exfirstdataujian', [BankSoalController::class, 'getFirstDataUjian'])->name('getFirstDataUjian');
 	Route::post('exinputbanksoal', [BankSoalController::class, 'exInputBankSoal'])->name('exInputBankSoal');
-	// Route::post('exceksoalkembar', [BankSoalController::class, 'exCeksoalkembar'])->name('exCeksoalkembar');
-	// Route::post('exsimpanjawaban', [BankSoalController::class, 'exSimpanJawaban'])->name('exSimpanJawaban');
+	Route::post('exceksoalkembar', [BankSoalController::class, 'exCeksoalkembar'])->name('exCeksoalkembar');
+	Route::post('exsimpanjawaban', [BankSoalController::class, 'exSimpanJawaban'])->name('exSimpanJawaban');
 	Route::post('jsonaktiftest', [BankSoalController::class, 'dataJsonaktiftest'])->name('jsonaktiftest');
-	// Route::get('getbanksoal', [BankSoalController::class, 'getBankSoal'])->name('getBankSoal');
-	// Route::get('jsongetsoalaktif', [BankSoalController::class, 'jsonGetSoalAktif'])->name('jsonGetSoalAktif');
-	// Route::post('exaddtest', [BankSoalController::class, 'exAddTest'])->name('exAddTest');
-	// Route::post('exaddpesertatest', [BankSoalController::class, 'exAddPesertaTest'])->name('exAddPesertaTest');
-	// Route::post('exhitungnilai', [BankSoalController::class, 'exHitungNilai'])->name('exHitungNilai');
-	// Route::post('exaddtotxt', [BankSoalController::class, 'exAddtoTXT'])->name('exaddtotxt');
-	// Route::post('jsonallcase', [BankSoalController::class, 'jsonallcase'])->name('jsonallcase');
-	// Route::post('aktifet', [BankSoalController::class, 'aktifet'])->name('aktifet');
-	// Route::post('jsonallinterviewer', [BankSoalController::class, 'jsonallInterviewer'])->name('jsonallinterviewer');
-	// Route::post('jsonrekapsoal', [BankSoalController::class, 'jsonRekapSoal'])->name('jsonRekapSoal');
-    // Route::post('getdetailsoal', [BankSoalController::class, 'getDetailSoal'])->name('getDetailSoal');
-	// Route::post('exsetsoalprodi', [BankSoalController::class, 'exSetSoalProdi'])->name('exSetSoalProdi');
-	// Route::get('startujianrekrutmen',[BankSoalController::class, 'exStartUjianRekrutmen'])->name('exStartUjianRekrutmen');
+	Route::get('getbanksoal', [BankSoalController::class, 'getBankSoal'])->name('getBankSoal');
+	Route::get('jsongetsoalaktif', [BankSoalController::class, 'jsonGetSoalAktif'])->name('jsonGetSoalAktif');
+	Route::post('exaddtest', [BankSoalController::class, 'exAddTest'])->name('exAddTest');
+	Route::post('exaddpesertatest', [BankSoalController::class, 'exAddPesertaTest'])->name('exAddPesertaTest');
+	Route::post('exhitungnilai', [BankSoalController::class, 'exHitungNilai'])->name('exHitungNilai');
+	Route::post('exaddtotxt', [BankSoalController::class, 'exAddtoTXT'])->name('exaddtotxt');
+	Route::post('jsonallcase', [BankSoalController::class, 'jsonallcase'])->name('jsonallcase');
+	Route::post('aktifet', [BankSoalController::class, 'aktifet'])->name('aktifet');
+	Route::post('jsonallinterviewer', [BankSoalController::class, 'jsonallInterviewer'])->name('jsonallinterviewer');
+	Route::post('jsonrekapsoal', [BankSoalController::class, 'jsonRekapSoal'])->name('jsonRekapSoal');
+    Route::post('getdetailsoal', [BankSoalController::class, 'getDetailSoal'])->name('getDetailSoal');
+	Route::post('exsetsoalprodi', [BankSoalController::class, 'exSetSoalProdi'])->name('exSetSoalProdi');
+	Route::get('startujianrekrutmen',[BankSoalController::class, 'exStartUjianRekrutmen'])->name('exStartUjianRekrutmen');
+    
 });
 
 ///////////////// REKRUITMEN ////////////////////////

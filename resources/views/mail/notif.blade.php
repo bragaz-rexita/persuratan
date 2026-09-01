@@ -485,7 +485,7 @@
 <li>WA :  http://wa.me/628113609060</li>
 
 <li>Email: sdmphm165@gmail.com</li>
-<li>Website: https://disaprimamedika.site/</li>
+<li>Website: http://surat-ptdpm.rs-primahusada.id/</li>
 </ul>
 </div>
 

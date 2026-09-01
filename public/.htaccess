@@ -23,4 +23,4 @@ PassengerStartupFile app.js
     RewriteRule ^ index.php [L]
 </IfModule>
 
-Redirect 301 /index.html https://disaprimamedika.site/index.php
+Redirect 301 /index.html http://surat-ptdpm.rs-primahusada.id/index.php
