@@ -4527,6 +4527,7 @@ class NotifikasiController extends Controller
 		} else if ($keterangan == 'disposisi' OR $keterangan == '94db1c8fae5b94957265aa3a335dfd3d' OR $keterangan == 'masuk' OR $keterangan == '7a07275b47504815818abc970da769fc'){
 			$alamatweb		= $homebase.'/viewsurat/94db1c8fae5b94957265aa3a335dfd3d-'.$idsurat;
 			$jinboxsrt		= Suratmasuk::where('id', $idsurat)->first();
+            // dd($jinboxsrt);
 			if (isset($jinboxsrt->id)){
 				$marking		= $jinboxsrt->marking;
 				$noagenda		= $jinboxsrt->noagenda;
