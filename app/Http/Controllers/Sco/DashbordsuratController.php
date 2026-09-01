@@ -6954,31 +6954,44 @@ class DashbordsuratController extends Controller
 		$kalender 	= array("Bulan", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember");
 		$ceksek 	= explode("=", $id);
 		$namasaja	= '';
-		$alamatweb	= $homebase.'/trackingid/srtklr-'.$id;
-        // $rexita_audio = request()->root();
-        // $public_path = public_path('dist/img/pt.png');
-        // dd($public_path);
+		// $alamatweb	= $homebase.'/trackingid/srtklr-'.$id;
+        // $domainUrl = 'http://surat-ptdpm.rs-primahusada.id';
+        // $alamatweb	= $domainUrl.'/trackingid/srtklr-'.$id;
+        // dd($alamatweb);
 		if (Session('fakultas') == 'DPM'){
 			// $qrcode = QrCode::format('png')->merge('http://127.0.0.1:8000/dist/img/pt.png', 0.2, true)->size(150)->generate($alamatweb);
+            $domainUrl = 'http://surat-ptdpm.rs-primahusada.id';
+            $alamatweb	= $domainUrl.'/trackingid/srtklr-'.$id;
             $qrcode = QrCode::format('png')->merge(public_path('dist/img/pt.png'), 0.2, true)->size(150)->generate($alamatweb);
 		} else if (Session('fakultas') == 'PDP'){
 			// $qrcode = QrCode::format('png')->merge($rexita_audio.'/dist/img/pdp.png', 0.2, true)->size(150)->generate($alamatweb);
+            $domainUrl = 'http://surat-pdp.rs-primahusada.id';
+            $alamatweb	= $domainUrl.'/trackingid/srtklr-'.$id;
             $qrcode = QrCode::format('png')->merge(public_path('dist/img/pdp.png'), 0.2, true)->size(150)->generate($alamatweb);
-		} else if (Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'RSPHMLG'){
+		} else if (Session('fakultas') == 'RSPHSKR'){
 			// $qrcode = QrCode::format('png')->merge($rexita_audio.'/dist/img/rs.png', 0.2, true)->size(150)->generate($alamatweb);
+            $domainUrl = 'http://surat-rsphs.rs-primahusada.id';
+            $alamatweb	= $domainUrl.'/trackingid/srtklr-'.$id;
+            $qrcode = QrCode::format('png')->merge(public_path('dist/img/rs.png'), 0.2, true)->size(150)->generate($alamatweb);
+		} else if (Session('fakultas') == 'RSPHMLG'){
+			// $qrcode = QrCode::format('png')->merge($rexita_audio.'/dist/img/rs.png', 0.2, true)->size(150)->generate($alamatweb);
+            $domainUrl = 'http://surat-rsphm.rs-primahusada.id';
+            $alamatweb	= $domainUrl.'/trackingid/srtklr-'.$id;
             $qrcode = QrCode::format('png')->merge(public_path('dist/img/rs.png'), 0.2, true)->size(150)->generate($alamatweb);
 		} else {
+            $domainUrl = 'http://surat-ptdpm.rs-primahusada.id';
+            $alamatweb	= $domainUrl.'/trackingid/srtklr-'.$id;
 			$qrcode = QrCode::format('png')->size(150)->generate($alamatweb);
 		}
 		$qrcode 	= base64_encode($qrcode);
-		$tte		= '<img src="data:image/png;base64,'.$qrcode.'" width="100" height="100"/>';
+		$tte		= '<img src="data:image/png;base64,'.$qrcode.'" width="200" height="200"/>';
 		$tulisttd= '
-			<table width="300" border="0" cellpadding="2" cellspacing="2" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;"> 
+			<table width="500" border="0" cellpadding="2" cellspacing="2" style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;"> 
 				<tr>
-					<td width="100">'.$tte.'</td>
-					<td width="200" align="left" valign="center">
-						<font color="blue">
-							Dokumen ditandatangi secara elektronik. Gunakan Pembaca Tandatangan Elektronik Untuk Verifikasi Dokumen Ini
+					<td width="300px">'.$tte.'</td>
+					<td width="500px" align="left" valign="left">
+						<font color="blue" style="font-size: 16px;">
+							Dokumen ditandatangi secara elektronik. Gunakan Pembaca Tandatangan Elektronik Untuk Verifikasi Dokumen Ini.
 						</font>
 					</td>
 				</tr>
