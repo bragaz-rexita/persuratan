@@ -6955,13 +6955,18 @@ class DashbordsuratController extends Controller
 		$ceksek 	= explode("=", $id);
 		$namasaja	= '';
 		$alamatweb	= $homebase.'/trackingid/srtklr-'.$id;
-        $rexita_audio = request()->root();
+        // $rexita_audio = request()->root();
+        // $public_path = public_path('dist/img/pt.png');
+        // dd($public_path);
 		if (Session('fakultas') == 'DPM'){
-			$qrcode = QrCode::format('png')->merge($rexita_audio.'/dist/img/pt.png', 0.2, true)->size(150)->generate($alamatweb);
+			// $qrcode = QrCode::format('png')->merge('http://127.0.0.1:8000/dist/img/pt.png', 0.2, true)->size(150)->generate($alamatweb);
+            $qrcode = QrCode::format('png')->merge(public_path('dist/img/pt.png'), 0.2, true)->size(150)->generate($alamatweb);
 		} else if (Session('fakultas') == 'PDP'){
-			$qrcode = QrCode::format('png')->merge($rexita_audio.'/dist/img/pdp.png', 0.2, true)->size(150)->generate($alamatweb);
+			// $qrcode = QrCode::format('png')->merge($rexita_audio.'/dist/img/pdp.png', 0.2, true)->size(150)->generate($alamatweb);
+            $qrcode = QrCode::format('png')->merge(public_path('dist/img/pdp.png'), 0.2, true)->size(150)->generate($alamatweb);
 		} else if (Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'RSPHMLG'){
-			$qrcode = QrCode::format('png')->merge($rexita_audio.'/dist/img/rs.png', 0.2, true)->size(150)->generate($alamatweb);
+			// $qrcode = QrCode::format('png')->merge($rexita_audio.'/dist/img/rs.png', 0.2, true)->size(150)->generate($alamatweb);
+            $qrcode = QrCode::format('png')->merge(public_path('dist/img/rs.png'), 0.2, true)->size(150)->generate($alamatweb);
 		} else {
 			$qrcode = QrCode::format('png')->size(150)->generate($alamatweb);
 		}
