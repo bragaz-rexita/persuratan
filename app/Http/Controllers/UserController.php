@@ -1871,6 +1871,8 @@ class UserController extends Controller
 		}
 	}
 	public function cekNotifikasi(Request $request) {
+        set_time_limit(300); // 5 menit
+        ini_set('memory_limit', '512M');
 		$textnotif						= '';
 		$countsuratmasuk				= 0;
 		$countsuratkeluar				= 0;
