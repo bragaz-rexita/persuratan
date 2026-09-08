@@ -1,7 +1,7 @@
 <?php
 $host = $_SERVER['HTTP_HOST'];
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
-$redirect_url = $protocol . "://" . $host . "/public/";
+$redirect_url = $protocol . "://" . $host . "/rsphportal";
 
 header("refresh: 5; url=" . $redirect_url);
 
