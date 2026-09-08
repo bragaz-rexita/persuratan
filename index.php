@@ -1,5 +1,10 @@
 <?php
-header("refresh: 5; http://172.100.0.18/public/");
+// header("refresh: 5; http://172.100.0.18/public/");
+$host = $_SERVER['HTTP_HOST'];
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+$redirect_url = $protocol . "://" . $host . "/public/";
+
+header("refresh: 3; url=" . $redirect_url);
 
 	echo '<title>Laravel Installed</title><div style="background: #e9ffed; border: 1px solid #b0dab7; padding: 15px;" align="center" >
 	<font size="5" color="#182e7a">Laravel is installed successfully.</font><br /><br />
