@@ -7,7 +7,7 @@ return [
 	'sekolah' 			=> 	'Rumah Sakit Prima Husada',
 	'singkatan' 		=> 	'RSPH',
 	'namaapps' 			=> 	'DPM Online Apps',
-	'homeweb' 			=> 	'http://surat-ptdpm.rs-primahusada.id/',
+	'homeweb' 			=> 	'http://surat-ptdpm.rs-primahusada.id/rsphportal',
 	'background' 		=> 	'background.jpg',
 	'logoapss' 			=> 	'logo.png',
 	'kota' 				=> 	'Malang',
