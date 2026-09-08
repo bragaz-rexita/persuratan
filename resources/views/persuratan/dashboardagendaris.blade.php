@@ -4020,7 +4020,7 @@ $(document).ready(function () {
 							var dataRecord 	= $("#gridevent").jqxGrid('getrowdata', editrow);
 							var url 		= "{{URL::to("/")}}/cetaklinkpresensi/"+dataRecord.idne;
 							var windowName 	= dataRecord.nama+" Tanggal "+dataRecord.tanggal;
-							var windowSize 	= "width=700,height=800";
+							var windowSize 	= "width=930,height=800";
 							window.open(url, windowName, windowSize);
 							event.preventDefault();
 							return false;

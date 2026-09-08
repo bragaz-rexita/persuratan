@@ -2727,6 +2727,23 @@ class WebinarController extends Controller
 		$qrcode 		= base64_encode(QrCode::format('png')->size(400)->generate($alamatweb));
 		$getdata		= WebinarEventlist::where('id', $id)->first();
 		$data			= [];
+        switch ($kementerian) {
+            case "DPM":
+                $publicUrl = "http://surat-ptdpm.rs-primahusada.id".'/hadir/'.$id;
+                $publicqrcode 		= base64_encode(QrCode::format('png')->size(400)->generate($publicUrl));
+                break;
+            case "RSPHSKR":
+                $publicUrl = "http://surat-rsphs.rs-primahusada.id".'/hadir/'.$id;
+                $publicqrcode 		= base64_encode(QrCode::format('png')->size(400)->generate($publicUrl));
+                break;
+            case "RSPHMLG":
+                $publicUrl = "http://surat-rsphm.rs-primahusada.id".'/hadir/'.$id;
+                $publicqrcode 		= base64_encode(QrCode::format('png')->size(400)->generate($publicUrl));
+                break;
+            default:
+                $publicUrl = "http://surat-pdp.rs-primahusada.id".'/hadir/'.$id;
+                $publicqrcode 		= base64_encode(QrCode::format('png')->size(400)->generate($publicUrl));
+        }
 		if (isset($getdata->nama)){
 			$nama			= $getdata->nama;
 			$tempat			= $getdata->tempat;
@@ -2759,7 +2776,7 @@ class WebinarController extends Controller
 			$tulisawkt 		= '<div style="line-height:0.9"><font style="font-size:13px">: '.$tulisawkt2.'</font><br /><i style="font-size:x-small">&nbsp;&nbsp;'.$tulisawkt1.'</i></div>';
 			$judul 			= '<div style="line-height:0.9"><font style="font-size:20px">Link Presensi<br />'.$nama.'</font></div>';
 			$generatetbl	= '
-						<table id="printiki" width="640" border="0" cellspacing="0" cellpadding="0">
+						<table id="printiki" width="900" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 							<td colspan="2" rowspan="4" align="left"><img src="'.Session('logofrontapps01').'" width="80" height="80" alt=""/></td>	  
 							<td colspan="9"><b>'.$kementerian.'</b></td>	
@@ -2822,11 +2839,27 @@ class WebinarController extends Controller
 								<td>&nbsp;</td>
 								<td colspan="4">&nbsp;</td>
 							</tr>   
-							<tr><td colspan="11" align="center"><img src="data:image/png;base64,'.$qrcode.'" width="240" /></td></tr>
+							<tr>
+                                <td colspan="4" align="center"><img src="data:image/png;base64,'.$qrcode.'" width="200" /></td>
+                                <td colspan="7" align="center"><img src="data:image/png;base64,'.$publicqrcode.'" width="200" /></td>
+                            </tr>
+                            <tr><td colspan="11" align="center">&nbsp;</td></tr>
+                            <tr>
+                                <td colspan="4" align="center">QR Local</td>
+                                <td colspan="7" align="center">QR Public</td>
+                            </tr>
 							<tr><td colspan="11" align="center">&nbsp;</td></tr>
-							<tr><td colspan="11" align="center">Silahkan Gunakan Gawai Bapak/Ibu untuk memindai Kode QR diatas untuk melakukan presensi. Atau Ketik tautan dibawah ini di Laptop / Gawai Bapak/Ibu. Link Presensi :</td></tr>
+							<tr><td colspan="11" align="center">Silahkan pilih salah satu QR-Code diatas dan Gunakan Gawai Bapak/Ibu untuk memindai Kode QR diatas untuk melakukan presensi. Atau Ketik salah satu tautan dibawah ini di Laptop / Gawai Bapak/Ibu. Link Presensi :</td></tr>
 							<tr><td colspan="11" align="center">&nbsp;</td></tr>
-							<tr><td colspan="11" align="center"><font color="blue" size="+2">'.$alamatweb.'</font></td></tr>
+                            <tr>
+                                <td colspan="2" align="center">Link Url Local :</td>
+                                <td colspan="15" align="center">Link Url Public :</td>
+                            </tr>
+                            <tr><td colspan="11" align="center">&nbsp;</td></tr>
+							<tr>
+                                <td colspan="2" align="center"><font color="blue" size="+2">'.$alamatweb.'</font></td>
+                                <td colspan="15" align="center" width="900"><font color="blue" size="+2">'.$publicUrl.'</font></td>
+                            </tr>
 							<tr><td colspan="11" align="center">&nbsp;</td></tr>
 							<tr><td colspan="11" align="center">&nbsp;</td></tr>
 							<tr>
