@@ -469,13 +469,13 @@ class WebinarController extends Controller
         return redirect('webinar');
     }
 	public function geteventList(Request $request) {
-		$arrevent	= array();
+        $arrevent	= array();
 		$homebase	= url("/");
 		$idevent	= $request->input('val01');
 		if ($idevent == 'all'){
 			$jevent	= WebinarEventlist::where('created_by', Session('email'))->orwhere('created_by', Session('nama'))->orderBy('mulai', 'DESC')->get();
 		} else {
-			if (Session('email') !== null){
+            if (Session('email') !== null){
 				if (Session('previlage') == 'administrasi'){
 					$jevent		= WebinarEventlist::where('fakultas', Session('fakultas'))->orderBy('mulai', 'DESC')->limit('100')->get();
 				} else {
@@ -493,7 +493,7 @@ class WebinarController extends Controller
 				$url2		= $homebase.'/hadir/'.$revent->id;
 				$url3		= $homebase.'/cetaklinkpresensi/'.$revent->id;
 				$tlskegiatan= '<a href="'.$urle.'" target="_blank">'.$nama.'</a>';
-				$peserta	= WebinarPartisipan::where('idevent', $idne)->count();			
+				$peserta	= WebinarPartisipan::where('idevent', $idne)->count();
 				$arrevent[] = array(
 					'idne'			=> $idne,
 					'tlskegiatan'	=> $tlskegiatan,
@@ -2778,7 +2778,7 @@ class WebinarController extends Controller
 			$generatetbl	= '
 						<table id="printiki" width="900" border="0" cellspacing="0" cellpadding="0">
 							<tr>
-							<td colspan="2" rowspan="4" align="left"><img src="'.Session('logofrontapps01').'" width="80" height="80" alt=""/></td>	  
+							<td colspan="2" rowspan="4" align="left"><img src="'.Session('logofrontapps01').'" width="350" height="80" alt=""/></td>	  
 							<td colspan="9"><b>'.$kementerian.'</b></td>	
 							</tr>
 							<tr>
@@ -3016,7 +3016,7 @@ class WebinarController extends Controller
 							$peserta 	= $peserta.'</table></td></tr></table><div style="page-break-before: always">';
 							$peserta 	= $peserta.'<table id="printiki" width="640" border="0" cellspacing="0" cellpadding="0">
 													<tr>
-														<td colspan="2" rowspan="4" align="left"><img src="'.Session('logofrontapps01').'" width="80" height="80" alt=""/></td>	  
+														<td colspan="2" rowspan="4" align="left"><img src="'.Session('logofrontapps01').'" width="190" height="45" alt=""/></td>	  
 														<td colspan="9"><b>'.$kementerian.'</b></td>	
 													</tr>
 													<tr>
@@ -3156,7 +3156,7 @@ class WebinarController extends Controller
 			$generatetbl	= '
 			<table id="printiki" width="640" border="0" cellspacing="0" cellpadding="0">
 				<tr>
-				<td colspan="2" rowspan="4" align="left"><img src="'.Session('logofrontapps01').'" width="80" height="80" alt=""/></td>	  
+				<td colspan="2" rowspan="4" align="left"><img src="'.Session('logofrontapps01').'" width="190" height="45" alt=""/></td>	  
 				<td colspan="9"><b>'.$kementerian.'</b></td>	
 				</tr>
 				<tr>
