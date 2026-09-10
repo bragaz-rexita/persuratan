@@ -1870,978 +1870,2066 @@ class UserController extends Controller
 			return view('errors.notready', $tasks);
 		}
 	}
-	public function cekNotifikasi(Request $request) {
+
+    // old function
+	// public function cekNotifikasi(Request $request) {
+    //     set_time_limit(300); // 5 menit
+    //     ini_set('memory_limit', '512M');
+	// 	$textnotif						= '';
+	// 	$countsuratmasuk				= 0;
+	// 	$countsuratkeluar				= 0;
+	// 	$countskdanperaturan			= 0;
+	// 	$efent							= 0;
+	// 	$countmohonttd					= 0;
+	// 	$countnotadinas					= 0;
+	// 	$countmemo						= 0;
+	// 	$cekmari						= 0;
+	// 	$cekrungmari					= 0;
+	// 	$totalform 						= 0;
+	// 	$notifcutitahunan				= 0;
+	// 	$notifcutiagama					= 0;
+	// 	$notifijinplgcepat				= 0;
+	// 	$notifijinkeluarkantor			= 0;
+	// 	$notifpermintaanpegawai			= 0;
+	// 	$notifmutasirotasi				= 0;
+	// 	$notifkomunikasi				= 0;
+	//     $notifpengangkatanjabatan		= 0;
+	// 	$notifpemberhentianjabatan		= 0;
+	// 	$notifpegawaitetap				= 0;
+	// 	$notifdoktertetap				= 0;
+	// 	$notifpenerimaanstaf			= 0;
+	// 	$notifpenonaktifanstaf			= 0;
+	// 	$notifpengaktifanstaf			= 0;
+	// 	$notifmutasi					= 0;
+	// 	$notifpenonaktifandokter		= 0;
+	// 	$notiforientasikerja			= 0;
+	// 	$notifpkwt						= 0;
+	// 	$notifpkwtt						= 0;
+	// 	$notifspo						= 0;
+	// 	$notifedaran					= 0;
+	// 	$notifperingatan				= 0;
+	// 	$notifbalasanpenambahanstaf		= 0;
+	// 	$notifpermohonan				= 0;
+	// 	$notiftugas						= 0;
+	// 	$notifpemberitahuan				= 0;
+	// 	$notiftanggapanresign			= 0;
+	// 	$notifreferensikerja			= 0;
+	// 	$notifketeranganaktif			= 0;
+	// 	$notifpemutusanhubungan			= 0;
+	// 	$notifpemanggilancalonkaryawan	= 0;
+	// 	$notiflolosseleksi				= 0;
+	// 	$notifpemberitahuanmcu			= 0;
+	// 	$notifundangan					= 0;
+	// 	$notifpemanggilankie			= 0;
+	// 	$notifketerangantidakbekerja	= 0;
+	// 	$notifformrs01 					= 0;
+	// 	$notifformrs02 					= 0;
+	// 	$notifformrs03 					= 0;
+	// 	$notifformrs04 					= 0;
+	// 	$notifformrs05 					= 0;
+	// 	$notifformrs06 					= 0;
+	// 	$notifformrs07 					= 0;
+	// 	$notifformrs08 					= 0;
+	// 	$notifformrs09 					= 0;
+	// 	$notifformrs10 					= 0;
+	// 	$notifformrs11 					= 0;
+	// 	$notifformrs12 					= 0;
+	// 	$notifformrs13 					= 0;
+	// 	$notifformrs14 					= 0;
+	// 	$notifformrs15 					= 0;
+	// 	$notifformrs16 					= 0;
+	// 	$notifformrs17 					= 0;
+	// 	$notifformrs18 					= 0;
+	// 	$notifformrs19 					= 0;
+	// 	$persuratanptform 				= 0;
+	// 	$persuratanptkd 				= 0;
+	// 	$persuratanptkk 				= 0;
+	// 	$persuratanptss 				= 0;
+	// 	$persuratanrs 					= 0;
+	// 	$markingname 					= Session('id').'-'.time();
+	// 	$markingname					= md5($markingname);
+	// 	$homebase						= url("/");
+	// 	$idusername						= Session('id');
+	// 	$fakultas						= Session('fakultas');
+	// 	$fakpanjang						= Session('fakpanjang');
+	// 	$namaapps 						= Session('namaapps01');
+	// 	$swandhanafak       			= Session('fakultas');
+	// 	$swandhanaalamat    			= Session('addressapps01');
+	// 	$swandhanakemen     			= Session('subdomainapps01');
+	// 	$swandhanauniv      			= Session('subsubdomainapps01');
+	// 	$mkelompok						= Session('previlage');
+	// 	$pembuat						= Session('nama');
+	// 	$fakultas						= Session('fakultas');
+	// 	$swandhanakota    				= Session('kota01');
+	// 	$swandhanaemail					= Session('emailapps01');
+	// 	$ttd 							= 'SIgned With TTE'; 
+	// 	$encoded_image 					= 'SIgned With TTE';
+	// 	$benergak						= 'TIDAK';
+	// 	$textsamplesalah				= 'Password Anda Salah';
+	// 	$noselanjutnya					= 0;
+	// 	$error							= '';
+	// 	$certificate					= 'file://'.base_path().'/public/sco.crt';
+	// 	$page_format 					= array(
+	// 										'MediaBox' 		=> array ('llx' => 0, 'lly' => 0, 'urx' => 210, 'ury' => 330),
+	// 										'Dur' 			=> 3,
+	// 										'PZ' 			=> 1,
+	// 	);
+	// 	$info 							= array(
+	// 										'Name' 			=> $namaapps,
+	// 										'Location' 		=> $swandhanauniv,
+	// 										'Reason' 		=> 'Dokumen ini ditandatangani secara elektronik',
+	// 										'ContactInfo' 	=> $homebase,
+	// 	);
+	// 	$sql							= Inboxsurat::where('terjadwal', '1')->orderBy('updated_at', 'ASC')->get();
+	// 	$countsql 						= count($sql);
+	// 	$parafcount 					= 0;
+	// 	$ttecount 						= 0;
+	// 	if (!empty($sql)){
+	// 		foreach ($sql as $rinbox){
+	// 			$idne 					= $rinbox->id;
+	// 			$marking 				= $rinbox->marking;
+	// 			$kerjalm				= $rinbox->kerja;
+	// 			$kerja					= $rinbox->kerja;
+	// 			$penerima				= $rinbox->penerima;
+	// 			$catatan				= $rinbox->catatan;
+	// 			$tabele					= $rinbox->jenis;
+	// 			$ctanggal				= $rinbox->tanggal;
+	// 			$paraf1 				= $rinbox->paraf1;
+	// 			$paraf2 				= $rinbox->paraf2;
+	// 			$paraf3 				= $rinbox->paraf3;
+	// 			$paraf4 				= $rinbox->paraf4;
+	// 			$penandatangan 			= $rinbox->penandatangan;
+	// 			$masterjenissurat		= $rinbox->jenissrt;
+	// 			$jenissrt 				= $rinbox->jenissrt;
+	// 			$footnote				= $rinbox->footnote;
+	// 			$komputer				= $rinbox->komputer;
+	// 			$email					= $rinbox->email;
+	// 			$pembuat 				= $rinbox->pembuat;
+	// 			$perihal 				= $rinbox->perihal;
+	// 			$kepada					= $rinbox->kepada;
+	// 			$serttte 				= md5($email);
+	// 			$ceksertifikatpribadi 	= $serttte.'.crt';
+	// 			$sertifikatpribadi 		= $serttte.'.csr';
+	// 			$kelompok 				= $penerima;
+	// 			if (file_exists(base_path().'/public/tte/'.$ceksertifikatpribadi)){
+	// 				$certificate 	= 'file://'.base_path().'/public/tte/'.$ceksertifikatpribadi;
+	// 			} else if (file_exists(public_path().'/tte/'.$ceksertifikatpribadi)){
+	// 				$certificate 	= 'file://'.public_path().'/tte/'.$ceksertifikatpribadi;
+	// 			} else {
+	// 				$getpejabat = Pejabatsurat::where('email', $rinbox->email)->first();
+	// 				if (isset($getpejabat->pejabat)){
+	// 					$namapejabat = $getpejabat->nama;
+	// 				} else {
+	// 					$namapejabat = $rinbox->penerima;
+	// 				}
+	// 				$dn = array(
+	// 					"countryName" 			=> "IN",
+	// 					"stateOrProvinceName" 	=> "East Java Indonesia",
+	// 					"localityName" 			=> $penerima,
+	// 					"organizationName" 		=> $swandhanauniv,
+	// 					"organizationalUnitName"=> $swandhanafak,
+	// 					"commonName" 			=> $namapejabat,
+	// 					"emailAddress" 			=> $email
+	// 				);
+	// 				$privkey = openssl_pkey_new(array(
+	// 					"private_key_bits" => 2048,
+	// 					"private_key_type" => OPENSSL_KEYTYPE_RSA,
+	// 				));
+	// 				$csr = openssl_csr_new($dn, $privkey, array('digest_alg' => 'RSA-SHA256'));
+	// 				$sscert = openssl_csr_sign($csr, null, $privkey, 365);
+	// 				openssl_csr_export($csr, $csrout);
+	// 				openssl_x509_export($sscert, $certout);
+	// 				openssl_pkey_export($privkey, $pkeyout);
+	// 				Storage::disk('local')->put('/tte/'.$ceksertifikatpribadi, $pkeyout);
+	// 				file_put_contents(public_path()."/tte/".$ceksertifikatpribadi, $certout, FILE_APPEND | LOCK_EX);
+	// 				if (file_exists(base_path().'/public/tte/'.$ceksertifikatpribadi)){
+	// 					$certificate 	= 'file://'.base_path().'/public/tte/'.$ceksertifikatpribadi;
+	// 				} else if (file_exists(public_path().'/tte/'.$ceksertifikatpribadi)){
+	// 					$certificate 	= 'file://'.public_path().'/tte/'.$ceksertifikatpribadi;
+	// 				}
+	// 			}
+	// 			if ($rinbox->kerja == 'PARAF'){
+	// 				$noselanjutnya = 2;
+	// 				if ($rinbox->tanggal == '1'){ $penandatangan = $paraf2; $noselanjutnya = 2; }
+	// 				if ($rinbox->tanggal == '2'){ $penandatangan = $paraf3; $noselanjutnya = 3; }
+	// 				if ($rinbox->tanggal == '3'){ $penandatangan = $paraf4; $noselanjutnya = 4; }
+	// 				if ($rinbox->tanggal == '4'){ $noselanjutnya = 5; }
+	// 				if ($penandatangan == 0){ $penandatangan = $rinbox->penandatangan; }
+	// 				Inboxsurat::where('id', $idne)->update([
+	// 					'terjadwal'		=> 	$noselanjutnya
+	// 				]);
+	// 				$parafcount++;
+	// 				$getpejabat = Pejabatsurat::where('id', $penandatangan)->first();
+	// 				if (isset($getpejabat->id)){
+	// 					SendMail::kiriminbox($rinbox->marking,$rinbox->penerima,$getpejabat->pejabat,$getpejabat->email,'KELUAR','PARAF',$footnote,$noselanjutnya);
+	// 				} else {
+	// 					$getpejabat = Pejabatsurat::where('pejabat', 'LIKE', $penandatangan)->first();
+	// 					if (isset($getpejabat->id)){
+	// 						SendMail::kiriminbox($rinbox->marking,$rinbox->penerima,$getpejabat->pejabat,$getpejabat->email,'KELUAR','TTD',$footnote,$noselanjutnya);
+	// 					} else {
+	// 						Inboxsurat::where('id', $idne)->update([
+	// 							'kerja'		=> 	'TTD'
+	// 						]);
+	// 					}
+	// 				}
+	// 			} else {
+	// 				$cekbentuk 		= Templateskpp::where('namask', $masterjenissurat)->count();
+	// 				if ($cekbentuk == 0){
+	// 					$tanggalesign	= date('Y-m-d H:i:s');
+	// 					if ($ctanggal == ''){
+	// 						$ctanggal	= 0;
+	// 					} else {
+	// 						$ctanggal	= (int)$ctanggal;
+	// 					}
+	// 					$noselanjutnya	= $ctanggal++;
+	// 					$alamatweb		= $homebase.'/trackingid/srtklr-'.$marking;
+	// 					$bgbssn			= '';
+	// 					if ($masterjenissurat == 'UPLQRMAN' OR $masterjenissurat == 'SKDANPERATURANTTEMAN' OR $masterjenissurat == 'PERATURANTTEMAN' OR $masterjenissurat == 'INSTRUKSITTEMAN'){
+	// 						try {
+	// 							$pdf 	= new Fpdi('P','mm',array(210,330));
+	// 							$pages 	= $pdf->setSourceFile(public_path().'/scan/files/'.$marking.'.pdf');
+	// 							for ($i = 1; $i <= $pages; $i++)
+	// 							{
+	// 								$page = $pdf->importPage($i);
+	// 								$pdf->AddPage();
+	// 								$pdf->useTemplate($page, ['adjustPageSize' => true]);
+	// 								$pdf->setSignature($certificate, $certificate, $marking, '', 2, $info);
+	// 								$pdf->setPageMark();
+	// 							}
+	// 							$pdf->Output(public_path().'/scan/files/'.$marking.'.pdf', 'F');
+	// 							Inboxsurat::where('id', $idne)->update([
+	// 								'terjadwal' =>  6,
+	// 							]);
+	// 							$ttecount++;
+	// 						} catch (\Exception $e) {
+	// 							$footnote = $footnote.$e->getMessage();
+	// 						}
+	// 						if ($rinbox->tabel == 'DRAFTSK'){
+	// 							Draftsk::where('marking', $marking)->update([
+	// 								'status'		=> 'Signed',
+	// 								'tandatangan'	=> 'Signed By '.$penerima,
+	// 								'catatan'		=> $footnote
+	// 							]);
+	// 						} else if ($rinbox->tabel == 'SKDANPERATURAN'){
+	// 							Tabelskdanperaturan::where('marking', $marking)->update([
+	// 								'tandatangan'	=> 'Signed By '.$penerima,
+	// 								'catatan'		=> $footnote
+	// 							]);
+	// 						} else if ($rinbox->tabel == 'KELUARNONOMER'){
+	// 							Suratkeluartnpnomor::where('marking', $marking)->update([
+	// 								'status'		=> 'Signed',
+	// 								'tandatangan'	=> 'Signed By '.$penerima,
+	// 								'footnote'		=> $footnote
+	// 							]);
+	// 						} else {
+	// 							Suratkeluar::where('marking', $marking)->update([
+	// 								'tandatangan'	=> 'Signed By '.$penerima,
+	// 								'status'		=> 'Signed',
+	// 								'footnote'		=> $footnote
+	// 							]);
+	// 						}
+	// 					} else {
+	// 						SendMail::genQRCodefile($marking,$penerima,$penerima,$tanggalesign,$alamatweb);
+	// 						if (File::exists(base_path() ."/public/scan/generate/bg-". $marking.".png")) {
+	// 							$bgbssn 	= base_path('/public/scan/generate/bg-'.$marking.'.png');
+	// 						}
+	// 						if (File::exists(public_path() ."/scan/generate/bg-". $marking.".png")) {
+	// 							$bgbssn 	= public_path('/scan/generate/bg-'.$marking.'.png');
+	// 						}
+	// 						if ($bgbssn != '') {
+	// 							$file 	= public_path('scan/files/'.$marking.'.pdf');
+	// 							if (file_exists($file)){
+	// 								try {
+	// 									$pdf 	= new Fpdi('P','mm',array(210,330));
+	// 									$pages 	= $pdf->setSourceFile(public_path().'/scan/files/'.$marking.'.pdf');
+	// 									for ($i = 1; $i <= $pages; $i++)
+	// 									{
+	// 										$page = $pdf->importPage($i);
+	// 										$pdf->AddPage();
+	// 										$pdf->useTemplate($page, ['adjustPageSize' => true]);
+	// 										$pdf->setSignature($certificate, $certificate, $marking, '', 2, $info);
+	// 										$pdf->setPageMark();
+	// 									}
+	// 									$pdf->Output(public_path().'/scan/files/'.$marking.'.pdf', 'F');
+	// 								} catch (\Exception $e) {
+	// 									$footnote = $footnote.$e->getMessage();
+	// 								}
+	// 								Inboxsurat::where('id', $idne)->update([
+	// 									'terjadwal'	=> 7,
+	// 									'footnote'	=> $footnote
+	// 								]);
+	// 								$file1 			=  'scan/generate/bg-'.$marking.'.png';
+	// 								$file2 			=  'scan/generate/qrimg-'.$marking.'.png';
+	// 								$file3 			=  'scan/generate/qrimg-'.$marking.'.pdf';
+	// 								Storage::disk('local')->delete($file1);
+	// 								Storage::disk('local')->delete($file2);
+	// 								Storage::disk('local')->delete($file3);
+	// 								if ($rinbox->tabel == 'DRAFTSK'){
+	// 									Draftsk::where('marking', $marking)->update([
+	// 										'status'		=> 'Signed',
+	// 										'tandatangan'	=> 'Signed By '.$penerima,
+	// 										'catatan'		=> $footnote
+	// 									]);
+	// 								} else if ($rinbox->tabel == 'SKDANPERATURAN'){
+	// 									Tabelskdanperaturan::where('marking', $marking)->update([
+	// 										'tandatangan'	=> 'Signed By '.$penerima,
+	// 										'catatan'		=> $footnote
+	// 									]);
+	// 								} else if ($rinbox->tabel == 'KELUARNONOMER'){
+	// 									Suratkeluartnpnomor::where('marking', $marking)->update([
+	// 										'status'		=> 'Signed',
+	// 										'tandatangan'	=> 'Signed By '.$penerima,
+	// 										'footnote'		=> $footnote
+	// 									]);
+	// 								} else {
+	// 									Suratkeluar::where('marking', $marking)->update([
+	// 										'tandatangan'	=> 'Signed By '.$penerima,
+	// 										'status'		=> 'Signed',
+	// 										'footnote'		=> $footnote
+	// 									]);
+	// 								}
+	// 							} else {
+	// 								if ($rinbox->tabel == 'SKDANPERATURAN'){
+	// 									$ceksek 	= Tabelskdanperaturan::where('marking', $marking)->first();
+	// 									if (isset($ceksek->marking)){
+	// 										$file 	= 'scan/files/'.$ceksek->marking.'.pdf';
+	// 										Storage::disk('local')->delete($file);
+	// 										Tabelskdanperaturan::where('id', $ceksek->id)->update([
+	// 											'tandatangan'		=> 	$ttd,
+	// 											'updated_at'		=> 	date('Y-m-d H:i:s')
+	// 										]);
+											
+	// 										$img_file 	= public_path('kopfooterdpm.png');
+	// 										$text		= NotifikasiController::getTextExternal('formb',$ceksek->id);
+	// 										$marking 	= $ceksek->marking;
+	// 										if (isset($ceksek->pembuat)){ $pembuat = $ceksek->pembuat; }
+	// 										if (isset($ceksek->kelompok)){ $kelompok = $ceksek->kelompok; }
+	// 										if (isset($ceksek->jenissrt)){ $jenissrt = $ceksek->jenissrt; }
+	// 										if (isset($ceksek->kepada)){ $kepada = $ceksek->kepada; }
+	// 										if (isset($ceksek->perihal)){ $perihal = $ceksek->perihal; }
+											
+	// 										if (isset($ceksek->inputor)){ $pembuat = $ceksek->inputor; }
+	// 										if (isset($ceksek->fakultas)){ $kelompok = $ceksek->fakultas; }
+	// 										if (isset($ceksek->kelompok)){ $jenissrt = $ceksek->kelompok; }
+	// 										if (isset($ceksek->namaparaf4)){ $kepada = $ceksek->namaparaf4; }
+	// 										if (isset($ceksek->judul)){ $perihal = $ceksek->judul; }
+	// 										$gethalaman 	= explode('<div style="page-break-before: always"></div>', $text);
+	// 										try {
+	// 											PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
+	// 											PDFCREATOR::SetProtection(array('modify', 'copy'), '', null, 0, null);
+	// 											PDFCREATOR::SetCreator($pembuat);
+	// 											PDFCREATOR::SetAuthor($kelompok);
+	// 											PDFCREATOR::SetTitle($jenissrt);
+	// 											PDFCREATOR::SetSubject($kepada);
+	// 											PDFCREATOR::SetKeywords($perihal);
+	// 											PDFCREATOR::setPrintHeader(false);
+	// 											PDFCREATOR::setPrintFooter(false);
+	// 											PDFCREATOR::SetMargins(5, 0, 5);
+	// 											PDFCREATOR::setFontSubsetting(true);
+	// 											PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+	// 											foreach($gethalaman as $halaman){
+	// 												PDFCREATOR::AddPage('P', $page_format, false, false);
+	// 												$bMargin = PDFCREATOR::getBreakMargin();
+	// 												$auto_page_break = PDFCREATOR::getAutoPageBreak();
+	// 												PDFCREATOR::SetAutoPageBreak(false, 0);
+	// 												PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
+	// 												PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
+	// 												PDFCREATOR::setPageMark();
+	// 												PDFCREATOR::writeHTML($halaman, true, 0, true, 0);
+	// 												PDFCREATOR::setFooterMargin(0);	
+	// 											}
+	// 											$pdfdoc = PDFCREATOR::Output('', 'S');
+	// 											PDFCREATOR::reset();
+	// 											Storage::disk('local')->put('/scan/files/'.$marking.'.pdf', $pdfdoc);
+	// 										} catch (\Exception $e) {
+	// 											$footnote = $footnote.$e->getMessage();
+	// 										}
+											
+	// 										Inboxsurat::where('id', $rinbox->id)->update([
+	// 											'terjadwal'	=> 8,
+	// 											'footnote'	=> $footnote
+	// 										]);
+	// 										$text = null;
+	// 									}
+	// 								} else {
+	// 									$ceksek 	= Suratkeluar::where('marking', $marking)->first();
+	// 									if (isset($ceksek->marking)){
+	// 										$file 	= 'scan/files/'.$ceksek->marking.'.pdf';
+	// 										Storage::disk('local')->delete($file);
+										
+	// 										Suratkeluar::where('id', $ceksek->id)->update([
+	// 											'tandatangan'		=> 	$ttd,
+	// 											'status'			=> 	$ttd
+	// 										]);
+	// 										if ($ceksek->fakultas == 'RSPHSKR'){
+	// 											$img_file = public_path('kopfooterrsphs.png');
+	// 										} else if ($ceksek->fakultas == 'RSPHMLG'){
+	// 											$img_file = public_path('kopfooterrsphm.png');
+	// 										} else if ($ceksek->fakultas == 'PDP'){
+	// 											$img_file = public_path('kopfooterpdp.png');
+	// 										} else {
+	// 											$img_file = public_path('kopfooterdpm.png');
+	// 										}
+	// 										$text		= NotifikasiController::getTextExternal('formc',$ceksek->id);
+	// 										$marking 	= $ceksek->marking;
+	// 										$gethalaman = explode('<div style="page-break-before: always"></div>', $text);
+	// 										if (isset($ceksek->pembuat)){ $pembuat = $ceksek->pembuat; }
+	// 										if (isset($ceksek->kelompok)){ $kelompok = $ceksek->kelompok; }
+	// 										if (isset($ceksek->jenissrt)){ $jenissrt = $ceksek->jenissrt; }
+	// 										if (isset($ceksek->kepada)){ $kepada = $ceksek->kepada; }
+	// 										if (isset($ceksek->perihal)){ $perihal = $ceksek->perihal; }
+											
+	// 										if (isset($ceksek->inputor)){ $pembuat = $ceksek->inputor; }
+	// 										if (isset($ceksek->fakultas)){ $kelompok = $ceksek->fakultas; }
+	// 										if (isset($ceksek->kelompok)){ $jenissrt = $ceksek->kelompok; }
+	// 										if (isset($ceksek->namaparaf4)){ $kepada = $ceksek->namaparaf4; }
+	// 										if (isset($ceksek->judul)){ $perihal = $ceksek->judul; }
+	// 										try {
+	// 											PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
+	// 											PDFCREATOR::SetCreator($pembuat);
+	// 											PDFCREATOR::SetAuthor($kelompok);
+	// 											PDFCREATOR::SetTitle($jenissrt);
+	// 											PDFCREATOR::SetSubject($kepada);
+	// 											PDFCREATOR::SetKeywords($perihal);
+	// 											PDFCREATOR::setPrintHeader(false);
+	// 											PDFCREATOR::setPrintFooter(false);
+	// 											PDFCREATOR::SetMargins(5, 0, 5);
+	// 											PDFCREATOR::setFontSubsetting(true);
+	// 											PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+	// 											foreach($gethalaman as $halaman){
+	// 												PDFCREATOR::AddPage('P', $page_format, false, false);
+	// 												$bMargin = PDFCREATOR::getBreakMargin();
+	// 												$auto_page_break = PDFCREATOR::getAutoPageBreak();
+	// 												PDFCREATOR::SetAutoPageBreak(false, 0);
+	// 												PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
+	// 												PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
+	// 												PDFCREATOR::setPageMark();
+	// 												PDFCREATOR::writeHTML($halaman, true, 0, true, 0);
+	// 												PDFCREATOR::setFooterMargin(0);	
+	// 											}
+	// 											$pdfdoc = PDFCREATOR::Output('', 'S');
+	// 											PDFCREATOR::reset();
+	// 											Storage::disk('local')->put('/scan/files/'.$marking.'.pdf', $pdfdoc);
+	// 										} catch (\Exception $e) {
+	// 											$footnote = $footnote.$e->getMessage();
+	// 										}
+											
+	// 										Inboxsurat::where('id', $rinbox->id)->update([
+	// 											'terjadwal'	=> 9,
+	// 											'footnote'	=> $footnote
+	// 										]);
+	// 										$text = null;
+	// 									} else {
+	// 										$gceksrtklr 	= Suratkeluartnpnomor::where('marking', $marking)->first();
+	// 										if (isset($gceksrtklr->marking)){
+	// 											$idsurat 	= $gceksrtklr->id;
+	// 											$jenissrt	= $gceksrtklr->jenissrt;
+	// 											$status 	= $gceksrtklr->status;
+	// 											$marking 	= $gceksrtklr->marking;
+	// 											$perihal 	= $gceksrtklr->perihal;
+	// 											$kelompok 	= $gceksrtklr->kelompok;
+	// 											if ($status == 'MANUAL' OR $jenissrt == 'SPO'){
+	// 												try {
+	// 													$pdf 	= new Fpdi('P','mm',array(210,330));
+	// 													$pages 	= $pdf->setSourceFile(public_path().'/scan/files/'.$marking.'.pdf');
+	// 													for ($i = 1; $i <= $pages; $i++)
+	// 													{
+	// 														$page = $pdf->importPage($i);
+	// 														$pdf->AddPage();
+	// 														$pdf->useTemplate($page, ['adjustPageSize' => true]);
+	// 														$pdf->setSignature($certificate, $certificate, $marking, '', 2, $info);
+	// 														$pdf->setPageMark();
+	// 													}
+	// 													$pdf->Output(public_path().'/scan/files/'.$marking.'.pdf', 'F');
+	// 												} catch (\Exception $e) {
+	// 													$footnote = $footnote.$e->getMessage();
+	// 												}
+	// 												Inboxsurat::where('id', $rinbox->id)->update([
+	// 													'terjadwal'	=>  22,
+	// 													'footnote'	=> 	$footnote
+	// 												]);
+	// 											} else {
+	// 												$text		= NotifikasiController::getTextExternal('srtklrtnpnomor',$gceksrtklr->id);
+	// 												try {
+	// 													PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
+	// 													PDFCREATOR::SetCreator($pembuat);
+	// 													PDFCREATOR::SetAuthor($kelompok);
+	// 													PDFCREATOR::SetTitle($jenissrt);
+	// 													PDFCREATOR::SetSubject($gceksrtklr->kepada);
+	// 													PDFCREATOR::SetKeywords($perihal);
+	// 													PDFCREATOR::setPrintHeader(false);
+	// 													PDFCREATOR::setPrintFooter(false);
+	// 													PDFCREATOR::SetMargins(5, 0, 5);
+	// 													PDFCREATOR::setFontSubsetting(true);
+	// 													PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+	// 													PDFCREATOR::AddPage('L', $page_format, false, false);
+	// 													PDFCREATOR::writeHTML($text, true, false, true, false, '');
+	// 													PDFCREATOR::setFooterMargin(0);
+	// 													$pdfdoc = PDFCREATOR::Output('', 'S');
+	// 													PDFCREATOR::reset();
+	// 													Storage::disk('local')->put('/scan/files/'.$idsurat.'.pdf', $pdfdoc);
+	// 													$text = null;
+	// 												} catch (\Exception $e) {
+	// 													$footnote = $footnote.$e->getMessage();
+	// 													$text = null;
+	// 												}
+	// 												Inboxsurat::where('id', $rinbox->id)->update([
+	// 													'terjadwal'	=>  23,
+	// 													'footnote'	=> 	$footnote
+	// 												]);
+	// 											}
+	// 										}
+	// 									}
+	// 								}
+	// 							}
+	// 						}
+	// 					}
+	// 				} else {
+	// 					if ($rinbox->tabel == 'SKDANPERATURAN'){
+	// 						$ceksek 	= Tabelskdanperaturan::where('marking', $marking)->first();
+	// 						if (isset($ceksek->marking)){
+	// 							$file 	= 'scan/files/'.$ceksek->marking.'.pdf';
+	// 							Storage::disk('local')->delete($file);
+	// 							Tabelskdanperaturan::where('id', $ceksek->id)->update([
+	// 								'tandatangan'		=> 	$ttd,
+	// 								'updated_at'		=> 	date('Y-m-d H:i:s')
+	// 							]);
+	// 							$text		= NotifikasiController::getTextExternal('formb',$ceksek->id);
+	// 							$marking 	= $ceksek->marking;
+	// 							$img_file 	= public_path('kopfooterdpm.png');
+	// 							$gethalaman = explode('<div style="page-break-before: always"></div>', $text);
+	// 							if (isset($ceksek->pembuat)){ $pembuat = $ceksek->pembuat; }
+	// 							if (isset($ceksek->kelompok)){ $kelompok = $ceksek->kelompok; }
+	// 							if (isset($ceksek->jenissrt)){ $jenissrt = $ceksek->jenissrt; }
+	// 							if (isset($ceksek->kepada)){ $kepada = $ceksek->kepada; }
+	// 							if (isset($ceksek->perihal)){ $perihal = $ceksek->perihal; }
+								
+	// 							if (isset($ceksek->inputor)){ $pembuat = $ceksek->inputor; }
+	// 							if (isset($ceksek->fakultas)){ $kelompok = $ceksek->fakultas; }
+	// 							if (isset($ceksek->kelompok)){ $jenissrt = $ceksek->kelompok; }
+	// 							if (isset($ceksek->namaparaf4)){ $kepada = $ceksek->namaparaf4; }
+	// 							if (isset($ceksek->judul)){ $perihal = $ceksek->judul; }
+	// 							try {
+	// 								PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
+	// 								PDFCREATOR::SetProtection(array('modify', 'copy'), '', null, 0, null);
+	// 								PDFCREATOR::SetCreator($pembuat);
+	// 								PDFCREATOR::SetAuthor($kelompok);
+	// 								PDFCREATOR::SetTitle($jenissrt);
+	// 								PDFCREATOR::SetSubject($kepada);
+	// 								PDFCREATOR::SetKeywords($perihal);
+	// 								PDFCREATOR::setPrintHeader(false);
+	// 								PDFCREATOR::setPrintFooter(false);
+	// 								PDFCREATOR::SetMargins(5, 0, 5);
+	// 								PDFCREATOR::setFontSubsetting(true);
+	// 								PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+	// 								foreach($gethalaman as $halaman){
+	// 									PDFCREATOR::AddPage('P', $page_format, false, false);
+	// 									$bMargin = PDFCREATOR::getBreakMargin();
+	// 									$auto_page_break = PDFCREATOR::getAutoPageBreak();
+	// 									PDFCREATOR::SetAutoPageBreak(false, 0);
+	// 									PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
+	// 									PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
+	// 									PDFCREATOR::setPageMark();
+	// 									PDFCREATOR::writeHTML($halaman, true, 0, true, 0);
+	// 									PDFCREATOR::setFooterMargin(0);	
+	// 								}
+	// 								$pdfdoc = PDFCREATOR::Output('', 'S');
+	// 								PDFCREATOR::reset();
+	// 								Storage::disk('local')->put('/scan/files/'.$marking.'.pdf', $pdfdoc);
+	// 								$ttecount++;
+	// 							} catch (\Exception $e) {
+	// 								$footnote = $footnote.$e->getMessage();
+	// 							}
+								
+	// 							Inboxsurat::where('id', $rinbox->id)->update([
+	// 								'terjadwal'	=>  10,
+	// 								'footnote'	=> 	$footnote
+	// 							]);
+	// 							$text = null;
+	// 						}
+	// 					} else {
+	// 						$ceksek 	= Suratkeluar::where('marking', $marking)->first();
+	// 						if (isset($ceksek->marking)){
+	// 							$file 	= 'scan/files/'.$ceksek->marking.'.pdf';
+	// 							Storage::disk('local')->delete($file);
+	// 							Suratkeluar::where('id', $ceksek->id)->update([
+	// 								'tandatangan'		=> 	$ttd,
+	// 								'status'			=> 	$ttd
+	// 							]);
+	// 							if ($ceksek->fakultas == 'RSPHSKR'){
+	// 								$img_file = public_path('kopfooterrsphs.png');
+	// 							} else if ($ceksek->fakultas == 'RSPHMLG'){
+	// 								$img_file = public_path('kopfooterrsphm.png');
+	// 							} else if ($ceksek->fakultas == 'PDP'){
+	// 								$img_file = public_path('kopfooterpdp.png');
+	// 							} else {
+	// 								$img_file = public_path('kopfooterdpm.png');
+	// 							}
+	// 							$text		= NotifikasiController::getTextExternal('formc',$ceksek->id);
+	// 							$marking 	= $ceksek->marking;
+	// 							$gethalaman = explode('<div style="page-break-before: always"></div>', $text);
+	// 							if (isset($ceksek->pembuat)){ $pembuat = $ceksek->pembuat; }
+	// 							if (isset($ceksek->kelompok)){ $kelompok = $ceksek->kelompok; }
+	// 							if (isset($ceksek->jenissrt)){ $jenissrt = $ceksek->jenissrt; }
+	// 							if (isset($ceksek->kepada)){ $kepada = $ceksek->kepada; }
+	// 							if (isset($ceksek->perihal)){ $perihal = $ceksek->perihal; }
+								
+	// 							if (isset($ceksek->inputor)){ $pembuat = $ceksek->inputor; }
+	// 							if (isset($ceksek->fakultas)){ $kelompok = $ceksek->fakultas; }
+	// 							if (isset($ceksek->kelompok)){ $jenissrt = $ceksek->kelompok; }
+	// 							if (isset($ceksek->namaparaf4)){ $kepada = $ceksek->namaparaf4; }
+	// 							if (isset($ceksek->judul)){ $perihal = $ceksek->judul; }
+	// 							try {
+	// 								PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
+	// 								PDFCREATOR::SetCreator($pembuat);
+	// 								PDFCREATOR::SetAuthor($kelompok);
+	// 								PDFCREATOR::SetTitle($jenissrt);
+	// 								PDFCREATOR::SetSubject($kepada);
+	// 								PDFCREATOR::SetKeywords($perihal);
+	// 								PDFCREATOR::setPrintHeader(false);
+	// 								PDFCREATOR::setPrintFooter(false);
+	// 								PDFCREATOR::SetMargins(5, 0, 5);
+	// 								PDFCREATOR::setFontSubsetting(true);
+	// 								PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+	// 								foreach($gethalaman as $halaman){
+	// 									PDFCREATOR::AddPage('P', $page_format, false, false);
+	// 									$bMargin = PDFCREATOR::getBreakMargin();
+	// 									$auto_page_break = PDFCREATOR::getAutoPageBreak();
+	// 									PDFCREATOR::SetAutoPageBreak(false, 0);
+	// 									PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
+	// 									PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
+	// 									PDFCREATOR::setPageMark();
+	// 									PDFCREATOR::writeHTML($halaman, true, 0, true, 0);
+	// 									PDFCREATOR::setFooterMargin(0);	
+	// 								}
+	// 								$pdfdoc = PDFCREATOR::Output('', 'S');
+	// 								PDFCREATOR::reset();
+	// 								Storage::disk('local')->put('/scan/files/'.$marking.'.pdf', $pdfdoc);
+	// 								$ttecount++;
+	// 							} catch (\Exception $e) {
+	// 								$footnote = $footnote.$e->getMessage();
+	// 							}
+	// 							Inboxsurat::where('id', $rinbox->id)->update([
+	// 								'terjadwal'	=> 11,
+	// 								'footnote'	=> $footnote
+	// 							]);
+	// 							$text = null;
+	// 						} else {
+	// 							$gceksrtklr	= Suratkeluartnpnomor::where('marking', $marking)->first();
+	// 							if (isset($gceksrtklr->id)){
+	// 								$idsurat 	= $gceksrtklr->id;
+	// 								$jenissrt	= $gceksrtklr->jenissrt;
+	// 								$status 	= $gceksrtklr->status;
+	// 								$marking 	= $gceksrtklr->marking;
+	// 								$perihal 	= $gceksrtklr->perihal;
+	// 								$kelompok 	= $gceksrtklr->kelompok;
+	// 								if ($status == 'MANUAL' OR $jenissrt == 'SPO'){
+	// 									try {
+	// 										$pdf 	= new Fpdi('P','mm',array(210,330));
+	// 										$pages 	= $pdf->setSourceFile(public_path().'/scan/files/'.$marking.'.pdf');
+	// 										for ($i = 1; $i <= $pages; $i++)
+	// 										{
+	// 											$page = $pdf->importPage($i);
+	// 											$pdf->AddPage();
+	// 											$pdf->useTemplate($page, ['adjustPageSize' => true]);
+	// 											$pdf->setSignature($certificate, $certificate, $marking, '', 2, $info);
+	// 											$pdf->setPageMark();
+	// 										}
+	// 										$pdf->Output(public_path().'/scan/files/'.$marking.'.pdf', 'F');
+	// 										$ttecount++;
+	// 									} catch (\Exception $e) {
+	// 										$footnote = $footnote.$e->getMessage();
+	// 									}
+	// 									Inboxsurat::where('id', $rinbox->id)->update([
+	// 										'terjadwal'	=> 12,
+	// 										'footnote'	=> $footnote
+	// 									]);
+	// 								} else {
+	// 									$text		= NotifikasiController::getTextExternal('srtklrtnpnomor',$gceksrtklr->id);
+	// 									try {
+	// 										PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
+	// 										PDFCREATOR::SetCreator($pembuat);
+	// 										PDFCREATOR::SetAuthor($kelompok);
+	// 										PDFCREATOR::SetTitle($jenissrt);
+	// 										PDFCREATOR::SetSubject($gceksrtklr->kepada);
+	// 										PDFCREATOR::SetKeywords($perihal);
+	// 										PDFCREATOR::setPrintHeader(false);
+	// 										PDFCREATOR::setPrintFooter(false);
+	// 										PDFCREATOR::SetMargins(5, 0, 5);
+	// 										PDFCREATOR::setFontSubsetting(true);
+	// 										PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+	// 										PDFCREATOR::AddPage('L', $page_format, false, false);
+	// 										PDFCREATOR::writeHTML($text, true, false, true, false, '');
+	// 										PDFCREATOR::setFooterMargin(0);
+	// 										$pdfdoc = PDFCREATOR::Output('', 'S');
+	// 										PDFCREATOR::reset();
+	// 										Storage::disk('local')->put('/scan/files/'.$idsurat.'.pdf', $pdfdoc);
+	// 										$text = null;
+	// 										$ttecount++;
+	// 									} catch (\Exception $e) {
+	// 										$footnote = $footnote.$e->getMessage();
+	// 										$text = null;
+	// 									}
+	// 									Inboxsurat::where('id', $rinbox->id)->update([
+	// 										'terjadwal'	=>  13,
+	// 										'footnote'	=> $footnote
+	// 									]);
+	// 								}
+	// 							}
+	// 						}
+	// 					}
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// 	$alamatweb					= $homebase.'/trackingid/marking-'.$markingname;
+	// 	//$qrcode 					= base64_encode(QrCode::format('png')->size(100)->generate($alamatweb));
+	// 	$qrcode 					= '';
+	// 	if(Session('previlage') == 'administrasi'){
+	// 		$countsuratmasuk  		= Suratmasuk::where('fakultas', Session('fakultas'))->where('status', '!=', 'arsip')->count();
+	// 		$countsuratkeluar  		= Suratkeluar::where('fakultas', Session('fakultas'))->where('ruangarsip', '')->count();
+	// 		$countskdanperaturan  	= Tabelskdanperaturan::where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$efent  				= WebinarEventlist::where('pembicara', 'UNDANGANDIGITAL')->where('created_by', Session('email'))->where('mulai', '>=', Carbon::now()->subDays(1)->toDateTimeString())->orderBy('mulai', 'ASC')->count();
+	// 		$jevent					= WebinarEventlist::where('fakultas', Session('fakultas'))->orderBy('mulai', 'DESC')->count();
+	// 		$efent					= $efent + $jevent;
+	// 	}
+	// 	if(Session('previlage') == 'Admin SDM'){
+	// 		$notifcutitahunan				= Suratkeluartnpnomor::where('jenissrt', 'Cuti Tahunan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifcutiagama					= Suratkeluartnpnomor::where('jenissrt', 'Cuti Keagamaan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifijinplgcepat				= Suratkeluartnpnomor::where('jenissrt', 'Ijin Pulang Cepat')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifijinkeluarkantor			= Suratkeluartnpnomor::where('jenissrt', 'Ijin Keluar Kantor')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpermintaanpegawai			= Suratkeluartnpnomor::where('jenissrt', 'Permintaan Pegawai')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifmutasirotasi				= Suratkeluartnpnomor::where('jenissrt', 'Mutasi Rotasi')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifkomunikasi				= Suratkeluartnpnomor::where('jenissrt', 'Komunikasi')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpengangkatanjabatan		= Tabelskdanperaturan::where('kelompok', 'Pengangkatan Jabatan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpemberhentianjabatan		= Tabelskdanperaturan::where('kelompok', 'Pemberhentian Jabatan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpegawaitetap				= Tabelskdanperaturan::where('kelompok', 'Pegawai Tetap')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifdoktertetap				= Tabelskdanperaturan::where('kelompok', 'Dokter Tetap')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpenerimaanstaf			= Tabelskdanperaturan::where('kelompok', 'Penerimaan Staf')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpenonaktifanstaf			= Tabelskdanperaturan::where('kelompok', 'Penonaktifan Staf')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpengaktifanstaf			= Tabelskdanperaturan::whereIn('kelompok', ['Pengaktifan Staf', 'Penempatan Administrasi Pendaftaran', 'Penempatan Analis Kesehatan', 'Penempatan Perawat', 'Penempatan Perekam Medik', 'Penempatan Security'])->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifmutasi					= Tabelskdanperaturan::where('kelompok', 'Mutasi')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpenonaktifandokter		= Tabelskdanperaturan::where('kelompok', 'Penonaktifan Dokter Tetap')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notiforientasikerja			= Suratkeluar::where('jenissrt', 'Perjanjian Orientasi Kerja')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpkwt						= Suratkeluar::where('jenissrt', 'PKWT')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpkwtt						= Suratkeluar::where('jenissrt', 'PKWTT')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifspo						= Suratkeluartnpnomor::where('jenissrt', 'SPO')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifedaran					= Suratkeluar::where('jenissrt', 'Edaran')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifperingatan				= Suratkeluar::where('jenissrt', 'Peringatan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifbalasanpenambahanstaf		= Suratkeluar::where('jenissrt', 'Balasan Penambahan Staf')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpermohonan				= Suratkeluar::where('jenissrt', 'Permohonan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notiftugas						= Suratkeluar::where('jenissrt', 'Tugas')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpemberitahuan				= Suratkeluar::where('jenissrt', 'Pemberitahuan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notiftanggapanresign			= Suratkeluar::where('jenissrt', 'Tanggapan Resign')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifreferensikerja			= Suratkeluar::where('jenissrt', 'Referensi Kerja')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifketeranganaktif			= Suratkeluar::where('jenissrt', 'Keterangan Aktif Bekerja')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpemutusanhubungan			= Suratkeluar::where('jenissrt', 'Pemutusan Hubungan Kerja')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpemanggilancalonkaryawan	= Suratkeluar::where('jenissrt', 'Pemanggilan Calon Karyawan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notiflolosseleksi				= Suratkeluar::where('jenissrt', 'Pemberitahuan Lolos Seleksi')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpemberitahuanmcu			= Suratkeluar::where('jenissrt', 'Pemberitahuan MCU')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifundangan					= Suratkeluar::where('jenissrt', 'Undangan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifpemanggilankie			= Suratkeluar::where('jenissrt', 'Pemanggilan KIE Staf')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifketerangantidakbekerja	= Suratkeluar::where('jenissrt', 'Keterangan Tidak Bekerja')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs01 					= Suratkeluartnpnomor::where('jenissrt', 'Tanda Terima Titipan Ijasah')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs02 					= Suratkeluartnpnomor::where('jenissrt', 'Visitor Tamu')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs03 					= Suratkeluartnpnomor::where('jenissrt', 'Konseling Staf')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs04 					= Suratkeluartnpnomor::where('jenissrt', 'Libur Akreditasi')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs05 					= Suratkeluartnpnomor::where('jenissrt', 'Serah Terima')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs06 					= Suratkeluartnpnomor::where('jenissrt', 'Riwayat Pelatihan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs07 					= Suratkeluartnpnomor::where('jenissrt', 'Pengajuan RS')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs08 					= Suratkeluartnpnomor::where('jenissrt', 'Penyelesaian Kewajiban')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs09 					= Suratkeluartnpnomor::where('jenissrt', 'Penggabungan Libur')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs10 					= Suratkeluartnpnomor::where('jenissrt', 'Cuti MS')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs11 					= Suratkeluartnpnomor::where('jenissrt', 'Infus On Call')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs12 					= Suratkeluartnpnomor::where('jenissrt', 'Lembur')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs13 					= Suratkeluartnpnomor::where('jenissrt', 'Finger Print')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs14 					= Suratkeluartnpnomor::where('jenissrt', 'Perintah On Call')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs15 					= Suratkeluartnpnomor::where('jenissrt', 'Ijin Dokter')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs16 					= Suratkeluartnpnomor::where('jenissrt', 'Ijin Staf')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs17 					= Suratkeluartnpnomor::where('jenissrt', 'Tukar Jadwal')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs18 					= Suratkeluartnpnomor::where('jenissrt', 'Pendelegasian Tugas')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$notifformrs19 					= Suratkeluartnpnomor::where('jenissrt', 'Permohonan Karyawan Baru')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
+	// 		$persuratanptform 				= $notifcutitahunan	+ $notifcutiagama + $notifijinplgcepat + $notifijinkeluarkantor	+ $notifpermintaanpegawai + $notifmutasirotasi + $notifkomunikasi;
+	// 		$persuratanptkd 				= $notifpengangkatanjabatan + $notifpemberhentianjabatan + $notifpegawaitetap + $notifdoktertetap + $notifpenerimaanstaf + $notifpenonaktifanstaf + $notifpengaktifanstaf + $notifmutasi + $notifpenonaktifandokter;
+	// 		$persuratanptkk 				= $notiforientasikerja + $notifpkwt + $notifpkwtt;
+	// 		$persuratanptss 				= $notifedaran + $notifperingatan + $notifbalasanpenambahanstaf + $notifpermohonan + $notiftugas + $notifpemberitahuan + $notiftanggapanresign + $notifreferensikerja + $notifketeranganaktif + $notifpemutusanhubungan + $notifpemanggilancalonkaryawan + $notiflolosseleksi + $notifpemberitahuanmcu + $notifundangan + $notifpemanggilankie + $notifketerangantidakbekerja;
+	// 		$persuratanrs 					= $notifformrs01 + $notifformrs02 + $notifformrs03 + $notifformrs04 + $notifformrs05 + $notifformrs06 + $notifformrs07 + $notifformrs08 + $notifformrs09 + $notifformrs10 + $notifformrs11 + $notifformrs12 + $notifformrs13 + $notifformrs14 + $notifformrs15 + $notifformrs16 + $notifformrs17 + $notifformrs18 + $notifformrs19;
+				
+	// 	}
+	// 	if (Session('previlage') == 'PEJABAT'){
+	// 		$cekselesai	= 0;
+	// 		$jmerangkap	= User::where('username', Session('username'))->first();
+	// 		if (isset($jmerangkap->merangkap)){
+	// 			$merangkap		= $jmerangkap->merangkap;
+	// 			if (is_null($merangkap)){ $merangkap = ''; }
+	// 		} else { $merangkap = ''; }
+	// 		$ceksrtmasuk	= Inboxsurat::Where('email', 'LIKE', Session('email'))->where('jenis', 'MASUK')->whereNotIn('status', ['reply', 'deleted'])->groupBy('marking')->get();
+	// 		if ($merangkap != ''){
+	// 			$countmemo		= Inboxsurat::whereIn('pengirim', [Session('jabatan'), $merangkap])->where('jenis', 'MASUK')->whereNotIn('status', ['reply', 'deleted'])->where('jenissrt', 'MEMO')->count();
+	// 			$countnotadinas	= Inboxsurat::whereIn('pengirim', [Session('jabatan'), $merangkap])->where('jenis', 'MASUK')->whereNotIn('status', ['reply', 'deleted'])->where('jenissrt', 'NOTA DINAS')->count();
+				
+	// 			$ceksrtkeluar	= Inboxsurat::whereIn('penerima', [Session('jabatan'), $merangkap])
+	// 							->whereIn('jenis', ['KELUAR', 'KELUARNONOMER'])
+	// 							->where('status', 'send')
+	// 							->groupBy('marking')
+	// 							->get();
+	// 			$cekmari		= DB::table('tbl_inbox')
+	// 							->join('tbl_suratmasuk', 'tbl_inbox.marking', 'tbl_suratmasuk.marking')
+	// 							->select('tbl_suratmasuk.*', 'tbl_inbox.pengirim')
+	// 							->whereIn('tbl_inbox.penerima', [Session('jabatan'), $merangkap])
+	// 							->where('tbl_suratmasuk.status', 'LIKE', '%'.'arsip'.'%')
+	// 							->whereYear('tbl_suratmasuk.tglmasuk', date('Y'))
+	// 							->orderBy('tbl_inbox.marking', 'DESC')
+	// 							->count();
+	// 			$cekrungmari	= DB::table('tbl_inbox')
+	// 							->join('tbl_suratmasuk', 'tbl_suratmasuk.marking', 'tbl_inbox.marking')
+	// 							->select('tbl_suratmasuk.*', 'tbl_inbox.pengirim')
+	// 							->whereIn('tbl_inbox.penerima', [Session('jabatan'), $merangkap])
+	// 							->where('tbl_suratmasuk.status', 'NOT LIKE', '%'.'arsip'.'%')
+	// 							->whereYear('tbl_suratmasuk.tglmasuk', date('Y'))
+	// 							->orderBy('tbl_inbox.marking', 'DESC')
+	// 							->count();
+	// 		} else {
+	// 			$countmemo		= Inboxsurat::where('pengirim', Session('jabatan'))->where('jenis', 'MASUK')->whereIn('status', ['send', 'read'])->where('jenissrt', 'MEMO')->count();
+	// 			$countnotadinas	= Inboxsurat::where('pengirim', Session('jabatan'))->where('jenis', 'MASUK')->whereIn('status', ['send', 'read'])->where('jenissrt', 'NOTA DINAS')->count();
+				
+	// 			$ceksrtkeluar	= Inboxsurat::where('penerima', Session('jabatan'))
+	// 							->whereIn('jenis', ['KELUAR', 'KELUARNONOMER'])
+	// 							->where('status', 'send')
+	// 							->groupBy('marking')
+	// 							->get();
+	// 			$cekmari		= DB::table('tbl_inbox')
+	// 							->join('tbl_suratmasuk', 'tbl_inbox.marking', 'tbl_suratmasuk.marking')
+	// 							->select('tbl_suratmasuk.*', 'tbl_inbox.pengirim')
+	// 							->where('tbl_inbox.penerima', Session('jabatan'))
+	// 							->where('tbl_suratmasuk.status', 'LIKE', '%'.'arsip'.'%')
+	// 							->whereYear('tbl_suratmasuk.tglmasuk', date('Y'))
+	// 							->orderBy('tbl_inbox.marking', 'DESC')
+	// 							->count();
+	// 			$cekrungmari	= DB::table('tbl_inbox')
+	// 							->join('tbl_suratmasuk', 'tbl_suratmasuk.marking', 'tbl_inbox.marking')
+	// 							->select('tbl_suratmasuk.*', 'tbl_inbox.pengirim')
+	// 							->where('tbl_inbox.penerima', Session('jabatan'))
+	// 							->where('tbl_suratmasuk.status', 'NOT LIKE', '%'.'arsip'.'%')
+	// 							->whereYear('tbl_suratmasuk.tglmasuk', date('Y'))
+	// 							->orderBy('tbl_inbox.marking', 'DESC')
+	// 							->count();
+		
+	// 		}
+	// 		$mailbox 		= count($ceksrtmasuk);
+	// 		$countmohonttd 	= count($ceksrtkeluar);
+	// 	} else {
+	// 		$mailbox			= Inboxsurat::where('email', 'LIKE', Session('email'))->where('status', 'send')->where('jenis', 'MASUK')->count();
+	// 		$cekselesai 		= Suratkeluar::where('pembuat', Session('email'))->where('arsip', '')->where('tandatangan', 'SIgned With TTE')->count();
+	// 		$cekditolak 		= Inboxsurat::where('pembuat', Session('email'))->where('jenis', 'KELUAR')->where('status', 'Ditolak')->get();
+	// 		if (!empty($cekditolak)){
+	// 			foreach($cekditolak as $rtolak){
+	// 				$textnotif 	= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-arrow-circle-right"></i> '.$rtolak->nosurat.' Mohon di Koreksi</a>';
+	// 			}
+	// 		}
+	// 	}
+	// 	$penerimasurat			= Penerimasurat::where('penulisan', Session('email'))->where('status', 'SEND')->count();
+	// 	$mailbox				= $mailbox + $penerimasurat;
+	// 	if ($mailbox != 0){
+	// 		$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> '.$mailbox.' new messages</a>';
+	// 	}
+	// 	if ($cekselesai != 0){
+	// 		$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-trophy mr-2"></i> '.$cekselesai.' Surat Keluar di Tandatangani dan Belum di Arsip</a>';
+	// 	}
+	// 	if ($countmohonttd != 0){
+	// 		$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-paper-plane-o mr-2"></i> '.$countmohonttd.' Surat Perlu Paraf/TTE</a>';
+	// 	}
+	// 	if ($countnotadinas != 0){
+	// 		$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-paper-plane-o mr-2"></i> '.$countnotadinas.' Nota Dinas Belum di Arsip</a>';
+	// 	}
+	// 	if ($countmemo != 0){
+	// 		$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-paper-plane-o mr-2"></i> '.$countmemo.' Memo Belum di Arsip</a>';
+	// 	}
+	// 	if ($countsuratmasuk != 0){
+	// 		$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-envelope mr-2"></i> '.$countsuratmasuk.' Surat Masuk</a>';
+	// 	}
+	// 	if ($countsuratkeluar != 0){
+	// 		$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-paper-plane-o mr-2"></i> '.$countsuratkeluar.' Surat Keluar</a>';
+	// 	}
+	// 	if ($countskdanperaturan != 0){
+	// 		$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-clone mr-2"></i> '.$countskdanperaturan.' SK dan Peraturan</a>';
+	// 	}
+	// 	if ($efent != 0){
+	// 		$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-calendar-plus-o mr-2"></i> '.$efent.' Kegiatan</a>';
+	// 	}
+	// 	if ($persuratanptform != 0){
+	// 		$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> '.$persuratanptform.' Form Persuratan PT Belum di Arsip</a>';
+	// 	}
+	// 	if ($persuratanptkd != 0){
+	// 		$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> '.$persuratanptkd.' Keputusan Direktur Belum di Arsip</a>';
+	// 	}
+	// 	if ($persuratanptkk != 0){
+	// 		$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> '.$persuratanptkk.' Kontrak Kerja Belum di Arsip</a>';
+	// 	}
+	// 	if ($persuratanptss != 0){
+	// 		$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> '.$persuratanptss.' Surat Belum di Arsip</a>';
+	// 	}
+	// 	if ($persuratanrs != 0){
+	// 		$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> '.$persuratanrs.' Form Persuratan RS Belum di Arsip</a>';
+	// 	}
+	// 	$counttotalnotif		= $persuratanrs + $persuratanptss + $persuratanptkk + $persuratanptform + $persuratanptkd + $mailbox + $countsuratmasuk + $countsuratkeluar + $countskdanperaturan + $efent + $countmohonttd;
+	// 	return response()->json([
+	// 		'markingname' 					=> $markingname, 
+	// 		'qrcode' 						=> $countsql.' => '.$ttecount.' (TTE) '.$parafcount.' (PARAF)',
+	// 		'textnotif' 					=> $textnotif, 
+	// 		'counttotalnotif' 				=> $counttotalnotif, 
+	// 		'countmailbox' 					=> $mailbox, 
+	// 		'countmohonttd' 				=> $countmohonttd, 
+	// 		'countnotadinas' 				=> $countnotadinas, 
+	// 		'countmemo' 					=> $countmemo, 
+	// 		'countsuratmasuk' 				=> $countsuratmasuk, 
+	// 		'countsuratkeluar' 				=> $countsuratkeluar, 
+	// 		'countsk' 						=> $countskdanperaturan, 
+	// 		'countevent' 					=> $efent,
+	// 		'notifcutitahunan' 				=> $notifcutitahunan,
+	// 		'notifcutiagama' 				=> $notifcutiagama,
+	// 		'notifijinplgcepat' 			=> $notifijinplgcepat,
+	// 		'notifijinkeluarkantor' 		=> $notifijinkeluarkantor,
+	// 		'notifpermintaanpegawai' 		=> $notifpermintaanpegawai,
+	// 		'notifmutasirotasi' 			=> $notifmutasirotasi,
+	// 		'notifkomunikasi' 				=> $notifkomunikasi,
+	// 		'notifpengangkatanjabatan' 		=> $notifpengangkatanjabatan,
+	// 		'notifpemberhentianjabatan'		=> $notifpemberhentianjabatan,
+	// 		'notifpegawaitetap' 			=> $notifpegawaitetap,
+	// 		'notifdoktertetap' 				=> $notifdoktertetap,
+	// 		'notifpenerimaanstaf' 			=> $notifpenerimaanstaf,
+	// 		'notifpenonaktifanstaf' 		=> $notifpenonaktifanstaf,
+	// 		'notifpengaktifanstaf' 			=> $notifpengaktifanstaf,
+	// 		'notifmutasi' 					=> $notifmutasi,
+	// 		'notifpenonaktifandokter'		=> $notifpenonaktifandokter,
+	// 		'notiforientasikerja' 			=> $notiforientasikerja,
+	// 		'notifpkwt' 					=> $notifpkwt,
+	// 		'notifpkwtt' 					=> $notifpkwtt,
+	// 		'notifspo' 						=> $notifspo,
+	// 		'notifedaran' 					=> $notifedaran,
+	// 		'notifperingatan' 				=> $notifperingatan,
+	// 		'notifbalasanpenambahanstaf'	=> $notifbalasanpenambahanstaf,
+	// 		'notifpermohonan' 				=> $notifpermohonan,
+	// 		'notiftugas' 					=> $notiftugas,
+	// 		'notifpemberitahuan' 			=> $notifpemberitahuan,
+	// 		'notiftanggapanresign' 			=> $notiftanggapanresign,
+	// 		'notifreferensikerja' 			=> $notifreferensikerja,
+	// 		'notifketeranganaktif' 			=> $notifketeranganaktif,
+	// 		'notifpemutusanhubungan' 		=> $notifpemutusanhubungan,
+	// 		'notifpemanggilancalonkaryawan'	=> $notifpemanggilancalonkaryawan,
+	// 		'notiflolosseleksi' 			=> $notiflolosseleksi,
+	// 		'notifpemberitahuanmcu' 		=> $notifpemberitahuanmcu,
+	// 		'notifundangan' 				=> $notifundangan,
+	// 		'notifpemanggilankie' 			=> $notifundangan,
+	// 		'notifketerangantidakbekerja'	=> $notifketerangantidakbekerja,
+	// 		'notifformrs01'					=> $notifformrs01,
+	// 		'notifformrs02'					=> $notifformrs02,
+	// 		'notifformrs03'					=> $notifformrs03,
+	// 		'notifformrs04'					=> $notifformrs04,
+	// 		'notifformrs05'					=> $notifformrs05,
+	// 		'notifformrs06'					=> $notifformrs06,
+	// 		'notifformrs07'					=> $notifformrs07,
+	// 		'notifformrs08'					=> $notifformrs08,
+	// 		'notifformrs09'					=> $notifformrs09,
+	// 		'notifformrs10'					=> $notifformrs10,
+	// 		'notifformrs11'					=> $notifformrs11,
+	// 		'notifformrs12'					=> $notifformrs12,
+	// 		'notifformrs13'					=> $notifformrs13,
+	// 		'notifformrs14'					=> $notifformrs14,
+	// 		'notifformrs15'					=> $notifformrs15,
+	// 		'notifformrs16'					=> $notifformrs16,
+	// 		'notifformrs17'					=> $notifformrs17,
+	// 		'notifformrs18'					=> $notifformrs18,
+	// 		'notifformrs19'					=> $notifformrs19,
+	// 	]);
+	// 	return back();
+	
+    // }
+
+    // new function
+    public function cekNotifikasi(Request $request) {
         set_time_limit(300); // 5 menit
         ini_set('memory_limit', '512M');
-		$textnotif						= '';
-		$countsuratmasuk				= 0;
-		$countsuratkeluar				= 0;
-		$countskdanperaturan			= 0;
-		$efent							= 0;
-		$countmohonttd					= 0;
-		$countnotadinas					= 0;
-		$countmemo						= 0;
-		$cekmari						= 0;
-		$cekrungmari					= 0;
-		$totalform 						= 0;
-		$notifcutitahunan				= 0;
-		$notifcutiagama					= 0;
-		$notifijinplgcepat				= 0;
-		$notifijinkeluarkantor			= 0;
-		$notifpermintaanpegawai			= 0;
-		$notifmutasirotasi				= 0;
-		$notifkomunikasi				= 0;
-	    $notifpengangkatanjabatan		= 0;
-		$notifpemberhentianjabatan		= 0;
-		$notifpegawaitetap				= 0;
-		$notifdoktertetap				= 0;
-		$notifpenerimaanstaf			= 0;
-		$notifpenonaktifanstaf			= 0;
-		$notifpengaktifanstaf			= 0;
-		$notifmutasi					= 0;
-		$notifpenonaktifandokter		= 0;
-		$notiforientasikerja			= 0;
-		$notifpkwt						= 0;
-		$notifpkwtt						= 0;
-		$notifspo						= 0;
-		$notifedaran					= 0;
-		$notifperingatan				= 0;
-		$notifbalasanpenambahanstaf		= 0;
-		$notifpermohonan				= 0;
-		$notiftugas						= 0;
-		$notifpemberitahuan				= 0;
-		$notiftanggapanresign			= 0;
-		$notifreferensikerja			= 0;
-		$notifketeranganaktif			= 0;
-		$notifpemutusanhubungan			= 0;
-		$notifpemanggilancalonkaryawan	= 0;
-		$notiflolosseleksi				= 0;
-		$notifpemberitahuanmcu			= 0;
-		$notifundangan					= 0;
-		$notifpemanggilankie			= 0;
-		$notifketerangantidakbekerja	= 0;
-		$notifformrs01 					= 0;
-		$notifformrs02 					= 0;
-		$notifformrs03 					= 0;
-		$notifformrs04 					= 0;
-		$notifformrs05 					= 0;
-		$notifformrs06 					= 0;
-		$notifformrs07 					= 0;
-		$notifformrs08 					= 0;
-		$notifformrs09 					= 0;
-		$notifformrs10 					= 0;
-		$notifformrs11 					= 0;
-		$notifformrs12 					= 0;
-		$notifformrs13 					= 0;
-		$notifformrs14 					= 0;
-		$notifformrs15 					= 0;
-		$notifformrs16 					= 0;
-		$notifformrs17 					= 0;
-		$notifformrs18 					= 0;
-		$notifformrs19 					= 0;
-		$persuratanptform 				= 0;
-		$persuratanptkd 				= 0;
-		$persuratanptkk 				= 0;
-		$persuratanptss 				= 0;
-		$persuratanrs 					= 0;
-		$markingname 					= Session('id').'-'.time();
-		$markingname					= md5($markingname);
-		$homebase						= url("/");
-		$idusername						= Session('id');
-		$fakultas						= Session('fakultas');
-		$fakpanjang						= Session('fakpanjang');
-		$namaapps 						= Session('namaapps01');
-		$swandhanafak       			= Session('fakultas');
-		$swandhanaalamat    			= Session('addressapps01');
-		$swandhanakemen     			= Session('subdomainapps01');
-		$swandhanauniv      			= Session('subsubdomainapps01');
-		$mkelompok						= Session('previlage');
-		$pembuat						= Session('nama');
-		$fakultas						= Session('fakultas');
-		$swandhanakota    				= Session('kota01');
-		$swandhanaemail					= Session('emailapps01');
-		$ttd 							= 'SIgned With TTE'; 
-		$encoded_image 					= 'SIgned With TTE';
-		$benergak						= 'TIDAK';
-		$textsamplesalah				= 'Password Anda Salah';
-		$noselanjutnya					= 0;
-		$error							= '';
-		$certificate					= 'file://'.base_path().'/public/sco.crt';
-		$page_format 					= array(
-											'MediaBox' 		=> array ('llx' => 0, 'lly' => 0, 'urx' => 210, 'ury' => 330),
-											'Dur' 			=> 3,
-											'PZ' 			=> 1,
-		);
-		$info 							= array(
-											'Name' 			=> $namaapps,
-											'Location' 		=> $swandhanauniv,
-											'Reason' 		=> 'Dokumen ini ditandatangani secara elektronik',
-											'ContactInfo' 	=> $homebase,
-		);
-		$sql							= Inboxsurat::where('terjadwal', '1')->orderBy('updated_at', 'ASC')->get();
-		$countsql 						= count($sql);
-		$parafcount 					= 0;
-		$ttecount 						= 0;
-		if (!empty($sql)){
-			foreach ($sql as $rinbox){
-				$idne 					= $rinbox->id;
-				$marking 				= $rinbox->marking;
-				$kerjalm				= $rinbox->kerja;
-				$kerja					= $rinbox->kerja;
-				$penerima				= $rinbox->penerima;
-				$catatan				= $rinbox->catatan;
-				$tabele					= $rinbox->jenis;
-				$ctanggal				= $rinbox->tanggal;
-				$paraf1 				= $rinbox->paraf1;
-				$paraf2 				= $rinbox->paraf2;
-				$paraf3 				= $rinbox->paraf3;
-				$paraf4 				= $rinbox->paraf4;
-				$penandatangan 			= $rinbox->penandatangan;
-				$masterjenissurat		= $rinbox->jenissrt;
-				$jenissrt 				= $rinbox->jenissrt;
-				$footnote				= $rinbox->footnote;
-				$komputer				= $rinbox->komputer;
-				$email					= $rinbox->email;
-				$pembuat 				= $rinbox->pembuat;
-				$perihal 				= $rinbox->perihal;
-				$kepada					= $rinbox->kepada;
-				$serttte 				= md5($email);
-				$ceksertifikatpribadi 	= $serttte.'.crt';
-				$sertifikatpribadi 		= $serttte.'.csr';
-				$kelompok 				= $penerima;
-				if (file_exists(base_path().'/public/tte/'.$ceksertifikatpribadi)){
-					$certificate 	= 'file://'.base_path().'/public/tte/'.$ceksertifikatpribadi;
-				} else if (file_exists(public_path().'/tte/'.$ceksertifikatpribadi)){
-					$certificate 	= 'file://'.public_path().'/tte/'.$ceksertifikatpribadi;
-				} else {
-					$getpejabat = Pejabatsurat::where('email', $rinbox->email)->first();
-					if (isset($getpejabat->pejabat)){
-						$namapejabat = $getpejabat->nama;
-					} else {
-						$namapejabat = $rinbox->penerima;
-					}
-					$dn = array(
-						"countryName" 			=> "IN",
-						"stateOrProvinceName" 	=> "East Java Indonesia",
-						"localityName" 			=> $penerima,
-						"organizationName" 		=> $swandhanauniv,
-						"organizationalUnitName"=> $swandhanafak,
-						"commonName" 			=> $namapejabat,
-						"emailAddress" 			=> $email
-					);
-					$privkey = openssl_pkey_new(array(
-						"private_key_bits" => 2048,
-						"private_key_type" => OPENSSL_KEYTYPE_RSA,
-					));
-					$csr = openssl_csr_new($dn, $privkey, array('digest_alg' => 'RSA-SHA256'));
-					$sscert = openssl_csr_sign($csr, null, $privkey, 365);
-					openssl_csr_export($csr, $csrout);
-					openssl_x509_export($sscert, $certout);
-					openssl_pkey_export($privkey, $pkeyout);
-					Storage::disk('local')->put('/tte/'.$ceksertifikatpribadi, $pkeyout);
-					file_put_contents(public_path()."/tte/".$ceksertifikatpribadi, $certout, FILE_APPEND | LOCK_EX);
-					if (file_exists(base_path().'/public/tte/'.$ceksertifikatpribadi)){
-						$certificate 	= 'file://'.base_path().'/public/tte/'.$ceksertifikatpribadi;
-					} else if (file_exists(public_path().'/tte/'.$ceksertifikatpribadi)){
-						$certificate 	= 'file://'.public_path().'/tte/'.$ceksertifikatpribadi;
-					}
-				}
-				if ($rinbox->kerja == 'PARAF'){
-					$noselanjutnya = 2;
-					if ($rinbox->tanggal == '1'){ $penandatangan = $paraf2; $noselanjutnya = 2; }
-					if ($rinbox->tanggal == '2'){ $penandatangan = $paraf3; $noselanjutnya = 3; }
-					if ($rinbox->tanggal == '3'){ $penandatangan = $paraf4; $noselanjutnya = 4; }
-					if ($rinbox->tanggal == '4'){ $noselanjutnya = 5; }
-					if ($penandatangan == 0){ $penandatangan = $rinbox->penandatangan; }
-					Inboxsurat::where('id', $idne)->update([
-						'terjadwal'		=> 	$noselanjutnya
-					]);
-					$parafcount++;
-					$getpejabat = Pejabatsurat::where('id', $penandatangan)->first();
-					if (isset($getpejabat->id)){
-						SendMail::kiriminbox($rinbox->marking,$rinbox->penerima,$getpejabat->pejabat,$getpejabat->email,'KELUAR','PARAF',$footnote,$noselanjutnya);
-					} else {
-						$getpejabat = Pejabatsurat::where('pejabat', 'LIKE', $penandatangan)->first();
-						if (isset($getpejabat->id)){
-							SendMail::kiriminbox($rinbox->marking,$rinbox->penerima,$getpejabat->pejabat,$getpejabat->email,'KELUAR','TTD',$footnote,$noselanjutnya);
-						} else {
-							Inboxsurat::where('id', $idne)->update([
-								'kerja'		=> 	'TTD'
-							]);
-						}
-					}
-				} else {
-					$cekbentuk 		= Templateskpp::where('namask', $masterjenissurat)->count();
-					if ($cekbentuk == 0){
-						$tanggalesign	= date('Y-m-d H:i:s');
-						if ($ctanggal == ''){
-							$ctanggal	= 0;
-						} else {
-							$ctanggal	= (int)$ctanggal;
-						}
-						$noselanjutnya	= $ctanggal++;
-						$alamatweb		= $homebase.'/trackingid/srtklr-'.$marking;
-						$bgbssn			= '';
-						if ($masterjenissurat == 'UPLQRMAN' OR $masterjenissurat == 'SKDANPERATURANTTEMAN' OR $masterjenissurat == 'PERATURANTTEMAN' OR $masterjenissurat == 'INSTRUKSITTEMAN'){
-							try {
-								$pdf 	= new Fpdi('P','mm',array(210,330));
-								$pages 	= $pdf->setSourceFile(public_path().'/scan/files/'.$marking.'.pdf');
-								for ($i = 1; $i <= $pages; $i++)
-								{
-									$page = $pdf->importPage($i);
-									$pdf->AddPage();
-									$pdf->useTemplate($page, ['adjustPageSize' => true]);
-									$pdf->setSignature($certificate, $certificate, $marking, '', 2, $info);
-									$pdf->setPageMark();
-								}
-								$pdf->Output(public_path().'/scan/files/'.$marking.'.pdf', 'F');
-								Inboxsurat::where('id', $idne)->update([
-									'terjadwal' =>  6,
-								]);
-								$ttecount++;
-							} catch (\Exception $e) {
-								$footnote = $footnote.$e->getMessage();
-							}
-							if ($rinbox->tabel == 'DRAFTSK'){
-								Draftsk::where('marking', $marking)->update([
-									'status'		=> 'Signed',
-									'tandatangan'	=> 'Signed By '.$penerima,
-									'catatan'		=> $footnote
-								]);
-							} else if ($rinbox->tabel == 'SKDANPERATURAN'){
-								Tabelskdanperaturan::where('marking', $marking)->update([
-									'tandatangan'	=> 'Signed By '.$penerima,
-									'catatan'		=> $footnote
-								]);
-							} else if ($rinbox->tabel == 'KELUARNONOMER'){
-								Suratkeluartnpnomor::where('marking', $marking)->update([
-									'status'		=> 'Signed',
-									'tandatangan'	=> 'Signed By '.$penerima,
-									'footnote'		=> $footnote
-								]);
-							} else {
-								Suratkeluar::where('marking', $marking)->update([
-									'tandatangan'	=> 'Signed By '.$penerima,
-									'status'		=> 'Signed',
-									'footnote'		=> $footnote
-								]);
-							}
-						} else {
-							SendMail::genQRCodefile($marking,$penerima,$penerima,$tanggalesign,$alamatweb);
-							if (File::exists(base_path() ."/public/scan/generate/bg-". $marking.".png")) {
-								$bgbssn 	= base_path('/public/scan/generate/bg-'.$marking.'.png');
-							}
-							if (File::exists(public_path() ."/scan/generate/bg-". $marking.".png")) {
-								$bgbssn 	= public_path('/scan/generate/bg-'.$marking.'.png');
-							}
-							if ($bgbssn != '') {
-								$file 	= public_path('scan/files/'.$marking.'.pdf');
-								if (file_exists($file)){
-									try {
-										$pdf 	= new Fpdi('P','mm',array(210,330));
-										$pages 	= $pdf->setSourceFile(public_path().'/scan/files/'.$marking.'.pdf');
-										for ($i = 1; $i <= $pages; $i++)
-										{
-											$page = $pdf->importPage($i);
-											$pdf->AddPage();
-											$pdf->useTemplate($page, ['adjustPageSize' => true]);
-											$pdf->setSignature($certificate, $certificate, $marking, '', 2, $info);
-											$pdf->setPageMark();
-										}
-										$pdf->Output(public_path().'/scan/files/'.$marking.'.pdf', 'F');
-									} catch (\Exception $e) {
-										$footnote = $footnote.$e->getMessage();
-									}
-									Inboxsurat::where('id', $idne)->update([
-										'terjadwal'	=> 7,
-										'footnote'	=> $footnote
-									]);
-									$file1 			=  'scan/generate/bg-'.$marking.'.png';
-									$file2 			=  'scan/generate/qrimg-'.$marking.'.png';
-									$file3 			=  'scan/generate/qrimg-'.$marking.'.pdf';
-									Storage::disk('local')->delete($file1);
-									Storage::disk('local')->delete($file2);
-									Storage::disk('local')->delete($file3);
-									if ($rinbox->tabel == 'DRAFTSK'){
-										Draftsk::where('marking', $marking)->update([
-											'status'		=> 'Signed',
-											'tandatangan'	=> 'Signed By '.$penerima,
-											'catatan'		=> $footnote
-										]);
-									} else if ($rinbox->tabel == 'SKDANPERATURAN'){
-										Tabelskdanperaturan::where('marking', $marking)->update([
-											'tandatangan'	=> 'Signed By '.$penerima,
-											'catatan'		=> $footnote
-										]);
-									} else if ($rinbox->tabel == 'KELUARNONOMER'){
-										Suratkeluartnpnomor::where('marking', $marking)->update([
-											'status'		=> 'Signed',
-											'tandatangan'	=> 'Signed By '.$penerima,
-											'footnote'		=> $footnote
-										]);
-									} else {
-										Suratkeluar::where('marking', $marking)->update([
-											'tandatangan'	=> 'Signed By '.$penerima,
-											'status'		=> 'Signed',
-											'footnote'		=> $footnote
-										]);
-									}
-								} else {
-									if ($rinbox->tabel == 'SKDANPERATURAN'){
-										$ceksek 	= Tabelskdanperaturan::where('marking', $marking)->first();
-										if (isset($ceksek->marking)){
-											$file 	= 'scan/files/'.$ceksek->marking.'.pdf';
-											Storage::disk('local')->delete($file);
-											Tabelskdanperaturan::where('id', $ceksek->id)->update([
-												'tandatangan'		=> 	$ttd,
-												'updated_at'		=> 	date('Y-m-d H:i:s')
-											]);
-											
-											$img_file 	= public_path('kopfooterdpm.png');
-											$text		= NotifikasiController::getTextExternal('formb',$ceksek->id);
-											$marking 	= $ceksek->marking;
-											if (isset($ceksek->pembuat)){ $pembuat = $ceksek->pembuat; }
-											if (isset($ceksek->kelompok)){ $kelompok = $ceksek->kelompok; }
-											if (isset($ceksek->jenissrt)){ $jenissrt = $ceksek->jenissrt; }
-											if (isset($ceksek->kepada)){ $kepada = $ceksek->kepada; }
-											if (isset($ceksek->perihal)){ $perihal = $ceksek->perihal; }
-											
-											if (isset($ceksek->inputor)){ $pembuat = $ceksek->inputor; }
-											if (isset($ceksek->fakultas)){ $kelompok = $ceksek->fakultas; }
-											if (isset($ceksek->kelompok)){ $jenissrt = $ceksek->kelompok; }
-											if (isset($ceksek->namaparaf4)){ $kepada = $ceksek->namaparaf4; }
-											if (isset($ceksek->judul)){ $perihal = $ceksek->judul; }
-											$gethalaman 	= explode('<div style="page-break-before: always"></div>', $text);
-											try {
-												PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
-												PDFCREATOR::SetProtection(array('modify', 'copy'), '', null, 0, null);
-												PDFCREATOR::SetCreator($pembuat);
-												PDFCREATOR::SetAuthor($kelompok);
-												PDFCREATOR::SetTitle($jenissrt);
-												PDFCREATOR::SetSubject($kepada);
-												PDFCREATOR::SetKeywords($perihal);
-												PDFCREATOR::setPrintHeader(false);
-												PDFCREATOR::setPrintFooter(false);
-												PDFCREATOR::SetMargins(5, 0, 5);
-												PDFCREATOR::setFontSubsetting(true);
-												PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
-												foreach($gethalaman as $halaman){
-													PDFCREATOR::AddPage('P', $page_format, false, false);
-													$bMargin = PDFCREATOR::getBreakMargin();
-													$auto_page_break = PDFCREATOR::getAutoPageBreak();
-													PDFCREATOR::SetAutoPageBreak(false, 0);
-													PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
-													PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
-													PDFCREATOR::setPageMark();
-													PDFCREATOR::writeHTML($halaman, true, 0, true, 0);
-													PDFCREATOR::setFooterMargin(0);	
-												}
-												$pdfdoc = PDFCREATOR::Output('', 'S');
-												PDFCREATOR::reset();
-												Storage::disk('local')->put('/scan/files/'.$marking.'.pdf', $pdfdoc);
-											} catch (\Exception $e) {
-												$footnote = $footnote.$e->getMessage();
-											}
-											
-											Inboxsurat::where('id', $rinbox->id)->update([
-												'terjadwal'	=> 8,
-												'footnote'	=> $footnote
-											]);
-											$text = null;
-										}
-									} else {
-										$ceksek 	= Suratkeluar::where('marking', $marking)->first();
-										if (isset($ceksek->marking)){
-											$file 	= 'scan/files/'.$ceksek->marking.'.pdf';
-											Storage::disk('local')->delete($file);
-										
-											Suratkeluar::where('id', $ceksek->id)->update([
-												'tandatangan'		=> 	$ttd,
-												'status'			=> 	$ttd
-											]);
-											if ($ceksek->fakultas == 'RSPHSKR'){
-												$img_file = public_path('kopfooterrsphs.png');
-											} else if ($ceksek->fakultas == 'RSPHMLG'){
-												$img_file = public_path('kopfooterrsphm.png');
-											} else if ($ceksek->fakultas == 'PDP'){
-												$img_file = public_path('kopfooterpdp.png');
-											} else {
-												$img_file = public_path('kopfooterdpm.png');
-											}
-											$text		= NotifikasiController::getTextExternal('formc',$ceksek->id);
-											$marking 	= $ceksek->marking;
-											$gethalaman = explode('<div style="page-break-before: always"></div>', $text);
-											if (isset($ceksek->pembuat)){ $pembuat = $ceksek->pembuat; }
-											if (isset($ceksek->kelompok)){ $kelompok = $ceksek->kelompok; }
-											if (isset($ceksek->jenissrt)){ $jenissrt = $ceksek->jenissrt; }
-											if (isset($ceksek->kepada)){ $kepada = $ceksek->kepada; }
-											if (isset($ceksek->perihal)){ $perihal = $ceksek->perihal; }
-											
-											if (isset($ceksek->inputor)){ $pembuat = $ceksek->inputor; }
-											if (isset($ceksek->fakultas)){ $kelompok = $ceksek->fakultas; }
-											if (isset($ceksek->kelompok)){ $jenissrt = $ceksek->kelompok; }
-											if (isset($ceksek->namaparaf4)){ $kepada = $ceksek->namaparaf4; }
-											if (isset($ceksek->judul)){ $perihal = $ceksek->judul; }
-											try {
-												PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
-												PDFCREATOR::SetCreator($pembuat);
-												PDFCREATOR::SetAuthor($kelompok);
-												PDFCREATOR::SetTitle($jenissrt);
-												PDFCREATOR::SetSubject($kepada);
-												PDFCREATOR::SetKeywords($perihal);
-												PDFCREATOR::setPrintHeader(false);
-												PDFCREATOR::setPrintFooter(false);
-												PDFCREATOR::SetMargins(5, 0, 5);
-												PDFCREATOR::setFontSubsetting(true);
-												PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
-												foreach($gethalaman as $halaman){
-													PDFCREATOR::AddPage('P', $page_format, false, false);
-													$bMargin = PDFCREATOR::getBreakMargin();
-													$auto_page_break = PDFCREATOR::getAutoPageBreak();
-													PDFCREATOR::SetAutoPageBreak(false, 0);
-													PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
-													PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
-													PDFCREATOR::setPageMark();
-													PDFCREATOR::writeHTML($halaman, true, 0, true, 0);
-													PDFCREATOR::setFooterMargin(0);	
-												}
-												$pdfdoc = PDFCREATOR::Output('', 'S');
-												PDFCREATOR::reset();
-												Storage::disk('local')->put('/scan/files/'.$marking.'.pdf', $pdfdoc);
-											} catch (\Exception $e) {
-												$footnote = $footnote.$e->getMessage();
-											}
-											
-											Inboxsurat::where('id', $rinbox->id)->update([
-												'terjadwal'	=> 9,
-												'footnote'	=> $footnote
-											]);
-											$text = null;
-										} else {
-											$gceksrtklr 	= Suratkeluartnpnomor::where('marking', $marking)->first();
-											if (isset($gceksrtklr->marking)){
-												$idsurat 	= $gceksrtklr->id;
-												$jenissrt	= $gceksrtklr->jenissrt;
-												$status 	= $gceksrtklr->status;
-												$marking 	= $gceksrtklr->marking;
-												$perihal 	= $gceksrtklr->perihal;
-												$kelompok 	= $gceksrtklr->kelompok;
-												if ($status == 'MANUAL' OR $jenissrt == 'SPO'){
-													try {
-														$pdf 	= new Fpdi('P','mm',array(210,330));
-														$pages 	= $pdf->setSourceFile(public_path().'/scan/files/'.$marking.'.pdf');
-														for ($i = 1; $i <= $pages; $i++)
-														{
-															$page = $pdf->importPage($i);
-															$pdf->AddPage();
-															$pdf->useTemplate($page, ['adjustPageSize' => true]);
-															$pdf->setSignature($certificate, $certificate, $marking, '', 2, $info);
-															$pdf->setPageMark();
-														}
-														$pdf->Output(public_path().'/scan/files/'.$marking.'.pdf', 'F');
-													} catch (\Exception $e) {
-														$footnote = $footnote.$e->getMessage();
-													}
-													Inboxsurat::where('id', $rinbox->id)->update([
-														'terjadwal'	=>  22,
-														'footnote'	=> 	$footnote
-													]);
-												} else {
-													$text		= NotifikasiController::getTextExternal('srtklrtnpnomor',$gceksrtklr->id);
-													try {
-														PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
-														PDFCREATOR::SetCreator($pembuat);
-														PDFCREATOR::SetAuthor($kelompok);
-														PDFCREATOR::SetTitle($jenissrt);
-														PDFCREATOR::SetSubject($gceksrtklr->kepada);
-														PDFCREATOR::SetKeywords($perihal);
-														PDFCREATOR::setPrintHeader(false);
-														PDFCREATOR::setPrintFooter(false);
-														PDFCREATOR::SetMargins(5, 0, 5);
-														PDFCREATOR::setFontSubsetting(true);
-														PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
-														PDFCREATOR::AddPage('L', $page_format, false, false);
-														PDFCREATOR::writeHTML($text, true, false, true, false, '');
-														PDFCREATOR::setFooterMargin(0);
-														$pdfdoc = PDFCREATOR::Output('', 'S');
-														PDFCREATOR::reset();
-														Storage::disk('local')->put('/scan/files/'.$idsurat.'.pdf', $pdfdoc);
-														$text = null;
-													} catch (\Exception $e) {
-														$footnote = $footnote.$e->getMessage();
-														$text = null;
-													}
-													Inboxsurat::where('id', $rinbox->id)->update([
-														'terjadwal'	=>  23,
-														'footnote'	=> 	$footnote
-													]);
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					} else {
-						if ($rinbox->tabel == 'SKDANPERATURAN'){
-							$ceksek 	= Tabelskdanperaturan::where('marking', $marking)->first();
-							if (isset($ceksek->marking)){
-								$file 	= 'scan/files/'.$ceksek->marking.'.pdf';
-								Storage::disk('local')->delete($file);
-								Tabelskdanperaturan::where('id', $ceksek->id)->update([
-									'tandatangan'		=> 	$ttd,
-									'updated_at'		=> 	date('Y-m-d H:i:s')
-								]);
-								$text		= NotifikasiController::getTextExternal('formb',$ceksek->id);
-								$marking 	= $ceksek->marking;
-								$img_file 	= public_path('kopfooterdpm.png');
-								$gethalaman = explode('<div style="page-break-before: always"></div>', $text);
-								if (isset($ceksek->pembuat)){ $pembuat = $ceksek->pembuat; }
-								if (isset($ceksek->kelompok)){ $kelompok = $ceksek->kelompok; }
-								if (isset($ceksek->jenissrt)){ $jenissrt = $ceksek->jenissrt; }
-								if (isset($ceksek->kepada)){ $kepada = $ceksek->kepada; }
-								if (isset($ceksek->perihal)){ $perihal = $ceksek->perihal; }
-								
-								if (isset($ceksek->inputor)){ $pembuat = $ceksek->inputor; }
-								if (isset($ceksek->fakultas)){ $kelompok = $ceksek->fakultas; }
-								if (isset($ceksek->kelompok)){ $jenissrt = $ceksek->kelompok; }
-								if (isset($ceksek->namaparaf4)){ $kepada = $ceksek->namaparaf4; }
-								if (isset($ceksek->judul)){ $perihal = $ceksek->judul; }
-								try {
-									PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
-									PDFCREATOR::SetProtection(array('modify', 'copy'), '', null, 0, null);
-									PDFCREATOR::SetCreator($pembuat);
-									PDFCREATOR::SetAuthor($kelompok);
-									PDFCREATOR::SetTitle($jenissrt);
-									PDFCREATOR::SetSubject($kepada);
-									PDFCREATOR::SetKeywords($perihal);
-									PDFCREATOR::setPrintHeader(false);
-									PDFCREATOR::setPrintFooter(false);
-									PDFCREATOR::SetMargins(5, 0, 5);
-									PDFCREATOR::setFontSubsetting(true);
-									PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
-									foreach($gethalaman as $halaman){
-										PDFCREATOR::AddPage('P', $page_format, false, false);
-										$bMargin = PDFCREATOR::getBreakMargin();
-										$auto_page_break = PDFCREATOR::getAutoPageBreak();
-										PDFCREATOR::SetAutoPageBreak(false, 0);
-										PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
-										PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
-										PDFCREATOR::setPageMark();
-										PDFCREATOR::writeHTML($halaman, true, 0, true, 0);
-										PDFCREATOR::setFooterMargin(0);	
-									}
-									$pdfdoc = PDFCREATOR::Output('', 'S');
-									PDFCREATOR::reset();
-									Storage::disk('local')->put('/scan/files/'.$marking.'.pdf', $pdfdoc);
-									$ttecount++;
-								} catch (\Exception $e) {
-									$footnote = $footnote.$e->getMessage();
-								}
-								
-								Inboxsurat::where('id', $rinbox->id)->update([
-									'terjadwal'	=>  10,
-									'footnote'	=> 	$footnote
-								]);
-								$text = null;
-							}
-						} else {
-							$ceksek 	= Suratkeluar::where('marking', $marking)->first();
-							if (isset($ceksek->marking)){
-								$file 	= 'scan/files/'.$ceksek->marking.'.pdf';
-								Storage::disk('local')->delete($file);
-								Suratkeluar::where('id', $ceksek->id)->update([
-									'tandatangan'		=> 	$ttd,
-									'status'			=> 	$ttd
-								]);
-								if ($ceksek->fakultas == 'RSPHSKR'){
-									$img_file = public_path('kopfooterrsphs.png');
-								} else if ($ceksek->fakultas == 'RSPHMLG'){
-									$img_file = public_path('kopfooterrsphm.png');
-								} else if ($ceksek->fakultas == 'PDP'){
-									$img_file = public_path('kopfooterpdp.png');
-								} else {
-									$img_file = public_path('kopfooterdpm.png');
-								}
-								$text		= NotifikasiController::getTextExternal('formc',$ceksek->id);
-								$marking 	= $ceksek->marking;
-								$gethalaman = explode('<div style="page-break-before: always"></div>', $text);
-								if (isset($ceksek->pembuat)){ $pembuat = $ceksek->pembuat; }
-								if (isset($ceksek->kelompok)){ $kelompok = $ceksek->kelompok; }
-								if (isset($ceksek->jenissrt)){ $jenissrt = $ceksek->jenissrt; }
-								if (isset($ceksek->kepada)){ $kepada = $ceksek->kepada; }
-								if (isset($ceksek->perihal)){ $perihal = $ceksek->perihal; }
-								
-								if (isset($ceksek->inputor)){ $pembuat = $ceksek->inputor; }
-								if (isset($ceksek->fakultas)){ $kelompok = $ceksek->fakultas; }
-								if (isset($ceksek->kelompok)){ $jenissrt = $ceksek->kelompok; }
-								if (isset($ceksek->namaparaf4)){ $kepada = $ceksek->namaparaf4; }
-								if (isset($ceksek->judul)){ $perihal = $ceksek->judul; }
-								try {
-									PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
-									PDFCREATOR::SetCreator($pembuat);
-									PDFCREATOR::SetAuthor($kelompok);
-									PDFCREATOR::SetTitle($jenissrt);
-									PDFCREATOR::SetSubject($kepada);
-									PDFCREATOR::SetKeywords($perihal);
-									PDFCREATOR::setPrintHeader(false);
-									PDFCREATOR::setPrintFooter(false);
-									PDFCREATOR::SetMargins(5, 0, 5);
-									PDFCREATOR::setFontSubsetting(true);
-									PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
-									foreach($gethalaman as $halaman){
-										PDFCREATOR::AddPage('P', $page_format, false, false);
-										$bMargin = PDFCREATOR::getBreakMargin();
-										$auto_page_break = PDFCREATOR::getAutoPageBreak();
-										PDFCREATOR::SetAutoPageBreak(false, 0);
-										PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
-										PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
-										PDFCREATOR::setPageMark();
-										PDFCREATOR::writeHTML($halaman, true, 0, true, 0);
-										PDFCREATOR::setFooterMargin(0);	
-									}
-									$pdfdoc = PDFCREATOR::Output('', 'S');
-									PDFCREATOR::reset();
-									Storage::disk('local')->put('/scan/files/'.$marking.'.pdf', $pdfdoc);
-									$ttecount++;
-								} catch (\Exception $e) {
-									$footnote = $footnote.$e->getMessage();
-								}
-								Inboxsurat::where('id', $rinbox->id)->update([
-									'terjadwal'	=> 11,
-									'footnote'	=> $footnote
-								]);
-								$text = null;
-							} else {
-								$gceksrtklr	= Suratkeluartnpnomor::where('marking', $marking)->first();
-								if (isset($gceksrtklr->id)){
-									$idsurat 	= $gceksrtklr->id;
-									$jenissrt	= $gceksrtklr->jenissrt;
-									$status 	= $gceksrtklr->status;
-									$marking 	= $gceksrtklr->marking;
-									$perihal 	= $gceksrtklr->perihal;
-									$kelompok 	= $gceksrtklr->kelompok;
-									if ($status == 'MANUAL' OR $jenissrt == 'SPO'){
-										try {
-											$pdf 	= new Fpdi('P','mm',array(210,330));
-											$pages 	= $pdf->setSourceFile(public_path().'/scan/files/'.$marking.'.pdf');
-											for ($i = 1; $i <= $pages; $i++)
-											{
-												$page = $pdf->importPage($i);
-												$pdf->AddPage();
-												$pdf->useTemplate($page, ['adjustPageSize' => true]);
-												$pdf->setSignature($certificate, $certificate, $marking, '', 2, $info);
-												$pdf->setPageMark();
-											}
-											$pdf->Output(public_path().'/scan/files/'.$marking.'.pdf', 'F');
-											$ttecount++;
-										} catch (\Exception $e) {
-											$footnote = $footnote.$e->getMessage();
-										}
-										Inboxsurat::where('id', $rinbox->id)->update([
-											'terjadwal'	=> 12,
-											'footnote'	=> $footnote
-										]);
-									} else {
-										$text		= NotifikasiController::getTextExternal('srtklrtnpnomor',$gceksrtklr->id);
-										try {
-											PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
-											PDFCREATOR::SetCreator($pembuat);
-											PDFCREATOR::SetAuthor($kelompok);
-											PDFCREATOR::SetTitle($jenissrt);
-											PDFCREATOR::SetSubject($gceksrtklr->kepada);
-											PDFCREATOR::SetKeywords($perihal);
-											PDFCREATOR::setPrintHeader(false);
-											PDFCREATOR::setPrintFooter(false);
-											PDFCREATOR::SetMargins(5, 0, 5);
-											PDFCREATOR::setFontSubsetting(true);
-											PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
-											PDFCREATOR::AddPage('L', $page_format, false, false);
-											PDFCREATOR::writeHTML($text, true, false, true, false, '');
-											PDFCREATOR::setFooterMargin(0);
-											$pdfdoc = PDFCREATOR::Output('', 'S');
-											PDFCREATOR::reset();
-											Storage::disk('local')->put('/scan/files/'.$idsurat.'.pdf', $pdfdoc);
-											$text = null;
-											$ttecount++;
-										} catch (\Exception $e) {
-											$footnote = $footnote.$e->getMessage();
-											$text = null;
-										}
-										Inboxsurat::where('id', $rinbox->id)->update([
-											'terjadwal'	=>  13,
-											'footnote'	=> $footnote
-										]);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		$alamatweb					= $homebase.'/trackingid/marking-'.$markingname;
-		//$qrcode 					= base64_encode(QrCode::format('png')->size(100)->generate($alamatweb));
-		$qrcode 					= '';
-		if(Session('previlage') == 'administrasi'){
-			$countsuratmasuk  		= Suratmasuk::where('fakultas', Session('fakultas'))->where('status', '!=', 'arsip')->count();
-			$countsuratkeluar  		= Suratkeluar::where('fakultas', Session('fakultas'))->where('ruangarsip', '')->count();
-			$countskdanperaturan  	= Tabelskdanperaturan::where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$efent  				= WebinarEventlist::where('pembicara', 'UNDANGANDIGITAL')->where('created_by', Session('email'))->where('mulai', '>=', Carbon::now()->subDays(1)->toDateTimeString())->orderBy('mulai', 'ASC')->count();
-			$jevent					= WebinarEventlist::where('fakultas', Session('fakultas'))->orderBy('mulai', 'DESC')->count();
-			$efent					= $efent + $jevent;
-		}
-		if(Session('previlage') == 'Admin SDM'){
-			$notifcutitahunan				= Suratkeluartnpnomor::where('jenissrt', 'Cuti Tahunan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifcutiagama					= Suratkeluartnpnomor::where('jenissrt', 'Cuti Keagamaan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifijinplgcepat				= Suratkeluartnpnomor::where('jenissrt', 'Ijin Pulang Cepat')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifijinkeluarkantor			= Suratkeluartnpnomor::where('jenissrt', 'Ijin Keluar Kantor')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpermintaanpegawai			= Suratkeluartnpnomor::where('jenissrt', 'Permintaan Pegawai')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifmutasirotasi				= Suratkeluartnpnomor::where('jenissrt', 'Mutasi Rotasi')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifkomunikasi				= Suratkeluartnpnomor::where('jenissrt', 'Komunikasi')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpengangkatanjabatan		= Tabelskdanperaturan::where('kelompok', 'Pengangkatan Jabatan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpemberhentianjabatan		= Tabelskdanperaturan::where('kelompok', 'Pemberhentian Jabatan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpegawaitetap				= Tabelskdanperaturan::where('kelompok', 'Pegawai Tetap')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifdoktertetap				= Tabelskdanperaturan::where('kelompok', 'Dokter Tetap')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpenerimaanstaf			= Tabelskdanperaturan::where('kelompok', 'Penerimaan Staf')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpenonaktifanstaf			= Tabelskdanperaturan::where('kelompok', 'Penonaktifan Staf')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpengaktifanstaf			= Tabelskdanperaturan::whereIn('kelompok', ['Pengaktifan Staf', 'Penempatan Administrasi Pendaftaran', 'Penempatan Analis Kesehatan', 'Penempatan Perawat', 'Penempatan Perekam Medik', 'Penempatan Security'])->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifmutasi					= Tabelskdanperaturan::where('kelompok', 'Mutasi')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpenonaktifandokter		= Tabelskdanperaturan::where('kelompok', 'Penonaktifan Dokter Tetap')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notiforientasikerja			= Suratkeluar::where('jenissrt', 'Perjanjian Orientasi Kerja')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpkwt						= Suratkeluar::where('jenissrt', 'PKWT')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpkwtt						= Suratkeluar::where('jenissrt', 'PKWTT')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifspo						= Suratkeluartnpnomor::where('jenissrt', 'SPO')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifedaran					= Suratkeluar::where('jenissrt', 'Edaran')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifperingatan				= Suratkeluar::where('jenissrt', 'Peringatan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifbalasanpenambahanstaf		= Suratkeluar::where('jenissrt', 'Balasan Penambahan Staf')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpermohonan				= Suratkeluar::where('jenissrt', 'Permohonan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notiftugas						= Suratkeluar::where('jenissrt', 'Tugas')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpemberitahuan				= Suratkeluar::where('jenissrt', 'Pemberitahuan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notiftanggapanresign			= Suratkeluar::where('jenissrt', 'Tanggapan Resign')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifreferensikerja			= Suratkeluar::where('jenissrt', 'Referensi Kerja')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifketeranganaktif			= Suratkeluar::where('jenissrt', 'Keterangan Aktif Bekerja')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpemutusanhubungan			= Suratkeluar::where('jenissrt', 'Pemutusan Hubungan Kerja')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpemanggilancalonkaryawan	= Suratkeluar::where('jenissrt', 'Pemanggilan Calon Karyawan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notiflolosseleksi				= Suratkeluar::where('jenissrt', 'Pemberitahuan Lolos Seleksi')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpemberitahuanmcu			= Suratkeluar::where('jenissrt', 'Pemberitahuan MCU')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifundangan					= Suratkeluar::where('jenissrt', 'Undangan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifpemanggilankie			= Suratkeluar::where('jenissrt', 'Pemanggilan KIE Staf')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifketerangantidakbekerja	= Suratkeluar::where('jenissrt', 'Keterangan Tidak Bekerja')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs01 					= Suratkeluartnpnomor::where('jenissrt', 'Tanda Terima Titipan Ijasah')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs02 					= Suratkeluartnpnomor::where('jenissrt', 'Visitor Tamu')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs03 					= Suratkeluartnpnomor::where('jenissrt', 'Konseling Staf')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs04 					= Suratkeluartnpnomor::where('jenissrt', 'Libur Akreditasi')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs05 					= Suratkeluartnpnomor::where('jenissrt', 'Serah Terima')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs06 					= Suratkeluartnpnomor::where('jenissrt', 'Riwayat Pelatihan')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs07 					= Suratkeluartnpnomor::where('jenissrt', 'Pengajuan RS')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs08 					= Suratkeluartnpnomor::where('jenissrt', 'Penyelesaian Kewajiban')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs09 					= Suratkeluartnpnomor::where('jenissrt', 'Penggabungan Libur')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs10 					= Suratkeluartnpnomor::where('jenissrt', 'Cuti MS')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs11 					= Suratkeluartnpnomor::where('jenissrt', 'Infus On Call')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs12 					= Suratkeluartnpnomor::where('jenissrt', 'Lembur')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs13 					= Suratkeluartnpnomor::where('jenissrt', 'Finger Print')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs14 					= Suratkeluartnpnomor::where('jenissrt', 'Perintah On Call')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs15 					= Suratkeluartnpnomor::where('jenissrt', 'Ijin Dokter')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs16 					= Suratkeluartnpnomor::where('jenissrt', 'Ijin Staf')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs17 					= Suratkeluartnpnomor::where('jenissrt', 'Tukar Jadwal')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs18 					= Suratkeluartnpnomor::where('jenissrt', 'Pendelegasian Tugas')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$notifformrs19 					= Suratkeluartnpnomor::where('jenissrt', 'Permohonan Karyawan Baru')->where('fakultas', Session('fakultas'))->where('arsip', '')->count();
-			$persuratanptform 				= $notifcutitahunan	+ $notifcutiagama + $notifijinplgcepat + $notifijinkeluarkantor	+ $notifpermintaanpegawai + $notifmutasirotasi + $notifkomunikasi;
-			$persuratanptkd 				= $notifpengangkatanjabatan + $notifpemberhentianjabatan + $notifpegawaitetap + $notifdoktertetap + $notifpenerimaanstaf + $notifpenonaktifanstaf + $notifpengaktifanstaf + $notifmutasi + $notifpenonaktifandokter;
-			$persuratanptkk 				= $notiforientasikerja + $notifpkwt + $notifpkwtt;
-			$persuratanptss 				= $notifedaran + $notifperingatan + $notifbalasanpenambahanstaf + $notifpermohonan + $notiftugas + $notifpemberitahuan + $notiftanggapanresign + $notifreferensikerja + $notifketeranganaktif + $notifpemutusanhubungan + $notifpemanggilancalonkaryawan + $notiflolosseleksi + $notifpemberitahuanmcu + $notifundangan + $notifpemanggilankie + $notifketerangantidakbekerja;
-			$persuratanrs 					= $notifformrs01 + $notifformrs02 + $notifformrs03 + $notifformrs04 + $notifformrs05 + $notifformrs06 + $notifformrs07 + $notifformrs08 + $notifformrs09 + $notifformrs10 + $notifformrs11 + $notifformrs12 + $notifformrs13 + $notifformrs14 + $notifformrs15 + $notifformrs16 + $notifformrs17 + $notifformrs18 + $notifformrs19;
-				
-		}
-		if (Session('previlage') == 'PEJABAT'){
-			$cekselesai	= 0;
-			$jmerangkap	= User::where('username', Session('username'))->first();
-			if (isset($jmerangkap->merangkap)){
-				$merangkap		= $jmerangkap->merangkap;
-				if (is_null($merangkap)){ $merangkap = ''; }
-			} else { $merangkap = ''; }
-			$ceksrtmasuk	= Inboxsurat::Where('email', 'LIKE', Session('email'))->where('jenis', 'MASUK')->whereNotIn('status', ['reply', 'deleted'])->groupBy('marking')->get();
-			if ($merangkap != ''){
-				$countmemo		= Inboxsurat::whereIn('pengirim', [Session('jabatan'), $merangkap])->where('jenis', 'MASUK')->whereNotIn('status', ['reply', 'deleted'])->where('jenissrt', 'MEMO')->count();
-				$countnotadinas	= Inboxsurat::whereIn('pengirim', [Session('jabatan'), $merangkap])->where('jenis', 'MASUK')->whereNotIn('status', ['reply', 'deleted'])->where('jenissrt', 'NOTA DINAS')->count();
-				
-				$ceksrtkeluar	= Inboxsurat::whereIn('penerima', [Session('jabatan'), $merangkap])
-								->whereIn('jenis', ['KELUAR', 'KELUARNONOMER'])
-								->where('status', 'send')
-								->groupBy('marking')
-								->get();
-				$cekmari		= DB::table('tbl_inbox')
-								->join('tbl_suratmasuk', 'tbl_inbox.marking', 'tbl_suratmasuk.marking')
-								->select('tbl_suratmasuk.*', 'tbl_inbox.pengirim')
-								->whereIn('tbl_inbox.penerima', [Session('jabatan'), $merangkap])
-								->where('tbl_suratmasuk.status', 'LIKE', '%'.'arsip'.'%')
-								->whereYear('tbl_suratmasuk.tglmasuk', date('Y'))
-								->orderBy('tbl_inbox.marking', 'DESC')
-								->count();
-				$cekrungmari	= DB::table('tbl_inbox')
-								->join('tbl_suratmasuk', 'tbl_suratmasuk.marking', 'tbl_inbox.marking')
-								->select('tbl_suratmasuk.*', 'tbl_inbox.pengirim')
-								->whereIn('tbl_inbox.penerima', [Session('jabatan'), $merangkap])
-								->where('tbl_suratmasuk.status', 'NOT LIKE', '%'.'arsip'.'%')
-								->whereYear('tbl_suratmasuk.tglmasuk', date('Y'))
-								->orderBy('tbl_inbox.marking', 'DESC')
-								->count();
-			} else {
-				$countmemo		= Inboxsurat::where('pengirim', Session('jabatan'))->where('jenis', 'MASUK')->whereIn('status', ['send', 'read'])->where('jenissrt', 'MEMO')->count();
-				$countnotadinas	= Inboxsurat::where('pengirim', Session('jabatan'))->where('jenis', 'MASUK')->whereIn('status', ['send', 'read'])->where('jenissrt', 'NOTA DINAS')->count();
-				
-				$ceksrtkeluar	= Inboxsurat::where('penerima', Session('jabatan'))
-								->whereIn('jenis', ['KELUAR', 'KELUARNONOMER'])
-								->where('status', 'send')
-								->groupBy('marking')
-								->get();
-				$cekmari		= DB::table('tbl_inbox')
-								->join('tbl_suratmasuk', 'tbl_inbox.marking', 'tbl_suratmasuk.marking')
-								->select('tbl_suratmasuk.*', 'tbl_inbox.pengirim')
-								->where('tbl_inbox.penerima', Session('jabatan'))
-								->where('tbl_suratmasuk.status', 'LIKE', '%'.'arsip'.'%')
-								->whereYear('tbl_suratmasuk.tglmasuk', date('Y'))
-								->orderBy('tbl_inbox.marking', 'DESC')
-								->count();
-				$cekrungmari	= DB::table('tbl_inbox')
-								->join('tbl_suratmasuk', 'tbl_suratmasuk.marking', 'tbl_inbox.marking')
-								->select('tbl_suratmasuk.*', 'tbl_inbox.pengirim')
-								->where('tbl_inbox.penerima', Session('jabatan'))
-								->where('tbl_suratmasuk.status', 'NOT LIKE', '%'.'arsip'.'%')
-								->whereYear('tbl_suratmasuk.tglmasuk', date('Y'))
-								->orderBy('tbl_inbox.marking', 'DESC')
-								->count();
-		
-			}
-			$mailbox 		= count($ceksrtmasuk);
-			$countmohonttd 	= count($ceksrtkeluar);
-		} else {
-			$mailbox			= Inboxsurat::where('email', 'LIKE', Session('email'))->where('status', 'send')->where('jenis', 'MASUK')->count();
-			$cekselesai 		= Suratkeluar::where('pembuat', Session('email'))->where('arsip', '')->where('tandatangan', 'SIgned With TTE')->count();
-			$cekditolak 		= Inboxsurat::where('pembuat', Session('email'))->where('jenis', 'KELUAR')->where('status', 'Ditolak')->get();
-			if (!empty($cekditolak)){
-				foreach($cekditolak as $rtolak){
-					$textnotif 	= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-arrow-circle-right"></i> '.$rtolak->nosurat.' Mohon di Koreksi</a>';
-				}
-			}
-		}
-		$penerimasurat			= Penerimasurat::where('penulisan', Session('email'))->where('status', 'SEND')->count();
-		$mailbox				= $mailbox + $penerimasurat;
-		if ($mailbox != 0){
-			$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> '.$mailbox.' new messages</a>';
-		}
-		if ($cekselesai != 0){
-			$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-trophy mr-2"></i> '.$cekselesai.' Surat Keluar di Tandatangani dan Belum di Arsip</a>';
-		}
-		if ($countmohonttd != 0){
-			$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-paper-plane-o mr-2"></i> '.$countmohonttd.' Surat Perlu Paraf/TTE</a>';
-		}
-		if ($countnotadinas != 0){
-			$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-paper-plane-o mr-2"></i> '.$countnotadinas.' Nota Dinas Belum di Arsip</a>';
-		}
-		if ($countmemo != 0){
-			$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-paper-plane-o mr-2"></i> '.$countmemo.' Memo Belum di Arsip</a>';
-		}
-		if ($countsuratmasuk != 0){
-			$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-envelope mr-2"></i> '.$countsuratmasuk.' Surat Masuk</a>';
-		}
-		if ($countsuratkeluar != 0){
-			$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-paper-plane-o mr-2"></i> '.$countsuratkeluar.' Surat Keluar</a>';
-		}
-		if ($countskdanperaturan != 0){
-			$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-clone mr-2"></i> '.$countskdanperaturan.' SK dan Peraturan</a>';
-		}
-		if ($efent != 0){
-			$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-calendar-plus-o mr-2"></i> '.$efent.' Kegiatan</a>';
-		}
-		if ($persuratanptform != 0){
-			$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> '.$persuratanptform.' Form Persuratan PT Belum di Arsip</a>';
-		}
-		if ($persuratanptkd != 0){
-			$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> '.$persuratanptkd.' Keputusan Direktur Belum di Arsip</a>';
-		}
-		if ($persuratanptkk != 0){
-			$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> '.$persuratanptkk.' Kontrak Kerja Belum di Arsip</a>';
-		}
-		if ($persuratanptss != 0){
-			$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> '.$persuratanptss.' Surat Belum di Arsip</a>';
-		}
-		if ($persuratanrs != 0){
-			$textnotif 			= $textnotif.'<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> '.$persuratanrs.' Form Persuratan RS Belum di Arsip</a>';
-		}
-		$counttotalnotif		= $persuratanrs + $persuratanptss + $persuratanptkk + $persuratanptform + $persuratanptkd + $mailbox + $countsuratmasuk + $countsuratkeluar + $countskdanperaturan + $efent + $countmohonttd;
-		return response()->json([
-			'markingname' 					=> $markingname, 
-			'qrcode' 						=> $countsql.' => '.$ttecount.' (TTE) '.$parafcount.' (PARAF)',
-			'textnotif' 					=> $textnotif, 
-			'counttotalnotif' 				=> $counttotalnotif, 
-			'countmailbox' 					=> $mailbox, 
-			'countmohonttd' 				=> $countmohonttd, 
-			'countnotadinas' 				=> $countnotadinas, 
-			'countmemo' 					=> $countmemo, 
-			'countsuratmasuk' 				=> $countsuratmasuk, 
-			'countsuratkeluar' 				=> $countsuratkeluar, 
-			'countsk' 						=> $countskdanperaturan, 
-			'countevent' 					=> $efent,
-			'notifcutitahunan' 				=> $notifcutitahunan,
-			'notifcutiagama' 				=> $notifcutiagama,
-			'notifijinplgcepat' 			=> $notifijinplgcepat,
-			'notifijinkeluarkantor' 		=> $notifijinkeluarkantor,
-			'notifpermintaanpegawai' 		=> $notifpermintaanpegawai,
-			'notifmutasirotasi' 			=> $notifmutasirotasi,
-			'notifkomunikasi' 				=> $notifkomunikasi,
-			'notifpengangkatanjabatan' 		=> $notifpengangkatanjabatan,
-			'notifpemberhentianjabatan'		=> $notifpemberhentianjabatan,
-			'notifpegawaitetap' 			=> $notifpegawaitetap,
-			'notifdoktertetap' 				=> $notifdoktertetap,
-			'notifpenerimaanstaf' 			=> $notifpenerimaanstaf,
-			'notifpenonaktifanstaf' 		=> $notifpenonaktifanstaf,
-			'notifpengaktifanstaf' 			=> $notifpengaktifanstaf,
-			'notifmutasi' 					=> $notifmutasi,
-			'notifpenonaktifandokter'		=> $notifpenonaktifandokter,
-			'notiforientasikerja' 			=> $notiforientasikerja,
-			'notifpkwt' 					=> $notifpkwt,
-			'notifpkwtt' 					=> $notifpkwtt,
-			'notifspo' 						=> $notifspo,
-			'notifedaran' 					=> $notifedaran,
-			'notifperingatan' 				=> $notifperingatan,
-			'notifbalasanpenambahanstaf'	=> $notifbalasanpenambahanstaf,
-			'notifpermohonan' 				=> $notifpermohonan,
-			'notiftugas' 					=> $notiftugas,
-			'notifpemberitahuan' 			=> $notifpemberitahuan,
-			'notiftanggapanresign' 			=> $notiftanggapanresign,
-			'notifreferensikerja' 			=> $notifreferensikerja,
-			'notifketeranganaktif' 			=> $notifketeranganaktif,
-			'notifpemutusanhubungan' 		=> $notifpemutusanhubungan,
-			'notifpemanggilancalonkaryawan'	=> $notifpemanggilancalonkaryawan,
-			'notiflolosseleksi' 			=> $notiflolosseleksi,
-			'notifpemberitahuanmcu' 		=> $notifpemberitahuanmcu,
-			'notifundangan' 				=> $notifundangan,
-			'notifpemanggilankie' 			=> $notifundangan,
-			'notifketerangantidakbekerja'	=> $notifketerangantidakbekerja,
-			'notifformrs01'					=> $notifformrs01,
-			'notifformrs02'					=> $notifformrs02,
-			'notifformrs03'					=> $notifformrs03,
-			'notifformrs04'					=> $notifformrs04,
-			'notifformrs05'					=> $notifformrs05,
-			'notifformrs06'					=> $notifformrs06,
-			'notifformrs07'					=> $notifformrs07,
-			'notifformrs08'					=> $notifformrs08,
-			'notifformrs09'					=> $notifformrs09,
-			'notifformrs10'					=> $notifformrs10,
-			'notifformrs11'					=> $notifformrs11,
-			'notifformrs12'					=> $notifformrs12,
-			'notifformrs13'					=> $notifformrs13,
-			'notifformrs14'					=> $notifformrs14,
-			'notifformrs15'					=> $notifformrs15,
-			'notifformrs16'					=> $notifformrs16,
-			'notifformrs17'					=> $notifformrs17,
-			'notifformrs18'					=> $notifformrs18,
-			'notifformrs19'					=> $notifformrs19,
-		]);
-		return back();
-	
+
+        // ===================== CACHE SESSION =====================
+        $sessId         = Session('id');
+        $sessFakultas   = Session('fakultas');
+        $sessFakpanjang = Session('fakpanjang');
+        $sessNamaapps   = Session('namaapps01');
+        $sessAlamatapps = Session('addressapps01');
+        $sessSubdomain  = Session('subdomainapps01');
+        $sessSubsub     = Session('subsubdomainapps01');
+        $sessPrevilage  = Session('previlage');
+        $sessNama       = Session('nama');
+        $sessKota       = Session('kota01');
+        $sessEmailApps  = Session('emailapps01');
+        $sessJabatan    = Session('jabatan');
+        $sessUsername   = Session('username');
+        $sessEmail      = Session('email');
+
+        // ===================== INISIALISASI VARIABEL =====================
+        $textnotif                      = '';
+        $countsuratmasuk                = 0;
+        $countsuratkeluar               = 0;
+        $countskdanperaturan            = 0;
+        $efent                          = 0;
+        $countmohonttd                  = 0;
+        $countnotadinas                 = 0;
+        $countmemo                      = 0;
+        $cekmari                        = 0;
+        $cekrungmari                    = 0;
+        $totalform                      = 0;
+        $notifcutitahunan               = 0;
+        $notifcutiagama                 = 0;
+        $notifijinplgcepat              = 0;
+        $notifijinkeluarkantor          = 0;
+        $notifpermintaanpegawai         = 0;
+        $notifmutasirotasi              = 0;
+        $notifkomunikasi                = 0;
+        $notifpengangkatanjabatan       = 0;
+        $notifpemberhentianjabatan      = 0;
+        $notifpegawaitetap              = 0;
+        $notifdoktertetap               = 0;
+        $notifpenerimaanstaf            = 0;
+        $notifpenonaktifanstaf          = 0;
+        $notifpengaktifanstaf           = 0;
+        $notifmutasi                    = 0;
+        $notifpenonaktifandokter        = 0;
+        $notiforientasikerja            = 0;
+        $notifpkwt                      = 0;
+        $notifpkwtt                     = 0;
+        $notifspo                       = 0;
+        $notifedaran                    = 0;
+        $notifperingatan                = 0;
+        $notifbalasanpenambahanstaf     = 0;
+        $notifpermohonan                = 0;
+        $notiftugas                     = 0;
+        $notifpemberitahuan             = 0;
+        $notiftanggapanresign           = 0;
+        $notifreferensikerja            = 0;
+        $notifketeranganaktif           = 0;
+        $notifpemutusanhubungan         = 0;
+        $notifpemanggilancalonkaryawan  = 0;
+        $notiflolosseleksi              = 0;
+        $notifpemberitahuanmcu          = 0;
+        $notifundangan                  = 0;
+        $notifpemanggilankie            = 0;
+        $notifketerangantidakbekerja    = 0;
+        $notifformrs01                  = 0;
+        $notifformrs02                  = 0;
+        $notifformrs03                  = 0;
+        $notifformrs04                  = 0;
+        $notifformrs05                  = 0;
+        $notifformrs06                  = 0;
+        $notifformrs07                  = 0;
+        $notifformrs08                  = 0;
+        $notifformrs09                  = 0;
+        $notifformrs10                  = 0;
+        $notifformrs11                  = 0;
+        $notifformrs12                  = 0;
+        $notifformrs13                  = 0;
+        $notifformrs14                  = 0;
+        $notifformrs15                  = 0;
+        $notifformrs16                  = 0;
+        $notifformrs17                  = 0;
+        $notifformrs18                  = 0;
+        $notifformrs19                  = 0;
+        $persuratanptform               = 0;
+        $persuratanptkd                 = 0;
+        $persuratanptkk                 = 0;
+        $persuratanptss                 = 0;
+        $persuratanrs                   = 0;
+        $mailbox                        = 0;
+        $cekselesai                     = 0;
+
+        $markingname                    = md5($sessId . '-' . time());
+        $homebase                       = url("/");
+        $swandhanafak                   = $sessFakultas;
+        $swandhanaalamat                = $sessAlamatapps;
+        $swandhanakemen                 = $sessSubdomain;
+        $swandhanauniv                  = $sessSubsub;
+        $mkelompok                      = $sessPrevilage;
+        $pembuat                        = $sessNama;
+        $swandhanakota                  = $sessKota;
+        $swandhanaemail                 = $sessEmailApps;
+        $ttd                            = 'SIgned With TTE';
+        $encoded_image                  = 'SIgned With TTE';
+        $benergak                       = 'TIDAK';
+        $textsamplesalah                = 'Password Anda Salah';
+        $noselanjutnya                  = 0;
+        $error                          = '';
+
+        $certificate                    = 'file://' . base_path() . '/public/sco.crt';
+
+        $page_format = array(
+            'MediaBox' => array('llx' => 0, 'lly' => 0, 'urx' => 210, 'ury' => 330),
+            'Dur'      => 3,
+            'PZ'       => 1,
+        );
+
+        $info = array(
+            'Name'        => $sessNamaapps,
+            'Location'    => $swandhanauniv,
+            'Reason'      => 'Dokumen ini ditandatangani secara elektronik',
+            'ContactInfo' => $homebase,
+        );
+
+        // ===================== AMBIL DATA TERJADWAL =====================
+        $sql = Inboxsurat::where('terjadwal', '1')->orderBy('updated_at', 'ASC')->get();
+        $countsql   = count($sql);
+        $parafcount = 0;
+        $ttecount   = 0;
+
+        // Cache lokal untuk menghindari query berulang
+        $pejabatIdCache   = array();
+        $pejabatLikeCache = array();
+        $certCache        = array();
+
+        if (!empty($sql)) {
+            foreach ($sql as $rinbox) {
+                $idne               = $rinbox->id;
+                $marking            = $rinbox->marking;
+                $kerjalm            = $rinbox->kerja;
+                $kerja              = $rinbox->kerja;
+                $penerima           = $rinbox->penerima;
+                $catatan            = $rinbox->catatan;
+                $tabele             = $rinbox->jenis;
+                $ctanggal           = $rinbox->tanggal;
+                $paraf1             = $rinbox->paraf1;
+                $paraf2             = $rinbox->paraf2;
+                $paraf3             = $rinbox->paraf3;
+                $paraf4             = $rinbox->paraf4;
+                $penandatangan      = $rinbox->penandatangan;
+                $masterjenissurat   = $rinbox->jenissrt;
+                $jenissrt           = $rinbox->jenissrt;
+                $footnote           = $rinbox->footnote;
+                $komputer           = $rinbox->komputer;
+                $email              = $rinbox->email;
+                $pembuat            = $rinbox->pembuat;
+                $perihal            = $rinbox->perihal;
+                $kepada             = $rinbox->kepada;
+                $serttte            = md5($email);
+                $ceksertifikatpribadi = $serttte . '.crt';
+                $sertifikatpribadi  = $serttte . '.csr';
+                $kelompok           = $penerima;
+
+                // ===================== HANDLE CERTIFICATE (dengan cache) =====================
+                if (isset($certCache[$ceksertifikatpribadi])) {
+                    $certificate = $certCache[$ceksertifikatpribadi];
+                } else {
+                    if (file_exists(base_path() . '/public/tte/' . $ceksertifikatpribadi)) {
+                        $certificate = 'file://' . base_path() . '/public/tte/' . $ceksertifikatpribadi;
+                    } else if (file_exists(public_path() . '/tte/' . $ceksertifikatpribadi)) {
+                        $certificate = 'file://' . public_path() . '/tte/' . $ceksertifikatpribadi;
+                    } else {
+                        $getpejabat = Pejabatsurat::where('email', $rinbox->email)->first();
+                        if (isset($getpejabat->pejabat)) {
+                            $namapejabat = $getpejabat->nama;
+                        } else {
+                            $namapejabat = $rinbox->penerima;
+                        }
+                        $dn = array(
+                            "countryName"             => "IN",
+                            "stateOrProvinceName"     => "East Java Indonesia",
+                            "localityName"            => $penerima,
+                            "organizationName"        => $swandhanauniv,
+                            "organizationalUnitName"  => $swandhanafak,
+                            "commonName"              => $namapejabat,
+                            "emailAddress"            => $email
+                        );
+                        $privkey = openssl_pkey_new(array(
+                            "private_key_bits" => 2048,
+                            "private_key_type" => OPENSSL_KEYTYPE_RSA,
+                        ));
+                        $csr     = openssl_csr_new($dn, $privkey, array('digest_alg' => 'RSA-SHA256'));
+                        $sscert  = openssl_csr_sign($csr, null, $privkey, 365);
+                        openssl_csr_export($csr, $csrout);
+                        openssl_x509_export($sscert, $certout);
+                        openssl_pkey_export($privkey, $pkeyout);
+                        Storage::disk('local')->put('/tte/' . $ceksertifikatpribadi, $pkeyout);
+                        file_put_contents(public_path() . "/tte/" . $ceksertifikatpribadi, $certout, FILE_APPEND | LOCK_EX);
+                        if (file_exists(base_path() . '/public/tte/' . $ceksertifikatpribadi)) {
+                            $certificate = 'file://' . base_path() . '/public/tte/' . $ceksertifikatpribadi;
+                        } else if (file_exists(public_path() . '/tte/' . $ceksertifikatpribadi)) {
+                            $certificate = 'file://' . public_path() . '/tte/' . $ceksertifikatpribadi;
+                        }
+                    }
+                    $certCache[$ceksertifikatpribadi] = $certificate;
+                }
+
+                // ===================== PROSES PARAF / TTD =====================
+                if ($rinbox->kerja == 'PARAF') {
+                    $noselanjutnya = 2;
+                    if ($rinbox->tanggal == '1') { $penandatangan = $paraf2; $noselanjutnya = 2; }
+                    if ($rinbox->tanggal == '2') { $penandatangan = $paraf3; $noselanjutnya = 3; }
+                    if ($rinbox->tanggal == '3') { $penandatangan = $paraf4; $noselanjutnya = 4; }
+                    if ($rinbox->tanggal == '4') { $noselanjutnya = 5; }
+                    if ($penandatangan == 0) { $penandatangan = $rinbox->penandatangan; }
+
+                    Inboxsurat::where('id', $idne)->update([
+                        'terjadwal' => $noselanjutnya
+                    ]);
+                    $parafcount++;
+
+                    // cache pejabat by id
+                    if (!isset($pejabatIdCache[$penandatangan])) {
+                        $pejabatIdCache[$penandatangan] = Pejabatsurat::where('id', $penandatangan)->first();
+                    }
+                    $getpejabat = $pejabatIdCache[$penandatangan];
+
+                    if (isset($getpejabat->id)) {
+                        SendMail::kiriminbox($rinbox->marking, $rinbox->penerima, $getpejabat->pejabat, $getpejabat->email, 'KELUAR', 'PARAF', $footnote, $noselanjutnya);
+                    } else {
+                        // cache pejabat by LIKE
+                        if (!isset($pejabatLikeCache[$penandatangan])) {
+                            $pejabatLikeCache[$penandatangan] = Pejabatsurat::where('pejabat', 'LIKE', $penandatangan)->first();
+                        }
+                        $getpejabat = $pejabatLikeCache[$penandatangan];
+
+                        if (isset($getpejabat->id)) {
+                            SendMail::kiriminbox($rinbox->marking, $rinbox->penerima, $getpejabat->pejabat, $getpejabat->email, 'KELUAR', 'TTD', $footnote, $noselanjutnya);
+                        } else {
+                            Inboxsurat::where('id', $idne)->update([
+                                'kerja' => 'TTD'
+                            ]);
+                        }
+                    }
+                } else {
+                    $cekbentuk = Templateskpp::where('namask', $masterjenissurat)->count();
+
+                    if ($cekbentuk == 0) {
+                        $tanggalesign = date('Y-m-d H:i:s');
+                        if ($ctanggal == '') {
+                            $ctanggal = 0;
+                        } else {
+                            $ctanggal = (int)$ctanggal;
+                        }
+                        $noselanjutnya = $ctanggal++;
+                        $alamatweb     = $homebase . '/trackingid/srtklr-' . $marking;
+                        $bgbssn        = '';
+
+                        // ===================== BLOK TTE NON-TEMPLATE =====================
+                        if ($masterjenissurat == 'UPLQRMAN' OR $masterjenissurat == 'SKDANPERATURANTTEMAN' OR $masterjenissurat == 'PERATURANTTEMAN' OR $masterjenissurat == 'INSTRUKSITTEMAN') {
+                            try {
+                                $pdf   = new Fpdi('P', 'mm', array(210, 330));
+                                $pages = $pdf->setSourceFile(public_path() . '/scan/files/' . $marking . '.pdf');
+                                for ($i = 1; $i <= $pages; $i++) {
+                                    $page = $pdf->importPage($i);
+                                    $pdf->AddPage();
+                                    $pdf->useTemplate($page, ['adjustPageSize' => true]);
+                                    $pdf->setSignature($certificate, $certificate, $marking, '', 2, $info);
+                                    $pdf->setPageMark();
+                                }
+                                $pdf->Output(public_path() . '/scan/files/' . $marking . '.pdf', 'F');
+                                Inboxsurat::where('id', $idne)->update([
+                                    'terjadwal' => 6,
+                                ]);
+                                $ttecount++;
+                            } catch (\Exception $e) {
+                                $footnote = $footnote . $e->getMessage();
+                            }
+                            if ($rinbox->tabel == 'DRAFTSK') {
+                                Draftsk::where('marking', $marking)->update([
+                                    'status'       => 'Signed',
+                                    'tandatangan'  => 'Signed By ' . $penerima,
+                                    'catatan'      => $footnote
+                                ]);
+                            } else if ($rinbox->tabel == 'SKDANPERATURAN') {
+                                Tabelskdanperaturan::where('marking', $marking)->update([
+                                    'tandatangan' => 'Signed By ' . $penerima,
+                                    'catatan'     => $footnote
+                                ]);
+                            } else if ($rinbox->tabel == 'KELUARNONOMER') {
+                                Suratkeluartnpnomor::where('marking', $marking)->update([
+                                    'status'      => 'Signed',
+                                    'tandatangan' => 'Signed By ' . $penerima,
+                                    'footnote'    => $footnote
+                                ]);
+                            } else {
+                                Suratkeluar::where('marking', $marking)->update([
+                                    'tandatangan' => 'Signed By ' . $penerima,
+                                    'status'      => 'Signed',
+                                    'footnote'    => $footnote
+                                ]);
+                            }
+                        } else {
+                            // ===================== BLOK TTE DENGAN QR CODE =====================
+                            SendMail::genQRCodefile($marking, $penerima, $penerima, $tanggalesign, $alamatweb);
+                            if (File::exists(base_path() . "/public/scan/generate/bg-" . $marking . ".png")) {
+                                $bgbssn = base_path('/public/scan/generate/bg-' . $marking . '.png');
+                            }
+                            if (File::exists(public_path() . "/scan/generate/bg-" . $marking . ".png")) {
+                                $bgbssn = public_path('/scan/generate/bg-' . $marking . '.png');
+                            }
+                            if ($bgbssn != '') {
+                                $file = public_path('scan/files/' . $marking . '.pdf');
+                                if (file_exists($file)) {
+                                    try {
+                                        $pdf   = new Fpdi('P', 'mm', array(210, 330));
+                                        $pages = $pdf->setSourceFile(public_path() . '/scan/files/' . $marking . '.pdf');
+                                        for ($i = 1; $i <= $pages; $i++) {
+                                            $page = $pdf->importPage($i);
+                                            $pdf->AddPage();
+                                            $pdf->useTemplate($page, ['adjustPageSize' => true]);
+                                            $pdf->setSignature($certificate, $certificate, $marking, '', 2, $info);
+                                            $pdf->setPageMark();
+                                        }
+                                        $pdf->Output(public_path() . '/scan/files/' . $marking . '.pdf', 'F');
+                                    } catch (\Exception $e) {
+                                        $footnote = $footnote . $e->getMessage();
+                                    }
+                                    Inboxsurat::where('id', $idne)->update([
+                                        'terjadwal' => 7,
+                                        'footnote'  => $footnote
+                                    ]);
+                                    $file1 = 'scan/generate/bg-' . $marking . '.png';
+                                    $file2 = 'scan/generate/qrimg-' . $marking . '.png';
+                                    $file3 = 'scan/generate/qrimg-' . $marking . '.pdf';
+                                    Storage::disk('local')->delete($file1);
+                                    Storage::disk('local')->delete($file2);
+                                    Storage::disk('local')->delete($file3);
+
+                                    if ($rinbox->tabel == 'DRAFTSK') {
+                                        Draftsk::where('marking', $marking)->update([
+                                            'status'      => 'Signed',
+                                            'tandatangan' => 'Signed By ' . $penerima,
+                                            'catatan'     => $footnote
+                                        ]);
+                                    } else if ($rinbox->tabel == 'SKDANPERATURAN') {
+                                        Tabelskdanperaturan::where('marking', $marking)->update([
+                                            'tandatangan' => 'Signed By ' . $penerima,
+                                            'catatan'     => $footnote
+                                        ]);
+                                    } else if ($rinbox->tabel == 'KELUARNONOMER') {
+                                        Suratkeluartnpnomor::where('marking', $marking)->update([
+                                            'status'      => 'Signed',
+                                            'tandatangan' => 'Signed By ' . $penerima,
+                                            'footnote'    => $footnote
+                                        ]);
+                                    } else {
+                                        Suratkeluar::where('marking', $marking)->update([
+                                            'tandatangan' => 'Signed By ' . $penerima,
+                                            'status'      => 'Signed',
+                                            'footnote'    => $footnote
+                                        ]);
+                                    }
+                                } else {
+                                    // ===================== FALLBACK SKDANPERATURAN / SURATKELUAR / TNP NOMOR =====================
+                                    if ($rinbox->tabel == 'SKDANPERATURAN') {
+                                        $ceksek = Tabelskdanperaturan::where('marking', $marking)->first();
+                                        if (isset($ceksek->marking)) {
+                                            $file = 'scan/files/' . $ceksek->marking . '.pdf';
+                                            Storage::disk('local')->delete($file);
+                                            Tabelskdanperaturan::where('id', $ceksek->id)->update([
+                                                'tandatangan' => $ttd,
+                                                'updated_at'  => date('Y-m-d H:i:s')
+                                            ]);
+
+                                            $img_file   = public_path('kopfooterdpm.png');
+                                            $text       = NotifikasiController::getTextExternal('formb', $ceksek->id);
+                                            $marking    = $ceksek->marking;
+                                            if (isset($ceksek->pembuat))   { $pembuat   = $ceksek->pembuat; }
+                                            if (isset($ceksek->kelompok))  { $kelompok  = $ceksek->kelompok; }
+                                            if (isset($ceksek->jenissrt))  { $jenissrt  = $ceksek->jenissrt; }
+                                            if (isset($ceksek->kepada))    { $kepada    = $ceksek->kepada; }
+                                            if (isset($ceksek->perihal))   { $perihal   = $ceksek->perihal; }
+                                            if (isset($ceksek->inputor))   { $pembuat   = $ceksek->inputor; }
+                                            if (isset($ceksek->fakultas))  { $kelompok  = $ceksek->fakultas; }
+                                            if (isset($ceksek->kelompok))  { $jenissrt  = $ceksek->kelompok; }
+                                            if (isset($ceksek->namaparaf4)){ $kepada    = $ceksek->namaparaf4; }
+                                            if (isset($ceksek->judul))     { $perihal   = $ceksek->judul; }
+
+                                            $gethalaman = explode('<div style="page-break-before: always"></div>', $text);
+                                            try {
+                                                PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
+                                                PDFCREATOR::SetProtection(array('modify', 'copy'), '', null, 0, null);
+                                                PDFCREATOR::SetCreator($pembuat);
+                                                PDFCREATOR::SetAuthor($kelompok);
+                                                PDFCREATOR::SetTitle($jenissrt);
+                                                PDFCREATOR::SetSubject($kepada);
+                                                PDFCREATOR::SetKeywords($perihal);
+                                                PDFCREATOR::setPrintHeader(false);
+                                                PDFCREATOR::setPrintFooter(false);
+                                                PDFCREATOR::SetMargins(5, 0, 5);
+                                                PDFCREATOR::setFontSubsetting(true);
+                                                PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+                                                foreach ($gethalaman as $halaman) {
+                                                    PDFCREATOR::AddPage('P', $page_format, false, false);
+                                                    $bMargin         = PDFCREATOR::getBreakMargin();
+                                                    $auto_page_break = PDFCREATOR::getAutoPageBreak();
+                                                    PDFCREATOR::SetAutoPageBreak(false, 0);
+                                                    PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
+                                                    PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
+                                                    PDFCREATOR::setPageMark();
+                                                    PDFCREATOR::writeHTML($halaman, true, 0, true, 0);
+                                                    PDFCREATOR::setFooterMargin(0);
+                                                }
+                                                $pdfdoc = PDFCREATOR::Output('', 'S');
+                                                PDFCREATOR::reset();
+                                                Storage::disk('local')->put('/scan/files/' . $marking . '.pdf', $pdfdoc);
+                                            } catch (\Exception $e) {
+                                                $footnote = $footnote . $e->getMessage();
+                                            }
+
+                                            Inboxsurat::where('id', $rinbox->id)->update([
+                                                'terjadwal' => 8,
+                                                'footnote'  => $footnote
+                                            ]);
+                                            $text = null;
+                                        }
+                                    } else {
+                                        $ceksek = Suratkeluar::where('marking', $marking)->first();
+                                        if (isset($ceksek->marking)) {
+                                            $file = 'scan/files/' . $ceksek->marking . '.pdf';
+                                            Storage::disk('local')->delete($file);
+
+                                            Suratkeluar::where('id', $ceksek->id)->update([
+                                                'tandatangan' => $ttd,
+                                                'status'      => $ttd
+                                            ]);
+                                            if ($ceksek->fakultas == 'RSPHSKR') {
+                                                $img_file = public_path('kopfooterrsphs.png');
+                                            } else if ($ceksek->fakultas == 'RSPHMLG') {
+                                                $img_file = public_path('kopfooterrsphm.png');
+                                            } else if ($ceksek->fakultas == 'PDP') {
+                                                $img_file = public_path('kopfooterpdp.png');
+                                            } else {
+                                                $img_file = public_path('kopfooterdpm.png');
+                                            }
+                                            $text       = NotifikasiController::getTextExternal('formc', $ceksek->id);
+                                            $marking    = $ceksek->marking;
+                                            $gethalaman = explode('<div style="page-break-before: always"></div>', $text);
+                                            if (isset($ceksek->pembuat))   { $pembuat   = $ceksek->pembuat; }
+                                            if (isset($ceksek->kelompok))  { $kelompok  = $ceksek->kelompok; }
+                                            if (isset($ceksek->jenissrt))  { $jenissrt  = $ceksek->jenissrt; }
+                                            if (isset($ceksek->kepada))    { $kepada    = $ceksek->kepada; }
+                                            if (isset($ceksek->perihal))   { $perihal   = $ceksek->perihal; }
+                                            if (isset($ceksek->inputor))   { $pembuat   = $ceksek->inputor; }
+                                            if (isset($ceksek->fakultas))  { $kelompok  = $ceksek->fakultas; }
+                                            if (isset($ceksek->kelompok))  { $jenissrt  = $ceksek->kelompok; }
+                                            if (isset($ceksek->namaparaf4)){ $kepada    = $ceksek->namaparaf4; }
+                                            if (isset($ceksek->judul))     { $perihal   = $ceksek->judul; }
+                                            try {
+                                                PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
+                                                PDFCREATOR::SetCreator($pembuat);
+                                                PDFCREATOR::SetAuthor($kelompok);
+                                                PDFCREATOR::SetTitle($jenissrt);
+                                                PDFCREATOR::SetSubject($kepada);
+                                                PDFCREATOR::SetKeywords($perihal);
+                                                PDFCREATOR::setPrintHeader(false);
+                                                PDFCREATOR::setPrintFooter(false);
+                                                PDFCREATOR::SetMargins(5, 0, 5);
+                                                PDFCREATOR::setFontSubsetting(true);
+                                                PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+                                                foreach ($gethalaman as $halaman) {
+                                                    PDFCREATOR::AddPage('P', $page_format, false, false);
+                                                    $bMargin         = PDFCREATOR::getBreakMargin();
+                                                    $auto_page_break = PDFCREATOR::getAutoPageBreak();
+                                                    PDFCREATOR::SetAutoPageBreak(false, 0);
+                                                    PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
+                                                    PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
+                                                    PDFCREATOR::setPageMark();
+                                                    PDFCREATOR::writeHTML($halaman, true, 0, true, 0);
+                                                    PDFCREATOR::setFooterMargin(0);
+                                                }
+                                                $pdfdoc = PDFCREATOR::Output('', 'S');
+                                                PDFCREATOR::reset();
+                                                Storage::disk('local')->put('/scan/files/' . $marking . '.pdf', $pdfdoc);
+                                            } catch (\Exception $e) {
+                                                $footnote = $footnote . $e->getMessage();
+                                            }
+
+                                            Inboxsurat::where('id', $rinbox->id)->update([
+                                                'terjadwal' => 9,
+                                                'footnote'  => $footnote
+                                            ]);
+                                            $text = null;
+                                        } else {
+                                            $gceksrtklr = Suratkeluartnpnomor::where('marking', $marking)->first();
+                                            if (isset($gceksrtklr->marking)) {
+                                                $idsurat  = $gceksrtklr->id;
+                                                $jenissrt = $gceksrtklr->jenissrt;
+                                                $status   = $gceksrtklr->status;
+                                                $marking  = $gceksrtklr->marking;
+                                                $perihal  = $gceksrtklr->perihal;
+                                                $kelompok = $gceksrtklr->kelompok;
+
+                                                if ($status == 'MANUAL' OR $jenissrt == 'SPO') {
+                                                    try {
+                                                        $pdf   = new Fpdi('P', 'mm', array(210, 330));
+                                                        $pages = $pdf->setSourceFile(public_path() . '/scan/files/' . $marking . '.pdf');
+                                                        for ($i = 1; $i <= $pages; $i++) {
+                                                            $page = $pdf->importPage($i);
+                                                            $pdf->AddPage();
+                                                            $pdf->useTemplate($page, ['adjustPageSize' => true]);
+                                                            $pdf->setSignature($certificate, $certificate, $marking, '', 2, $info);
+                                                            $pdf->setPageMark();
+                                                        }
+                                                        $pdf->Output(public_path() . '/scan/files/' . $marking . '.pdf', 'F');
+                                                    } catch (\Exception $e) {
+                                                        $footnote = $footnote . $e->getMessage();
+                                                    }
+                                                    Inboxsurat::where('id', $rinbox->id)->update([
+                                                        'terjadwal' => 22,
+                                                        'footnote'  => $footnote
+                                                    ]);
+                                                } else {
+                                                    $text = NotifikasiController::getTextExternal('srtklrtnpnomor', $gceksrtklr->id);
+                                                    try {
+                                                        PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
+                                                        PDFCREATOR::SetCreator($pembuat);
+                                                        PDFCREATOR::SetAuthor($kelompok);
+                                                        PDFCREATOR::SetTitle($jenissrt);
+                                                        PDFCREATOR::SetSubject($gceksrtklr->kepada);
+                                                        PDFCREATOR::SetKeywords($perihal);
+                                                        PDFCREATOR::setPrintHeader(false);
+                                                        PDFCREATOR::setPrintFooter(false);
+                                                        PDFCREATOR::SetMargins(5, 0, 5);
+                                                        PDFCREATOR::setFontSubsetting(true);
+                                                        PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+                                                        PDFCREATOR::AddPage('L', $page_format, false, false);
+                                                        PDFCREATOR::writeHTML($text, true, false, true, false, '');
+                                                        PDFCREATOR::setFooterMargin(0);
+                                                        $pdfdoc = PDFCREATOR::Output('', 'S');
+                                                        PDFCREATOR::reset();
+                                                        Storage::disk('local')->put('/scan/files/' . $idsurat . '.pdf', $pdfdoc);
+                                                        $text = null;
+                                                    } catch (\Exception $e) {
+                                                        $footnote = $footnote . $e->getMessage();
+                                                        $text = null;
+                                                    }
+                                                    Inboxsurat::where('id', $rinbox->id)->update([
+                                                        'terjadwal' => 23,
+                                                        'footnote'  => $footnote
+                                                    ]);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        // ===================== BLOK TEMPLATE SKPP =====================
+                        if ($rinbox->tabel == 'SKDANPERATURAN') {
+                            $ceksek = Tabelskdanperaturan::where('marking', $marking)->first();
+                            if (isset($ceksek->marking)) {
+                                $file = 'scan/files/' . $ceksek->marking . '.pdf';
+                                Storage::disk('local')->delete($file);
+                                Tabelskdanperaturan::where('id', $ceksek->id)->update([
+                                    'tandatangan' => $ttd,
+                                    'updated_at'  => date('Y-m-d H:i:s')
+                                ]);
+                                $text       = NotifikasiController::getTextExternal('formb', $ceksek->id);
+                                $marking    = $ceksek->marking;
+                                $img_file   = public_path('kopfooterdpm.png');
+                                $gethalaman = explode('<div style="page-break-before: always"></div>', $text);
+                                if (isset($ceksek->pembuat))   { $pembuat   = $ceksek->pembuat; }
+                                if (isset($ceksek->kelompok))  { $kelompok  = $ceksek->kelompok; }
+                                if (isset($ceksek->jenissrt))  { $jenissrt  = $ceksek->jenissrt; }
+                                if (isset($ceksek->kepada))    { $kepada    = $ceksek->kepada; }
+                                if (isset($ceksek->perihal))   { $perihal   = $ceksek->perihal; }
+                                if (isset($ceksek->inputor))   { $pembuat   = $ceksek->inputor; }
+                                if (isset($ceksek->fakultas))  { $kelompok  = $ceksek->fakultas; }
+                                if (isset($ceksek->kelompok))  { $jenissrt  = $ceksek->kelompok; }
+                                if (isset($ceksek->namaparaf4)){ $kepada    = $ceksek->namaparaf4; }
+                                if (isset($ceksek->judul))     { $perihal   = $ceksek->judul; }
+                                try {
+                                    PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
+                                    PDFCREATOR::SetProtection(array('modify', 'copy'), '', null, 0, null);
+                                    PDFCREATOR::SetCreator($pembuat);
+                                    PDFCREATOR::SetAuthor($kelompok);
+                                    PDFCREATOR::SetTitle($jenissrt);
+                                    PDFCREATOR::SetSubject($kepada);
+                                    PDFCREATOR::SetKeywords($perihal);
+                                    PDFCREATOR::setPrintHeader(false);
+                                    PDFCREATOR::setPrintFooter(false);
+                                    PDFCREATOR::SetMargins(5, 0, 5);
+                                    PDFCREATOR::setFontSubsetting(true);
+                                    PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+                                    foreach ($gethalaman as $halaman) {
+                                        PDFCREATOR::AddPage('P', $page_format, false, false);
+                                        $bMargin         = PDFCREATOR::getBreakMargin();
+                                        $auto_page_break = PDFCREATOR::getAutoPageBreak();
+                                        PDFCREATOR::SetAutoPageBreak(false, 0);
+                                        PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
+                                        PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
+                                        PDFCREATOR::setPageMark();
+                                        PDFCREATOR::writeHTML($halaman, true, 0, true, 0);
+                                        PDFCREATOR::setFooterMargin(0);
+                                    }
+                                    $pdfdoc = PDFCREATOR::Output('', 'S');
+                                    PDFCREATOR::reset();
+                                    Storage::disk('local')->put('/scan/files/' . $marking . '.pdf', $pdfdoc);
+                                    $ttecount++;
+                                } catch (\Exception $e) {
+                                    $footnote = $footnote . $e->getMessage();
+                                }
+
+                                Inboxsurat::where('id', $rinbox->id)->update([
+                                    'terjadwal' => 10,
+                                    'footnote'  => $footnote
+                                ]);
+                                $text = null;
+                            }
+                        } else {
+                            $ceksek = Suratkeluar::where('marking', $marking)->first();
+                            if (isset($ceksek->marking)) {
+                                $file = 'scan/files/' . $ceksek->marking . '.pdf';
+                                Storage::disk('local')->delete($file);
+                                Suratkeluar::where('id', $ceksek->id)->update([
+                                    'tandatangan' => $ttd,
+                                    'status'      => $ttd
+                                ]);
+                                if ($ceksek->fakultas == 'RSPHSKR') {
+                                    $img_file = public_path('kopfooterrsphs.png');
+                                } else if ($ceksek->fakultas == 'RSPHMLG') {
+                                    $img_file = public_path('kopfooterrsphm.png');
+                                } else if ($ceksek->fakultas == 'PDP') {
+                                    $img_file = public_path('kopfooterpdp.png');
+                                } else {
+                                    $img_file = public_path('kopfooterdpm.png');
+                                }
+                                $text       = NotifikasiController::getTextExternal('formc', $ceksek->id);
+                                $marking    = $ceksek->marking;
+                                $gethalaman = explode('<div style="page-break-before: always"></div>', $text);
+                                if (isset($ceksek->pembuat))   { $pembuat   = $ceksek->pembuat; }
+                                if (isset($ceksek->kelompok))  { $kelompok  = $ceksek->kelompok; }
+                                if (isset($ceksek->jenissrt))  { $jenissrt  = $ceksek->jenissrt; }
+                                if (isset($ceksek->kepada))    { $kepada    = $ceksek->kepada; }
+                                if (isset($ceksek->perihal))   { $perihal   = $ceksek->perihal; }
+                                if (isset($ceksek->inputor))   { $pembuat   = $ceksek->inputor; }
+                                if (isset($ceksek->fakultas))  { $kelompok  = $ceksek->fakultas; }
+                                if (isset($ceksek->kelompok))  { $jenissrt  = $ceksek->kelompok; }
+                                if (isset($ceksek->namaparaf4)){ $kepada    = $ceksek->namaparaf4; }
+                                if (isset($ceksek->judul))     { $perihal   = $ceksek->judul; }
+                                try {
+                                    PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
+                                    PDFCREATOR::SetCreator($pembuat);
+                                    PDFCREATOR::SetAuthor($kelompok);
+                                    PDFCREATOR::SetTitle($jenissrt);
+                                    PDFCREATOR::SetSubject($kepada);
+                                    PDFCREATOR::SetKeywords($perihal);
+                                    PDFCREATOR::setPrintHeader(false);
+                                    PDFCREATOR::setPrintFooter(false);
+                                    PDFCREATOR::SetMargins(5, 0, 5);
+                                    PDFCREATOR::setFontSubsetting(true);
+                                    PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+                                    foreach ($gethalaman as $halaman) {
+                                        PDFCREATOR::AddPage('P', $page_format, false, false);
+                                        $bMargin         = PDFCREATOR::getBreakMargin();
+                                        $auto_page_break = PDFCREATOR::getAutoPageBreak();
+                                        PDFCREATOR::SetAutoPageBreak(false, 0);
+                                        PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
+                                        PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
+                                        PDFCREATOR::setPageMark();
+                                        PDFCREATOR::writeHTML($halaman, true, 0, true, 0);
+                                        PDFCREATOR::setFooterMargin(0);
+                                    }
+                                    $pdfdoc = PDFCREATOR::Output('', 'S');
+                                    PDFCREATOR::reset();
+                                    Storage::disk('local')->put('/scan/files/' . $marking . '.pdf', $pdfdoc);
+                                    $ttecount++;
+                                } catch (\Exception $e) {
+                                    $footnote = $footnote . $e->getMessage();
+                                }
+                                Inboxsurat::where('id', $rinbox->id)->update([
+                                    'terjadwal' => 11,
+                                    'footnote'  => $footnote
+                                ]);
+                                $text = null;
+                            } else {
+                                $gceksrtklr = Suratkeluartnpnomor::where('marking', $marking)->first();
+                                if (isset($gceksrtklr->id)) {
+                                    $idsurat  = $gceksrtklr->id;
+                                    $jenissrt = $gceksrtklr->jenissrt;
+                                    $status   = $gceksrtklr->status;
+                                    $marking  = $gceksrtklr->marking;
+                                    $perihal  = $gceksrtklr->perihal;
+                                    $kelompok = $gceksrtklr->kelompok;
+                                    if ($status == 'MANUAL' OR $jenissrt == 'SPO') {
+                                        try {
+                                            $pdf   = new Fpdi('P', 'mm', array(210, 330));
+                                            $pages = $pdf->setSourceFile(public_path() . '/scan/files/' . $marking . '.pdf');
+                                            for ($i = 1; $i <= $pages; $i++) {
+                                                $page = $pdf->importPage($i);
+                                                $pdf->AddPage();
+                                                $pdf->useTemplate($page, ['adjustPageSize' => true]);
+                                                $pdf->setSignature($certificate, $certificate, $marking, '', 2, $info);
+                                                $pdf->setPageMark();
+                                            }
+                                            $pdf->Output(public_path() . '/scan/files/' . $marking . '.pdf', 'F');
+                                            $ttecount++;
+                                        } catch (\Exception $e) {
+                                            $footnote = $footnote . $e->getMessage();
+                                        }
+                                        Inboxsurat::where('id', $rinbox->id)->update([
+                                            'terjadwal' => 12,
+                                            'footnote'  => $footnote
+                                        ]);
+                                    } else {
+                                        $text = NotifikasiController::getTextExternal('srtklrtnpnomor', $gceksrtklr->id);
+                                        try {
+                                            PDFCREATOR::setSignature($certificate, $certificate, $marking, '', 2, $info, 'A');
+                                            PDFCREATOR::SetCreator($pembuat);
+                                            PDFCREATOR::SetAuthor($kelompok);
+                                            PDFCREATOR::SetTitle($jenissrt);
+                                            PDFCREATOR::SetSubject($gceksrtklr->kepada);
+                                            PDFCREATOR::SetKeywords($perihal);
+                                            PDFCREATOR::setPrintHeader(false);
+                                            PDFCREATOR::setPrintFooter(false);
+                                            PDFCREATOR::SetMargins(5, 0, 5);
+                                            PDFCREATOR::setFontSubsetting(true);
+                                            PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+                                            PDFCREATOR::AddPage('L', $page_format, false, false);
+                                            PDFCREATOR::writeHTML($text, true, false, true, false, '');
+                                            PDFCREATOR::setFooterMargin(0);
+                                            $pdfdoc = PDFCREATOR::Output('', 'S');
+                                            PDFCREATOR::reset();
+                                            Storage::disk('local')->put('/scan/files/' . $idsurat . '.pdf', $pdfdoc);
+                                            $text = null;
+                                            $ttecount++;
+                                        } catch (\Exception $e) {
+                                            $footnote = $footnote . $e->getMessage();
+                                            $text = null;
+                                        }
+                                        Inboxsurat::where('id', $rinbox->id)->update([
+                                            'terjadwal' => 13,
+                                            'footnote'  => $footnote
+                                        ]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // ===================== HITUNG NOTIFIKASI =====================
+        $alamatweb = $homebase . '/trackingid/marking-' . $markingname;
+        $qrcode    = '';
+
+        if ($sessPrevilage == 'administrasi') {
+            $countsuratmasuk     = Suratmasuk::where('fakultas', $sessFakultas)->where('status', '!=', 'arsip')->count();
+            $countsuratkeluar    = Suratkeluar::where('fakultas', $sessFakultas)->where('ruangarsip', '')->count();
+            $countskdanperaturan = Tabelskdanperaturan::where('fakultas', $sessFakultas)->where('arsip', '')->count();
+
+            $efent = WebinarEventlist::where('pembicara', 'UNDANGANDIGITAL')
+                ->where('created_by', $sessEmail)
+                ->where('mulai', '>=', Carbon::now()->subDays(1)->toDateTimeString())
+                ->count()
+            + WebinarEventlist::where('fakultas', $sessFakultas)->count();
+        }
+
+        if ($sessPrevilage == 'Admin SDM') {
+            $fak = $sessFakultas;
+
+            // --- Suratkeluartnpnomor: aggregate sekali ---
+            $sktnp = Suratkeluartnpnomor::where('fakultas', $fak)
+                ->where('arsip', '')
+                ->selectRaw('jenissrt, COUNT(*) as total')
+                ->groupBy('jenissrt')
+                ->pluck('total', 'jenissrt')
+                ->toArray();
+
+            $notifcutitahunan         = $sktnp['Cuti Tahunan']                ?? 0;
+            $notifcutiagama           = $sktnp['Cuti Keagamaan']              ?? 0;
+            $notifijinplgcepat        = $sktnp['Ijin Pulang Cepat']           ?? 0;
+            $notifijinkeluarkantor    = $sktnp['Ijin Keluar Kantor']          ?? 0;
+            $notifpermintaanpegawai   = $sktnp['Permintaan Pegawai']          ?? 0;
+            $notifmutasirotasi        = $sktnp['Mutasi Rotasi']               ?? 0;
+            $notifkomunikasi          = $sktnp['Komunikasi']                  ?? 0;
+            $notifspo                 = $sktnp['SPO']                         ?? 0;
+            $notifformrs01            = $sktnp['Tanda Terima Titipan Ijasah'] ?? 0;
+            $notifformrs02            = $sktnp['Visitor Tamu']                ?? 0;
+            $notifformrs03            = $sktnp['Konseling Staf']              ?? 0;
+            $notifformrs04            = $sktnp['Libur Akreditasi']            ?? 0;
+            $notifformrs05            = $sktnp['Serah Terima']                ?? 0;
+            $notifformrs06            = $sktnp['Riwayat Pelatihan']           ?? 0;
+            $notifformrs07            = $sktnp['Pengajuan RS']                ?? 0;
+            $notifformrs08            = $sktnp['Penyelesaian Kewajiban']      ?? 0;
+            $notifformrs09            = $sktnp['Penggabungan Libur']          ?? 0;
+            $notifformrs10            = $sktnp['Cuti MS']                     ?? 0;
+            $notifformrs11            = $sktnp['Infus On Call']               ?? 0;
+            $notifformrs12            = $sktnp['Lembur']                      ?? 0;
+            $notifformrs13            = $sktnp['Finger Print']                ?? 0;
+            $notifformrs14            = $sktnp['Perintah On Call']            ?? 0;
+            $notifformrs15            = $sktnp['Ijin Dokter']                 ?? 0;
+            $notifformrs16            = $sktnp['Ijin Staf']                   ?? 0;
+            $notifformrs17            = $sktnp['Tukar Jadwal']                ?? 0;
+            $notifformrs18            = $sktnp['Pendelegasian Tugas']         ?? 0;
+            $notifformrs19            = $sktnp['Permohonan Karyawan Baru']    ?? 0;
+
+            // --- Tabelskdanperaturan: aggregate sekali ---
+            $skd = Tabelskdanperaturan::where('fakultas', $fak)
+                ->where('arsip', '')
+                ->selectRaw('kelompok, COUNT(*) as total')
+                ->groupBy('kelompok')
+                ->pluck('total', 'kelompok')
+                ->toArray();
+
+            $notifpengangkatanjabatan  = $skd['Pengangkatan Jabatan']     ?? 0;
+            $notifpemberhentianjabatan = $skd['Pemberhentian Jabatan']    ?? 0;
+            $notifpegawaitetap         = $skd['Pegawai Tetap']            ?? 0;
+            $notifdoktertetap          = $skd['Dokter Tetap']             ?? 0;
+            $notifpenerimaanstaf       = $skd['Penerimaan Staf']          ?? 0;
+            $notifpenonaktifanstaf     = $skd['Penonaktifan Staf']        ?? 0;
+            $notifmutasi               = $skd['Mutasi']                   ?? 0;
+            $notifpenonaktifandokter   = $skd['Penonaktifan Dokter Tetap'] ?? 0;
+
+            $notifpengaktifanstaf = 0;
+            foreach (['Pengaktifan Staf','Penempatan Administrasi Pendaftaran','Penempatan Analis Kesehatan','Penempatan Perawat','Penempatan Perekam Medik','Penempatan Security'] as $k) {
+                $notifpengaktifanstaf += $skd[$k] ?? 0;
+            }
+
+            // --- Suratkeluar: aggregate sekali ---
+            $sk = Suratkeluar::where('fakultas', $fak)
+                ->where('arsip', '')
+                ->selectRaw('jenissrt, COUNT(*) as total')
+                ->groupBy('jenissrt')
+                ->pluck('total', 'jenissrt')
+                ->toArray();
+
+            $notiforientasikerja           = $sk['Perjanjian Orientasi Kerja']   ?? 0;
+            $notifpkwt                     = $sk['PKWT']                         ?? 0;
+            $notifpkwtt                    = $sk['PKWTT']                        ?? 0;
+            $notifedaran                   = $sk['Edaran']                       ?? 0;
+            $notifperingatan               = $sk['Peringatan']                   ?? 0;
+            $notifbalasanpenambahanstaf    = $sk['Balasan Penambahan Staf']      ?? 0;
+            $notifpermohonan               = $sk['Permohonan']                   ?? 0;
+            $notiftugas                    = $sk['Tugas']                        ?? 0;
+            $notifpemberitahuan            = $sk['Pemberitahuan']                ?? 0;
+            $notiftanggapanresign          = $sk['Tanggapan Resign']             ?? 0;
+            $notifreferensikerja           = $sk['Referensi Kerja']              ?? 0;
+            $notifketeranganaktif          = $sk['Keterangan Aktif Bekerja']     ?? 0;
+            $notifpemutusanhubungan        = $sk['Pemutusan Hubungan Kerja']     ?? 0;
+            $notifpemanggilancalonkaryawan = $sk['Pemanggilan Calon Karyawan']   ?? 0;
+            $notiflolosseleksi             = $sk['Pemberitahuan Lolos Seleksi']  ?? 0;
+            $notifpemberitahuanmcu         = $sk['Pemberitahuan MCU']            ?? 0;
+            $notifundangan                 = $sk['Undangan']                     ?? 0;
+            $notifpemanggilankie           = $sk['Pemanggilan KIE Staf']         ?? 0;
+            $notifketerangantidakbekerja   = $sk['Keterangan Tidak Bekerja']     ?? 0;
+
+            $persuratanptform = $notifcutitahunan + $notifcutiagama + $notifijinplgcepat + $notifijinkeluarkantor + $notifpermintaanpegawai + $notifmutasirotasi + $notifkomunikasi;
+            $persuratanptkd   = $notifpengangkatanjabatan + $notifpemberhentianjabatan + $notifpegawaitetap + $notifdoktertetap + $notifpenerimaanstaf + $notifpenonaktifanstaf + $notifpengaktifanstaf + $notifmutasi + $notifpenonaktifandokter;
+            $persuratanptkk   = $notiforientasikerja + $notifpkwt + $notifpkwtt;
+            $persuratanptss   = $notifedaran + $notifperingatan + $notifbalasanpenambahanstaf + $notifpermohonan + $notiftugas + $notifpemberitahuan + $notiftanggapanresign + $notifreferensikerja + $notifketeranganaktif + $notifpemutusanhubungan + $notifpemanggilancalonkaryawan + $notiflolosseleksi + $notifpemberitahuanmcu + $notifundangan + $notifpemanggilankie + $notifketerangantidakbekerja;
+            $persuratanrs     = $notifformrs01 + $notifformrs02 + $notifformrs03 + $notifformrs04 + $notifformrs05 + $notifformrs06 + $notifformrs07 + $notifformrs08 + $notifformrs09 + $notifformrs10 + $notifformrs11 + $notifformrs12 + $notifformrs13 + $notifformrs14 + $notifformrs15 + $notifformrs16 + $notifformrs17 + $notifformrs18 + $notifformrs19;
+        }
+
+        if ($sessPrevilage == 'PEJABAT') {
+            $cekselesai  = 0;
+            $jmerangkap  = User::where('username', $sessUsername)->first();
+            if (isset($jmerangkap->merangkap)) {
+                $merangkap = $jmerangkap->merangkap;
+                if (is_null($merangkap)) { $merangkap = ''; }
+            } else {
+                $merangkap = '';
+            }
+
+            $penerimaList = ($merangkap != '') ? [$sessJabatan, $merangkap] : [$sessJabatan];
+
+            $mailbox = Inboxsurat::where('email', 'LIKE', $sessEmail)
+                ->where('jenis', 'MASUK')
+                ->whereNotIn('status', ['reply', 'deleted'])
+                ->distinct('marking')
+                ->count('marking');
+
+            if ($merangkap != '') {
+                $countmemo = Inboxsurat::whereIn('pengirim', $penerimaList)
+                    ->where('jenis', 'MASUK')
+                    ->whereNotIn('status', ['reply', 'deleted'])
+                    ->where('jenissrt', 'MEMO')
+                    ->count();
+
+                $countnotadinas = Inboxsurat::whereIn('pengirim', $penerimaList)
+                    ->where('jenis', 'MASUK')
+                    ->whereNotIn('status', ['reply', 'deleted'])
+                    ->where('jenissrt', 'NOTA DINAS')
+                    ->count();
+
+                $countmohonttd = Inboxsurat::whereIn('penerima', $penerimaList)
+                    ->whereIn('jenis', ['KELUAR', 'KELUARNONOMER'])
+                    ->where('status', 'send')
+                    ->distinct('marking')
+                    ->count('marking');
+            } else {
+                $countmemo = Inboxsurat::where('pengirim', $sessJabatan)
+                    ->where('jenis', 'MASUK')
+                    ->whereIn('status', ['send', 'read'])
+                    ->where('jenissrt', 'MEMO')
+                    ->count();
+
+                $countnotadinas = Inboxsurat::where('pengirim', $sessJabatan)
+                    ->where('jenis', 'MASUK')
+                    ->whereIn('status', ['send', 'read'])
+                    ->where('jenissrt', 'NOTA DINAS')
+                    ->count();
+
+                $countmohonttd = Inboxsurat::where('penerima', $sessJabatan)
+                    ->whereIn('jenis', ['KELUAR', 'KELUARNONOMER'])
+                    ->where('status', 'send')
+                    ->distinct('marking')
+                    ->count('marking');
+            }
+
+            // Gabung 2 query arsip jadi 1
+            $year = date('Y');
+            $arsipStats = DB::table('tbl_inbox')
+                ->join('tbl_suratmasuk', 'tbl_inbox.marking', '=', 'tbl_suratmasuk.marking')
+                ->whereIn('tbl_inbox.penerima', $penerimaList)
+                ->whereYear('tbl_suratmasuk.tglmasuk', $year)
+                ->selectRaw("
+                    SUM(CASE WHEN tbl_suratmasuk.status LIKE '%arsip%' THEN 1 ELSE 0 END) as total_arsip,
+                    SUM(CASE WHEN tbl_suratmasuk.status NOT LIKE '%arsip%' THEN 1 ELSE 0 END) as total_rung
+                ")
+                ->first();
+
+            $cekmari     = (int) ($arsipStats->total_arsip ?? 0);
+            $cekrungmari = (int) ($arsipStats->total_rung  ?? 0);
+        } else {
+            $mailbox = Inboxsurat::where('email', 'LIKE', $sessEmail)
+                ->where('status', 'send')
+                ->where('jenis', 'MASUK')
+                ->count();
+
+            $cekselesai = Suratkeluar::where('pembuat', $sessEmail)
+                ->where('arsip', '')
+                ->where('tandatangan', 'SIgned With TTE')
+                ->count();
+
+            $cekditolak = Inboxsurat::where('pembuat', $sessEmail)
+                ->where('jenis', 'KELUAR')
+                ->where('status', 'Ditolak')
+                ->get();
+
+            if (!empty($cekditolak)) {
+                foreach ($cekditolak as $rtolak) {
+                    $textnotif .= '<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-arrow-circle-right"></i> ' . $rtolak->nosurat . ' Mohon di Koreksi</a>';
+                }
+            }
+        }
+
+        $penerimasurat = Penerimasurat::where('penulisan', $sessEmail)->where('status', 'SEND')->count();
+        $mailbox       = $mailbox + $penerimasurat;
+
+        // ===================== SUSUN TEXT NOTIFIKASI =====================
+        if ($mailbox != 0) {
+            $textnotif .= '<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> ' . $mailbox . ' new messages</a>';
+        }
+        if ($cekselesai != 0) {
+            $textnotif .= '<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-trophy mr-2"></i> ' . $cekselesai . ' Surat Keluar di Tandatangani dan Belum di Arsip</a>';
+        }
+        if ($countmohonttd != 0) {
+            $textnotif .= '<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-paper-plane-o mr-2"></i> ' . $countmohonttd . ' Surat Perlu Paraf/TTE</a>';
+        }
+        if ($countnotadinas != 0) {
+            $textnotif .= '<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-paper-plane-o mr-2"></i> ' . $countnotadinas . ' Nota Dinas Belum di Arsip</a>';
+        }
+        if ($countmemo != 0) {
+            $textnotif .= '<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-paper-plane-o mr-2"></i> ' . $countmemo . ' Memo Belum di Arsip</a>';
+        }
+        if ($countsuratmasuk != 0) {
+            $textnotif .= '<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-envelope mr-2"></i> ' . $countsuratmasuk . ' Surat Masuk</a>';
+        }
+        if ($countsuratkeluar != 0) {
+            $textnotif .= '<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-paper-plane-o mr-2"></i> ' . $countsuratkeluar . ' Surat Keluar</a>';
+        }
+        if ($countskdanperaturan != 0) {
+            $textnotif .= '<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-clone mr-2"></i> ' . $countskdanperaturan . ' SK dan Peraturan</a>';
+        }
+        if ($efent != 0) {
+            $textnotif .= '<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-calendar-plus-o mr-2"></i> ' . $efent . ' Kegiatan</a>';
+        }
+        if ($persuratanptform != 0) {
+            $textnotif .= '<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> ' . $persuratanptform . ' Form Persuratan PT Belum di Arsip</a>';
+        }
+        if ($persuratanptkd != 0) {
+            $textnotif .= '<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> ' . $persuratanptkd . ' Keputusan Direktur Belum di Arsip</a>';
+        }
+        if ($persuratanptkk != 0) {
+            $textnotif .= '<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> ' . $persuratanptkk . ' Kontrak Kerja Belum di Arsip</a>';
+        }
+        if ($persuratanptss != 0) {
+            $textnotif .= '<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> ' . $persuratanptss . ' Surat Belum di Arsip</a>';
+        }
+        if ($persuratanrs != 0) {
+            $textnotif .= '<div class="dropdown-divider"></div><a href="#" class="dropdown-item"><i class="fa fa-book mr-2"></i> ' . $persuratanrs . ' Form Persuratan RS Belum di Arsip</a>';
+        }
+
+        $counttotalnotif = $persuratanrs + $persuratanptss + $persuratanptkk + $persuratanptform + $persuratanptkd + $mailbox + $countsuratmasuk + $countsuratkeluar + $countskdanperaturan + $efent + $countmohonttd;
+
+        // ===================== RETURN JSON (SAMA SEPERTI ASLI) =====================
+        return response()->json([
+            'markingname'                   => $markingname,
+            'qrcode'                        => $countsql . ' => ' . $ttecount . ' (TTE) ' . $parafcount . ' (PARAF)',
+            'textnotif'                     => $textnotif,
+            'counttotalnotif'               => $counttotalnotif,
+            'countmailbox'                  => $mailbox,
+            'countmohonttd'                 => $countmohonttd,
+            'countnotadinas'                => $countnotadinas,
+            'countmemo'                     => $countmemo,
+            'countsuratmasuk'               => $countsuratmasuk,
+            'countsuratkeluar'              => $countsuratkeluar,
+            'countsk'                       => $countskdanperaturan,
+            'countevent'                    => $efent,
+            'notifcutitahunan'              => $notifcutitahunan,
+            'notifcutiagama'                => $notifcutiagama,
+            'notifijinplgcepat'             => $notifijinplgcepat,
+            'notifijinkeluarkantor'         => $notifijinkeluarkantor,
+            'notifpermintaanpegawai'        => $notifpermintaanpegawai,
+            'notifmutasirotasi'             => $notifmutasirotasi,
+            'notifkomunikasi'               => $notifkomunikasi,
+            'notifpengangkatanjabatan'      => $notifpengangkatanjabatan,
+            'notifpemberhentianjabatan'     => $notifpemberhentianjabatan,
+            'notifpegawaitetap'             => $notifpegawaitetap,
+            'notifdoktertetap'              => $notifdoktertetap,
+            'notifpenerimaanstaf'           => $notifpenerimaanstaf,
+            'notifpenonaktifanstaf'         => $notifpenonaktifanstaf,
+            'notifpengaktifanstaf'          => $notifpengaktifanstaf,
+            'notifmutasi'                   => $notifmutasi,
+            'notifpenonaktifandokter'       => $notifpenonaktifandokter,
+            'notiforientasikerja'           => $notiforientasikerja,
+            'notifpkwt'                     => $notifpkwt,
+            'notifpkwtt'                    => $notifpkwtt,
+            'notifspo'                      => $notifspo,
+            'notifedaran'                   => $notifedaran,
+            'notifperingatan'               => $notifperingatan,
+            'notifbalasanpenambahanstaf'    => $notifbalasanpenambahanstaf,
+            'notifpermohonan'               => $notifpermohonan,
+            'notiftugas'                    => $notiftugas,
+            'notifpemberitahuan'            => $notifpemberitahuan,
+            'notiftanggapanresign'          => $notiftanggapanresign,
+            'notifreferensikerja'           => $notifreferensikerja,
+            'notifketeranganaktif'          => $notifketeranganaktif,
+            'notifpemutusanhubungan'        => $notifpemutusanhubungan,
+            'notifpemanggilancalonkaryawan' => $notifpemanggilancalonkaryawan,
+            'notiflolosseleksi'             => $notiflolosseleksi,
+            'notifpemberitahuanmcu'         => $notifpemberitahuanmcu,
+            'notifundangan'                 => $notifundangan,
+            'notifpemanggilankie'           => $notifundangan,
+            'notifketerangantidakbekerja'   => $notifketerangantidakbekerja,
+            'notifformrs01'                 => $notifformrs01,
+            'notifformrs02'                 => $notifformrs02,
+            'notifformrs03'                 => $notifformrs03,
+            'notifformrs04'                 => $notifformrs04,
+            'notifformrs05'                 => $notifformrs05,
+            'notifformrs06'                 => $notifformrs06,
+            'notifformrs07'                 => $notifformrs07,
+            'notifformrs08'                 => $notifformrs08,
+            'notifformrs09'                 => $notifformrs09,
+            'notifformrs10'                 => $notifformrs10,
+            'notifformrs11'                 => $notifformrs11,
+            'notifformrs12'                 => $notifformrs12,
+            'notifformrs13'                 => $notifformrs13,
+            'notifformrs14'                 => $notifformrs14,
+            'notifformrs15'                 => $notifformrs15,
+            'notifformrs16'                 => $notifformrs16,
+            'notifformrs17'                 => $notifformrs17,
+            'notifformrs18'                 => $notifformrs18,
+            'notifformrs19'                 => $notifformrs19,
+        ]);
     }
 	public function simpanDatadiri(Request $request) {
 		$jenisnip 		= '';
