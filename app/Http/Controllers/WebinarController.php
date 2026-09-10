@@ -468,56 +468,120 @@ class WebinarController extends Controller
         $request->session()->flush();
         return redirect('webinar');
     }
-	public function geteventList(Request $request) {
-        $arrevent	= array();
-		$homebase	= url("/");
-		$idevent	= $request->input('val01');
-		if ($idevent == 'all'){
-			$jevent	= WebinarEventlist::where('created_by', Session('email'))->orwhere('created_by', Session('nama'))->orderBy('mulai', 'DESC')->get();
-		} else {
-            if (Session('email') !== null){
-				if (Session('previlage') == 'administrasi'){
-					$jevent		= WebinarEventlist::where('fakultas', Session('fakultas'))->orderBy('mulai', 'DESC')->limit('100')->get();
-				} else {
-					$jevent		= WebinarEventlist::where('created_by', Session('email'))->orwhere('created_by', Session('nama'))->orderBy('mulai', 'DESC')->limit('100')->get();
-				}
-			} else {
-				$jevent		= WebinarEventlist::where('fakultas', Session('fakultas'))->orderBy('mulai', 'DESC')->limit('100')->get();
-			}
-		}
-		if (!empty($jevent)){
-			foreach ($jevent as $revent) {
-				$idne 		= $revent->id;
-				$nama 		= $revent->nama;
-				$urle		= $homebase.'/register/'.$revent->id;
-				$url2		= $homebase.'/hadir/'.$revent->id;
-				$url3		= $homebase.'/cetaklinkpresensi/'.$revent->id;
-				$tlskegiatan= '<a href="'.$urle.'" target="_blank">'.$nama.'</a>';
-				$peserta	= WebinarPartisipan::where('idevent', $idne)->count();
-				$arrevent[] = array(
-					'idne'			=> $idne,
-					'tlskegiatan'	=> $tlskegiatan,
-					'peserta'		=> $peserta,
-					'nama'			=> $revent->nama, 
-					'tempat'		=> $revent->tempat, 
-					'kapasitas'		=> $revent->kapasitas, 
-					'tanggal'		=> $revent->tanggal, 
-					'mulai'			=> $revent->mulai, 
-					'akhir'			=> $revent->akhir, 
-					'bayar'			=> $revent->bayar, 
-					'kontak'		=> $revent->kontak, 
-					'pembicara'		=> $revent->pembicara, 
-					'daftarmulai'	=> $revent->daftarmulai, 
-					'daftarakhir'	=> $revent->daftarakhir, 
-					'absenmulai'	=> $revent->absenmulai, 
-					'absenakhir'	=> $revent->absenakhir, 
-					'created_by'	=> $revent->created_by, 
-					'linkwebniar'	=> $revent->linkwebniar
-				);
-			}
-		}
-		echo json_encode($arrevent);
-	}
+    // old query function
+	// public function geteventList(Request $request) {
+    //     $arrevent	= array();
+	// 	$homebase	= url("/");
+	// 	$idevent	= $request->input('val01');
+	// 	if ($idevent == 'all'){
+	// 		$jevent	= WebinarEventlist::where('created_by', Session('email'))->orwhere('created_by', Session('nama'))->orderBy('mulai', 'DESC')->get();
+	// 	} else {
+    //         if (Session('email') !== null){
+	// 			if (Session('previlage') == 'administrasi'){
+	// 				$jevent		= WebinarEventlist::where('fakultas', Session('fakultas'))->orderBy('mulai', 'DESC')->limit('100')->get();
+	// 			} else {
+	// 				$jevent		= WebinarEventlist::where('created_by', Session('email'))->orwhere('created_by', Session('nama'))->orderBy('mulai', 'DESC')->limit('100')->get();
+	// 			}
+	// 		} else {
+	// 			$jevent		= WebinarEventlist::where('fakultas', Session('fakultas'))->orderBy('mulai', 'DESC')->limit('100')->get();
+	// 		}
+	// 	}
+	// 	if (!empty($jevent)){
+	// 		foreach ($jevent as $revent) {
+	// 			$idne 		= $revent->id;
+	// 			$nama 		= $revent->nama;
+	// 			$urle		= $homebase.'/register/'.$revent->id;
+	// 			$url2		= $homebase.'/hadir/'.$revent->id;
+	// 			$url3		= $homebase.'/cetaklinkpresensi/'.$revent->id;
+	// 			$tlskegiatan= '<a href="'.$urle.'" target="_blank">'.$nama.'</a>';
+	// 			$peserta	= WebinarPartisipan::where('idevent', $idne)->count();
+	// 			$arrevent[] = array(
+	// 				'idne'			=> $idne,
+	// 				'tlskegiatan'	=> $tlskegiatan,
+	// 				'peserta'		=> $peserta,
+	// 				'nama'			=> $revent->nama, 
+	// 				'tempat'		=> $revent->tempat, 
+	// 				'kapasitas'		=> $revent->kapasitas, 
+	// 				'tanggal'		=> $revent->tanggal, 
+	// 				'mulai'			=> $revent->mulai, 
+	// 				'akhir'			=> $revent->akhir, 
+	// 				'bayar'			=> $revent->bayar, 
+	// 				'kontak'		=> $revent->kontak, 
+	// 				'pembicara'		=> $revent->pembicara, 
+	// 				'daftarmulai'	=> $revent->daftarmulai, 
+	// 				'daftarakhir'	=> $revent->daftarakhir, 
+	// 				'absenmulai'	=> $revent->absenmulai, 
+	// 				'absenakhir'	=> $revent->absenakhir, 
+	// 				'created_by'	=> $revent->created_by, 
+	// 				'linkwebniar'	=> $revent->linkwebniar
+	// 			);
+	// 		}
+	// 	}
+	// 	echo json_encode($arrevent);
+	// }
+
+    // new query function
+    public function geteventList(Request $request){
+        $arrevent = [];
+        $homebase = url("/");
+        $idevent = $request->input('val01');
+        $email = Session('email');
+        $nama = Session('nama');
+        $fakultas = Session('fakultas');
+        $previlage = Session('previlage');
+
+        if ($idevent == 'all') {
+            $jevent = WebinarEventlist::where(function ($query) use ($email, $nama){$query->where('created_by', $email)->orWhere('created_by', $nama);})->orderBy('mulai', 'DESC')->get();
+        } else {
+            if ($email !== null) {
+                if ($previlage == 'administrasi') {
+                    $jevent = WebinarEventlist::where('fakultas', $fakultas)->orderBy('mulai', 'DESC')->limit(100)->get();
+                } else {
+                    $jevent = WebinarEventlist::where(function ($query) use ($email, $nama){$query->where('created_by', $email)->orWhere('created_by', $nama);})->orderBy('mulai', 'DESC')->limit(100)->get();
+                }
+            } else {
+                $jevent = WebinarEventlist::where('fakultas', $fakultas)->orderBy('mulai', 'DESC')->limit(100)->get();
+            }
+        }
+
+        $eventIds = $jevent->pluck('id')->toArray();
+        $pesertaCounts = [];
+
+        if (!empty($eventIds)) {
+            $pesertaCounts = WebinarPartisipan::whereIn('idevent', $eventIds)->selectRaw('idevent, COUNT(*) as total')->groupBy('idevent')->pluck('total', 'idevent')->toArray();
+        }
+        
+        foreach ($jevent as $revent){
+            $idne = $revent->id;
+            $nama = $revent->nama;
+            $peserta = $pesertaCounts[$idne] ?? 0;
+            $urle = $homebase . '/register/' . $idne;
+            $tlskegiatan = '<a href="' . $urle . '" target="_blank">'. e($nama) . '</a>';
+
+            $arrevent[] = [
+                'idne'          => $idne,
+                'tlskegiatan'   => $tlskegiatan,
+                'peserta'       => $peserta,
+                'nama'          => $revent->nama,
+                'tempat'        => $revent->tempat,
+                'kapasitas'     => $revent->kapasitas,
+                'tanggal'       => $revent->tanggal,
+                'mulai'         => $revent->mulai,
+                'akhir'         => $revent->akhir,
+                'bayar'         => $revent->bayar,
+                'kontak'        => $revent->kontak,
+                'pembicara'     => $revent->pembicara,
+                'daftarmulai'   => $revent->daftarmulai,
+                'daftarakhir'   => $revent->daftarakhir,
+                'absenmulai'    => $revent->absenmulai,
+                'absenakhir'    => $revent->absenakhir,
+                'created_by'    => $revent->created_by,
+                'linkwebniar'   => $revent->linkwebniar,
+            ];
+        }
+
+        return response()->json($arrevent);
+    }
 	public function getListpartisipan(Request $request) {
     	$idevent	= $request->input('val01');
 		$jenis		= $request->input('val02');
