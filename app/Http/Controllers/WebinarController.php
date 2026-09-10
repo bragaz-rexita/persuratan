@@ -529,7 +529,7 @@ class WebinarController extends Controller
 			if ($jenis == 'UNDANGAN'){
 				$jevent		= WebinarPartisipan::where('pekerjaan', 'UNDANGAN')->where('idevent', $idevent)->orderBy('id', 'ASC')->get();
 			} else if ($jenis == 'notulensi'){
-				$arrpartis	= DB::table('dpmtech_dummyproject.webinar_participan')->join('dpmtech_dummyproject.webinar_event', 'dpmtech_dummyproject.webinar_participan.idevent', 'dpmtech_dummyproject.webinar_event.id')->select('dpmtech_dummyproject.webinar_participan.*', 'dpmtech_dummyproject.webinar_event.nama as namaevent', 'dpmtech_dummyproject.webinar_event.tempat as tempatevent', 'dpmtech_dummyproject.webinar_event.tanggal as tglevent', 'dpmtech_dummyproject.webinar_event.mulai as startevent')->where('dpmtech_dummyproject.webinar_participan.email', $request->input('val01'))->orderBy('dpmtech_dummyproject.webinar_event.mulai', 'DESC')->get();
+				$arrpartis	= DB::table('db_surat_production.webinar_participan')->join('db_surat_production.webinar_event', 'db_surat_production.webinar_participan.idevent', 'db_surat_production.webinar_event.id')->select('db_surat_production.webinar_participan.*', 'db_surat_production.webinar_event.nama as namaevent', 'db_surat_production.webinar_event.tempat as tempatevent', 'db_surat_production.webinar_event.tanggal as tglevent', 'db_surat_production.webinar_event.mulai as startevent')->where('db_surat_production.webinar_participan.email', $request->input('val01'))->orderBy('db_surat_production.webinar_event.mulai', 'DESC')->get();
         		$jevent		= [];
 			} else {
 				$jevent		= WebinarPartisipan::where('pekerjaan', '!=', 'UNDANGAN')->where('idevent', $idevent)->orderBy('id', 'ASC')->get();
