@@ -10151,1772 +10151,3588 @@ class DashbordsuratController extends Controller
 			}
 		}
     }
-	public function exUploadSuratTTE(Request $request) {
-		$nomor			= $request->input('val02');
-		$tanggal		= $request->input('val03');
-		$kepada			= $request->input('val04');
-		$nmttd			= $request->input('val05');
-		$paraf1			= $request->input('val06');
-		$paraf2			= $request->input('val07');
-		$paraf3			= $request->input('val08');
-		$paraf4			= $request->input('val09');
-		$marking		= $request->input('val10');
-		$idsurat		= $request->input('val11');
-		$perihal		= $request->input('val12');
-		$thnagenda		= $request->input('val13');
-		$noagenda		= $request->input('val14');
-		$alamat 		= Session('addressapps01');
-		$swandhanakota	= Session('kota01');
-		$universitas 	= Session('subsubdomainapps01');
-		$konseptor		= Session('email');
-		$homebase		= url("/");
-		$kalender 		= array("Bulan", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember");
-		$dasarsurat		= '';
-		if ($thnagenda != '' AND $noagenda != ''){
-			$datalm1  = Suratmasuk::where('noagenda', $noagenda)->where('yersrt', $thnagenda)->where('fakultas', Session('fakultas'))->first();
-			if (isset($datalm1->scansurat)){
-				$dasarsurat = $datalm1->scansurat;
-			}
-		}
-		if ($paraf2 == ''){ $paraf2 = ''; }
-		if ($paraf3 == ''){ $paraf3 = ''; }
-		if ($paraf4 == ''){ $paraf4 = ''; }
-		if ($nmttd == 'materai') {
-			if ($request->hasFile('file')) {
-				$getsurat 		= Suratkeluar::where('marking', $marking)->first();
-				if (isset($getsurat->id)){
-					$ceksudahtte = AntrianTTE::where('idsurat', $getsurat->id)->where('jenis', 'KELUAR')->first();
-					if (isset($ceksudahtte->id)){
-						$nonik		= $ceksudahtte->nonik;
-						$passphare	= $ceksudahtte->passphare;
-						if ($nonik == '' OR is_null($nonik)){
-							return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Pejabat : '.$ceksudahtte->pejabat.' Tidak Menggunakan TTE Tersertifikasi']);
-							return back();
-						} else {
-							$output_file 	= '/scan/files/'. $getsurat->marking.'.pdf';
-							try {
-								Storage::disk('local')->delete($output_file);
-							} catch (\Exception $e) {
-							}
-							$namafile	= $getsurat->marking.'.pdf';
-							$request->file('file')->move(public_path('scan/files'), $namafile);
-							if (file_exists(public_path($output_file))){
-								$error		= '';
-								$pesan		= '';
-								$file 		= public_path($output_file);
-								$passphare	= Crypt::decryptString($passphare);
-								$client 	= new Client();
-								$authHeader = [
-									'auth'    		=> ['esign', 'qwerty'],
-									'multipart'    	=> [
-										[
-											'name'		=> 'file',
-											'contents'	=> fopen($file, 'r')
-										],
-										[
-											'name'		=> 'nik',
-											'contents'	=> $nonik
-										],
-										[
-											'name'		=> 'passphrase',
-											'contents'	=> $passphare
-										],
-										[
-											'name'		=> 'tampilan',
-											'contents'	=> 'invisible'
-										],
-									],
-								];
-								try {
-									$response 	= $client->post('https://esign.ub.ac.id/api/sign/pdf', $authHeader);
-									$status		= (string)$response->getStatusCode();
-									$body		= (string)$response->getBody();
-									$hasil		= json_decode($body, true);
-									$tgltte		= date("Y-m-d H:i:s");
-									$waktutte	= 0;
-									$iddok		= '';
-									$waktutte 	= $response->getHeader('signing_time');
-									$waktutte	= $waktutte[0];
-									$tgltte 	= $response->getHeader('Date');
-									$tgltte		= $tgltte[0];
-									$iddok		= $response->getHeader('id_dokumen');
-									$iddok		= $iddok[0];
-									$error		= 'Signed at '.$tgltte.' Signing Time: '.$waktutte.' ID Dokumen: '.$iddok;
-									Suratkeluar::where('marking', $marking)->update([
-										'status' 		=>  'Final Form',
-										'tandatangan' 	=>  'Signed Using TTE',
-										'paraf1' 		=>  $iddok.'-SCO-DOWNLOAD',
-									]);
-								} catch (\GuzzleHttp\Exception\ClientException $e) {
-									$response 				= $e->getResponse();
-									$responseBodyAsString 	= $response->getBody()->getContents();
-									$pesan 					= json_decode($responseBodyAsString);
-									if ($pesan->error !== null){
-										$pesan 				= $pesan->error;
-									} else {
-										$pesan				= 'gagal - 413 Request Entity Too Large';
-									}
-									$error		= $error.$pesan.' Untuk ID '.$getsurat->id.'<br />';
-								}
-								return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => $error]);
-								return back();
-							} else {
-								return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat : '.$output_file.' Gagal di Upload']);
-								return back();
-							}
-						}
-					} else {
-						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Belum dengan ID : '.$getsurat->id.' Belum Masuk Antrian TTE']);
-						return back();
-					}
+
+    // old function
+	// public function exUploadSuratTTE(Request $request) {
+	// 	$nomor			= $request->input('val02');
+	// 	$tanggal		= $request->input('val03');
+	// 	$kepada			= $request->input('val04');
+	// 	$nmttd			= $request->input('val05');
+	// 	$paraf1			= $request->input('val06');
+	// 	$paraf2			= $request->input('val07');
+	// 	$paraf3			= $request->input('val08');
+	// 	$paraf4			= $request->input('val09');
+	// 	$marking		= $request->input('val10');
+	// 	$idsurat		= $request->input('val11');
+	// 	$perihal		= $request->input('val12');
+	// 	$thnagenda		= $request->input('val13');
+	// 	$noagenda		= $request->input('val14');
+	// 	$alamat 		= Session('addressapps01');
+	// 	$swandhanakota	= Session('kota01');
+	// 	$universitas 	= Session('subsubdomainapps01');
+	// 	$konseptor		= Session('email');
+	// 	$homebase		= url("/");
+	// 	$kalender 		= array("Bulan", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember");
+	// 	$dasarsurat		= '';
+	// 	if ($thnagenda != '' AND $noagenda != ''){
+	// 		$datalm1  = Suratmasuk::where('noagenda', $noagenda)->where('yersrt', $thnagenda)->where('fakultas', Session('fakultas'))->first();
+	// 		if (isset($datalm1->scansurat)){
+	// 			$dasarsurat = $datalm1->scansurat;
+	// 		}
+	// 	}
+	// 	if ($paraf2 == ''){ $paraf2 = ''; }
+	// 	if ($paraf3 == ''){ $paraf3 = ''; }
+	// 	if ($paraf4 == ''){ $paraf4 = ''; }
+	// 	if ($nmttd == 'materai') {
+	// 		if ($request->hasFile('file')) {
+	// 			$getsurat 		= Suratkeluar::where('marking', $marking)->first();
+	// 			if (isset($getsurat->id)){
+	// 				$ceksudahtte = AntrianTTE::where('idsurat', $getsurat->id)->where('jenis', 'KELUAR')->first();
+	// 				if (isset($ceksudahtte->id)){
+	// 					$nonik		= $ceksudahtte->nonik;
+	// 					$passphare	= $ceksudahtte->passphare;
+	// 					if ($nonik == '' OR is_null($nonik)){
+	// 						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Pejabat : '.$ceksudahtte->pejabat.' Tidak Menggunakan TTE Tersertifikasi']);
+	// 						return back();
+	// 					} else {
+	// 						$output_file 	= '/scan/files/'. $getsurat->marking.'.pdf';
+	// 						try {
+	// 							Storage::disk('local')->delete($output_file);
+	// 						} catch (\Exception $e) {
+	// 						}
+	// 						$namafile	= $getsurat->marking.'.pdf';
+	// 						$request->file('file')->move(public_path('scan/files'), $namafile);
+	// 						if (file_exists(public_path($output_file))){
+	// 							$error		= '';
+	// 							$pesan		= '';
+	// 							$file 		= public_path($output_file);
+	// 							$passphare	= Crypt::decryptString($passphare);
+	// 							$client 	= new Client();
+	// 							$authHeader = [
+	// 								'auth'    		=> ['esign', 'qwerty'],
+	// 								'multipart'    	=> [
+	// 									[
+	// 										'name'		=> 'file',
+	// 										'contents'	=> fopen($file, 'r')
+	// 									],
+	// 									[
+	// 										'name'		=> 'nik',
+	// 										'contents'	=> $nonik
+	// 									],
+	// 									[
+	// 										'name'		=> 'passphrase',
+	// 										'contents'	=> $passphare
+	// 									],
+	// 									[
+	// 										'name'		=> 'tampilan',
+	// 										'contents'	=> 'invisible'
+	// 									],
+	// 								],
+	// 							];
+	// 							try {
+    //                                 // dd('4');
+    //                                 // dd($authHeader);die;
+	// 								$response 	= $client->post('https://esign.ub.ac.id/api/sign/pdf', $authHeader);
+	// 								$status		= (string)$response->getStatusCode();
+	// 								$body		= (string)$response->getBody();
+	// 								$hasil		= json_decode($body, true);
+	// 								$tgltte		= date("Y-m-d H:i:s");
+	// 								$waktutte	= 0;
+	// 								$iddok		= '';
+	// 								$waktutte 	= $response->getHeader('signing_time');
+	// 								$waktutte	= $waktutte[0];
+	// 								$tgltte 	= $response->getHeader('Date');
+	// 								$tgltte		= $tgltte[0];
+	// 								$iddok		= $response->getHeader('id_dokumen');
+	// 								$iddok		= $iddok[0];
+	// 								$error		= 'Signed at '.$tgltte.' Signing Time: '.$waktutte.' ID Dokumen: '.$iddok;
+	// 								Suratkeluar::where('marking', $marking)->update([
+	// 									'status' 		=>  'Final Form',
+	// 									'tandatangan' 	=>  'Signed Using TTE',
+	// 									'paraf1' 		=>  $iddok.'-SCO-DOWNLOAD',
+	// 								]);
+	// 							} catch (\GuzzleHttp\Exception\ClientException $e) {
+	// 								$response 				= $e->getResponse();
+	// 								$responseBodyAsString 	= $response->getBody()->getContents();
+	// 								$pesan 					= json_decode($responseBodyAsString);
+	// 								if ($pesan->error !== null){
+	// 									$pesan 				= $pesan->error;
+	// 								} else {
+	// 									$pesan				= 'gagal - 413 Request Entity Too Large';
+	// 								}
+	// 								$error		= $error.$pesan.' Untuk ID '.$getsurat->id.'<br />';
+	// 							}
+	// 							return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => $error]);
+	// 							return back();
+	// 						} else {
+	// 							return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat : '.$output_file.' Gagal di Upload']);
+	// 							return back();
+	// 						}
+	// 					}
+	// 				} else {
+	// 					return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Belum dengan ID : '.$getsurat->id.' Belum Masuk Antrian TTE']);
+	// 					return back();
+	// 				}
 					
-				} else {
-					return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Marking : '.$marking.' Tidak di temukan']);
-					return back();
-				}
-			} else {
-				return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'File Tidak di Pilih']);
-				return back();
-			}
-		} else if ($nmttd == 'nonomor') {
-			$getpejabat			= Pejabatsurat::where('id', $kepada)->first();
-			if (isset($getpejabat->id)){
-				$idpejabat		= $getpejabat->id;
-				$penandatangan	= $getpejabat->pejabat;
-				$setttd			= $getpejabat->nama;
-				$kodepjbt		= $getpejabat->kode;
-				$email			= $getpejabat->email;
-			} else {
-				$idpejabat		= 0;
-				$penandatangan	= '';
-				$setttd			= '';
-				$kodepjbt		= '';
-				$email			= '';
-			}
-			$getdatalama = Suratkeluartnpnomor::where('marking', $marking)->first();
-			if (isset($getdatalama->id)){
-				if ($getdatalama->tandatangan == ''){
-					$input = Suratkeluartnpnomor::where('marking', $marking)->update([
-						'isisurat'		=> 	$namafile,
-						'idpejabat' 	=>  $idpejabat,
-						'pejabat' 		=>  $penandatangan,
-						'namapejabat' 	=>  $setttd,
-						'paraf1' 		=>  $paraf1,
-						'paraf2' 		=>  $paraf2,
-						'paraf3' 		=>  $paraf3,
-						'paraf4' 		=>  $paraf4,
-						'updated_at'	=> 	date('Y-m-d H:i:s')
-					]);
-					if ($input){
-						$teks = '';
-						Inboxsurat::where('marking', $marking)->where('jenis', 'KELUARNONOMER')->delete();
-						if ($paraf1 != 'SELF'){
-							$qnamapjbt	= Pejabatsurat::where('pejabat', $paraf1)->first();
-							if (isset($qnamapjbt->pejabat)){
-								$pejabat 	= $qnamapjbt->pejabat;
-								SendMail::kiriminbox($marking,Session('nama'),$pejabat,$qnamapjbt->email,'KELUARNONOMER','PARAF','','1');
-								$teks 		= 'Surat telah kami kirimkan ke '.$pejabat.' untuk di periksa (paraf)';
-							} else {
-								SendMail::kiriminbox($marking,Session('nama'),$penandatangan,$email,'KELUARNONOMER','TTD','','1');
-								$teks 		= 'Surat telah kami kirimkan ke '.$penandatangan.' untuk di tandatangani secara elektronik';
-							}
-						} else {
-							SendMail::kiriminbox($marking,Session('nama'),$penandatangan,$email,'KELUARNONOMER','TTD','','1');
-							$teks 		= 'Surat telah kami kirimkan ke '.$penandatangan.' untuk di tandatangani secara elektronik';
-						}
-						if ($teks != ''){
-							return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => $teks]);
-							return back();
-						} else {
-							return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal menemukan Key : '.$marking]);
-							return back();
-						}
-					} else {
-						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Update Gagal, Silahkan coba beberapa saat lagi']);
-						return back();
-					}
-				} else {
-					return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat yang telah ditandatangani tidak bisa di ubah']);
-					return back();
-				}
+	// 			} else {
+	// 				return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Marking : '.$marking.' Tidak di temukan']);
+	// 				return back();
+	// 			}
+	// 		} else {
+	// 			return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'File Tidak di Pilih']);
+	// 			return back();
+	// 		}
+	// 	} else if ($nmttd == 'nonomor') {
+	// 		$getpejabat			= Pejabatsurat::where('id', $kepada)->first();
+	// 		if (isset($getpejabat->id)){
+	// 			$idpejabat		= $getpejabat->id;
+	// 			$penandatangan	= $getpejabat->pejabat;
+	// 			$setttd			= $getpejabat->nama;
+	// 			$kodepjbt		= $getpejabat->kode;
+	// 			$email			= $getpejabat->email;
+	// 		} else {
+	// 			$idpejabat		= 0;
+	// 			$penandatangan	= '';
+	// 			$setttd			= '';
+	// 			$kodepjbt		= '';
+	// 			$email			= '';
+	// 		}
+	// 		$getdatalama = Suratkeluartnpnomor::where('marking', $marking)->first();
+	// 		if (isset($getdatalama->id)){
+	// 			if ($getdatalama->tandatangan == ''){
+	// 				$input = Suratkeluartnpnomor::where('marking', $marking)->update([
+	// 					'isisurat'		=> 	$namafile,
+	// 					'idpejabat' 	=>  $idpejabat,
+	// 					'pejabat' 		=>  $penandatangan,
+	// 					'namapejabat' 	=>  $setttd,
+	// 					'paraf1' 		=>  $paraf1,
+	// 					'paraf2' 		=>  $paraf2,
+	// 					'paraf3' 		=>  $paraf3,
+	// 					'paraf4' 		=>  $paraf4,
+	// 					'updated_at'	=> 	date('Y-m-d H:i:s')
+	// 				]);
+	// 				if ($input){
+	// 					$teks = '';
+	// 					Inboxsurat::where('marking', $marking)->where('jenis', 'KELUARNONOMER')->delete();
+	// 					if ($paraf1 != 'SELF'){
+	// 						$qnamapjbt	= Pejabatsurat::where('pejabat', $paraf1)->first();
+	// 						if (isset($qnamapjbt->pejabat)){
+	// 							$pejabat 	= $qnamapjbt->pejabat;
+	// 							SendMail::kiriminbox($marking,Session('nama'),$pejabat,$qnamapjbt->email,'KELUARNONOMER','PARAF','','1');
+	// 							$teks 		= 'Surat telah kami kirimkan ke '.$pejabat.' untuk di periksa (paraf)';
+	// 						} else {
+	// 							SendMail::kiriminbox($marking,Session('nama'),$penandatangan,$email,'KELUARNONOMER','TTD','','1');
+	// 							$teks 		= 'Surat telah kami kirimkan ke '.$penandatangan.' untuk di tandatangani secara elektronik';
+	// 						}
+	// 					} else {
+	// 						SendMail::kiriminbox($marking,Session('nama'),$penandatangan,$email,'KELUARNONOMER','TTD','','1');
+	// 						$teks 		= 'Surat telah kami kirimkan ke '.$penandatangan.' untuk di tandatangani secara elektronik';
+	// 					}
+	// 					if ($teks != ''){
+	// 						return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => $teks]);
+	// 						return back();
+	// 					} else {
+	// 						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal menemukan Key : '.$marking]);
+	// 						return back();
+	// 					}
+	// 				} else {
+	// 					return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Update Gagal, Silahkan coba beberapa saat lagi']);
+	// 					return back();
+	// 				}
+	// 			} else {
+	// 				return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat yang telah ditandatangani tidak bisa di ubah']);
+	// 				return back();
+	// 			}
 				
-			} else {
-				return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Marking Tidak diTemukan']);
-				return back();
-			}
-		} else if ($nmttd == 'changesif') {
-			$getdatalama = JadwalPiket::where('id', $idsurat)->first();
-			if (isset($getdatalama->id)){
-				$start_date 	= $getdatalama->tanggal;
-				$presensimulai 	= $getdatalama->presensimulai;
-				$presensiakhir 	= $getdatalama->presensiakhir;
-				$ktl 			= $getdatalama->ktl;
-				$psw 			= $getdatalama->psw;
-				$getarrjam 		= explode('-', $perihal);
-				$mulaikerja		= $start_date.' '.$getarrjam[0].':00';
-				if ($perihal == '21:00-07:00' OR $perihal == '22:00-06:00'){
-					$start_time = strtotime($start_date);
-					$end_time 	= date('Y-m-d', strtotime("+1 day", $start_time));
-					$akhirkerja	= $end_time.' '.$getarrjam[1].':00';
-				} else {
-					$akhirkerja	= $start_date.' '.$getarrjam[1].':00';
-				}
-				$update = JadwalPiket::where('id', $idsurat)->update([
-					'shift'			=> $perihal,
-					'mulaikerja'	=> $mulaikerja,
-					'akhirkerja'	=> $akhirkerja,
-					'updated_at'	=> date('Y-m-d H:i:s')
-				]);
-				if ($update){
-					$pesan 	= '';
-					if ($thnagenda != $ktl){
-						JadwalPiket::where('id', $idsurat)->update([
-							'ktl'	=> $thnagenda,
-						]);
-						$ktl	= $thnagenda;
-						$pesan 	= $pesan.' Data Keterlambatan di Hitung Manual';
-					} else {
-						if ($presensimulai == '0000-00-00 00:00:00' OR $presensimulai == null OR $presensimulai == ''){
+	// 		} else {
+	// 			return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Marking Tidak diTemukan']);
+	// 			return back();
+	// 		}
+	// 	} else if ($nmttd == 'changesif') {
+	// 		$getdatalama = JadwalPiket::where('id', $idsurat)->first();
+	// 		if (isset($getdatalama->id)){
+	// 			$start_date 	= $getdatalama->tanggal;
+	// 			$presensimulai 	= $getdatalama->presensimulai;
+	// 			$presensiakhir 	= $getdatalama->presensiakhir;
+	// 			$ktl 			= $getdatalama->ktl;
+	// 			$psw 			= $getdatalama->psw;
+	// 			$getarrjam 		= explode('-', $perihal);
+	// 			$mulaikerja		= $start_date.' '.$getarrjam[0].':00';
+	// 			if ($perihal == '21:00-07:00' OR $perihal == '22:00-06:00'){
+	// 				$start_time = strtotime($start_date);
+	// 				$end_time 	= date('Y-m-d', strtotime("+1 day", $start_time));
+	// 				$akhirkerja	= $end_time.' '.$getarrjam[1].':00';
+	// 			} else {
+	// 				$akhirkerja	= $start_date.' '.$getarrjam[1].':00';
+	// 			}
+	// 			$update = JadwalPiket::where('id', $idsurat)->update([
+	// 				'shift'			=> $perihal,
+	// 				'mulaikerja'	=> $mulaikerja,
+	// 				'akhirkerja'	=> $akhirkerja,
+	// 				'updated_at'	=> date('Y-m-d H:i:s')
+	// 			]);
+	// 			if ($update){
+	// 				$pesan 	= '';
+	// 				if ($thnagenda != $ktl){
+	// 					JadwalPiket::where('id', $idsurat)->update([
+	// 						'ktl'	=> $thnagenda,
+	// 					]);
+	// 					$ktl	= $thnagenda;
+	// 					$pesan 	= $pesan.' Data Keterlambatan di Hitung Manual';
+	// 				} else {
+	// 					if ($presensimulai == '0000-00-00 00:00:00' OR $presensimulai == null OR $presensimulai == ''){
 
-						} else {
-							$from	= strtotime($mulaikerja);
-							$to		= strtotime($presensimulai);
-							if ($to > $from){
-								$from	= Carbon::createFromFormat('Y-m-d H:s:i', $mulaikerja);
-								$to		= Carbon::createFromFormat('Y-m-d H:s:i', $presensimulai);
-								$ktl 	= $from->DiffInSeconds($to);
-							} else {
-								$ktl = 0;
-							}
-						}
-						JadwalPiket::where('id', $idsurat)->update([
-							'ktl'	=> $ktl,
-						]);
-						$pesan 	= $pesan.' Data Keterlambatan di Hitung Otomatis';
-					}
-					if ($noagenda != $psw){
-						JadwalPiket::where('id', $idsurat)->update([
-							'psw'	=> $noagenda,
-						]);
-						$psw 	= $noagenda;
-						$pesan 	= $pesan.' Data Pulang Sebelum Waktunya di Hitung Manual';
-					} else {
-						if ($presensiakhir == '0000-00-00 00:00:00' OR $presensiakhir == null OR $presensiakhir == ''){
+	// 					} else {
+	// 						$from	= strtotime($mulaikerja);
+	// 						$to		= strtotime($presensimulai);
+	// 						if ($to > $from){
+	// 							$from	= Carbon::createFromFormat('Y-m-d H:s:i', $mulaikerja);
+	// 							$to		= Carbon::createFromFormat('Y-m-d H:s:i', $presensimulai);
+	// 							$ktl 	= $from->DiffInSeconds($to);
+	// 						} else {
+	// 							$ktl = 0;
+	// 						}
+	// 					}
+	// 					JadwalPiket::where('id', $idsurat)->update([
+	// 						'ktl'	=> $ktl,
+	// 					]);
+	// 					$pesan 	= $pesan.' Data Keterlambatan di Hitung Otomatis';
+	// 				}
+	// 				if ($noagenda != $psw){
+	// 					JadwalPiket::where('id', $idsurat)->update([
+	// 						'psw'	=> $noagenda,
+	// 					]);
+	// 					$psw 	= $noagenda;
+	// 					$pesan 	= $pesan.' Data Pulang Sebelum Waktunya di Hitung Manual';
+	// 				} else {
+	// 					if ($presensiakhir == '0000-00-00 00:00:00' OR $presensiakhir == null OR $presensiakhir == ''){
 
-						} else {
-							$from	= strtotime($akhirkerja);
-							$to		= strtotime($presensiakhir);
-							if ($to < $from){
-								$from	= Carbon::createFromFormat('Y-m-d H:s:i', $akhirkerja);
-								$to		= Carbon::createFromFormat('Y-m-d H:s:i', $presensiakhir);
-								$psw 	= $from->DiffInSeconds($to);
-							} else {
-								$psw = 0;
-							}
-						}
-						JadwalPiket::where('id', $idsurat)->update([
-							'psw'	=> $psw,
-						]);
-						$pesan 	= $pesan.' Data Pulang Sebelum Waktunya di Hitung Otomatis';
-					}
-					$total 	= $ktl + $psw;
-					JadwalPiket::where('id', $idsurat)->update([
-						'total'	=> $total,
-					]);
-					return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => $pesan]);
-					return back();
-				} else {
-					return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Update Gagal, Silahkan coba beberapa saat lagi']);
-					return back();
-				}
-			} else {
-				return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Marking Tidak diTemukan']);
-				return back();
-			}
-		} else if ($nmttd == 'emeterai') {
-			$namafile 		= 'bermeterai-'.$marking.'.pdf';
-			$input = null;
-			$datadiri	= Suratkeluar::where('marking', $marking)->first();
-			if (!isset($datadiri->id)){
-				$datadiri	= Tabelskdanperaturan::where('marking', $marking)->first();
-				if (!isset($datadiri->id)){
-					$datadiri	= Draftsk::where('marking', $marking)->first();
-					if (!isset($datadiri->id)){
-						$datadiri	= Suratkeluartnpnomor::where('marking', $marking)->first();
-						if (isset($datadiri->id)){
-							$input = Suratkeluartnpnomor::where('marking', $marking)->update([
-								'lampiran'	=> $namafile,
-								'arsip'		=> 'Archive By '.Session('nama').' at '.date('Y-m-d H:i:s')
-							]);
-						}
-					} else {
-						$input = Draftsk::where('marking', $marking)->update([
-							'lampiran'	=> $namafile,
-							'arsip'		=> 'Archive By '.Session('nama').' at '.date('Y-m-d H:i:s')
-						]);
-					}
-				} else {
-					$input = Tabelskdanperaturan::where('marking', $marking)->update([
-						'namaparaf3'	=> $namafile,
-						'arsip'			=> 'Archive By '.Session('nama').' at '.date('Y-m-d H:i:s')
-					]);
-				}
-			} else {
-				$input = Suratkeluar::where('marking', $marking)->update([
-					'lampiran'	=> $namafile,
-					'arsip'		=> 'Archive By '.Session('nama').' at '.date('Y-m-d H:i:s')
-				]);
-			}
-			if ($input){
-				$output_file 	= '/scan/files/'. $namafile;
-				try {
-					Storage::disk('local')->delete($output_file);
-				} catch (\Exception $e) {
+	// 					} else {
+	// 						$from	= strtotime($akhirkerja);
+	// 						$to		= strtotime($presensiakhir);
+	// 						if ($to < $from){
+	// 							$from	= Carbon::createFromFormat('Y-m-d H:s:i', $akhirkerja);
+	// 							$to		= Carbon::createFromFormat('Y-m-d H:s:i', $presensiakhir);
+	// 							$psw 	= $from->DiffInSeconds($to);
+	// 						} else {
+	// 							$psw = 0;
+	// 						}
+	// 					}
+	// 					JadwalPiket::where('id', $idsurat)->update([
+	// 						'psw'	=> $psw,
+	// 					]);
+	// 					$pesan 	= $pesan.' Data Pulang Sebelum Waktunya di Hitung Otomatis';
+	// 				}
+	// 				$total 	= $ktl + $psw;
+	// 				JadwalPiket::where('id', $idsurat)->update([
+	// 					'total'	=> $total,
+	// 				]);
+	// 				return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => $pesan]);
+	// 				return back();
+	// 			} else {
+	// 				return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Update Gagal, Silahkan coba beberapa saat lagi']);
+	// 				return back();
+	// 			}
+	// 		} else {
+	// 			return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Marking Tidak diTemukan']);
+	// 			return back();
+	// 		}
+	// 	} else if ($nmttd == 'emeterai') {
+	// 		$namafile 		= 'bermeterai-'.$marking.'.pdf';
+	// 		$input = null;
+	// 		$datadiri	= Suratkeluar::where('marking', $marking)->first();
+	// 		if (!isset($datadiri->id)){
+	// 			$datadiri	= Tabelskdanperaturan::where('marking', $marking)->first();
+	// 			if (!isset($datadiri->id)){
+	// 				$datadiri	= Draftsk::where('marking', $marking)->first();
+	// 				if (!isset($datadiri->id)){
+	// 					$datadiri	= Suratkeluartnpnomor::where('marking', $marking)->first();
+	// 					if (isset($datadiri->id)){
+	// 						$input = Suratkeluartnpnomor::where('marking', $marking)->update([
+	// 							'lampiran'	=> $namafile,
+	// 							'arsip'		=> 'Archive By '.Session('nama').' at '.date('Y-m-d H:i:s')
+	// 						]);
+	// 					}
+	// 				} else {
+	// 					$input = Draftsk::where('marking', $marking)->update([
+	// 						'lampiran'	=> $namafile,
+	// 						'arsip'		=> 'Archive By '.Session('nama').' at '.date('Y-m-d H:i:s')
+	// 					]);
+	// 				}
+	// 			} else {
+	// 				$input = Tabelskdanperaturan::where('marking', $marking)->update([
+	// 					'namaparaf3'	=> $namafile,
+	// 					'arsip'			=> 'Archive By '.Session('nama').' at '.date('Y-m-d H:i:s')
+	// 				]);
+	// 			}
+	// 		} else {
+	// 			$input = Suratkeluar::where('marking', $marking)->update([
+	// 				'lampiran'	=> $namafile,
+	// 				'arsip'		=> 'Archive By '.Session('nama').' at '.date('Y-m-d H:i:s')
+	// 			]);
+	// 		}
+	// 		if ($input){
+	// 			$output_file 	= '/scan/files/'. $namafile;
+	// 			try {
+	// 				Storage::disk('local')->delete($output_file);
+	// 			} catch (\Exception $e) {
 
-				}
-				$request->file('file')->move(public_path('scan/files'), $namafile);
+	// 			}
+	// 			$request->file('file')->move(public_path('scan/files'), $namafile);
 				
-				return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Upload Mark '.$marking.' Success']);
-				return back();
-			} else {
-				return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal menemukan Key : '.$marking]);
-				return back();
-			}
-		} else if ($nmttd == 'custom') {
-			$namafile 	= $marking.'.pdf';
-			$input 		= null;
-			$teks		= '';
-			$output_file= '/scan/files/'. $namafile;
-			try {
-				Storage::disk('local')->delete($output_file);
-			} catch (\Exception $e) {
+	// 			return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Upload Mark '.$marking.' Success']);
+	// 			return back();
+	// 		} else {
+	// 			return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal menemukan Key : '.$marking]);
+	// 			return back();
+	// 		}
+	// 	} else if ($nmttd == 'custom') {
+	// 		$namafile 	= $marking.'.pdf';
+	// 		$input 		= null;
+	// 		$teks		= '';
+	// 		$output_file= '/scan/files/'. $namafile;
+	// 		try {
+	// 			Storage::disk('local')->delete($output_file);
+	// 		} catch (\Exception $e) {
 
-			}
-			$request->file('file')->move(public_path('scan/files'), $namafile);
-			$getpejabat			= Pejabatsurat::where('pejabat', $kepada)->first();
-			if (isset($getpejabat->id)){
-				$idpejabat		= $getpejabat->id;
-				$penandatangan	= $getpejabat->pejabat;
-				$setttd			= $getpejabat->nama;
-				$kodepjbt		= $getpejabat->kode;
-				$email			= $getpejabat->email;
-			} else {
-				$idpejabat		= 0;
-				$penandatangan	= '';
-				$setttd			= '';
-				$kodepjbt		= '';
-				$email			= '';
-			}
-			if ($paraf1 == '' OR is_null($paraf1)){ $paraf1 = 'SELF'; }
-			if ($idsurat == 'KELUARNONOMER'){
-				$input = Suratkeluartnpnomor::where('marking', $marking)->update([
-					'isisurat'		=> 	$namafile,
-					'idpejabat' 	=>  $idpejabat,
-					'pejabat' 		=>  $penandatangan,
-					'namapejabat' 	=>  $setttd,
-					'pembuat' 		=>  Session('email'),
-					'kelompok' 		=>  Session('jabatan'),
-					'tandatangan' 	=>  'Antri TTE',
-					'paraf1' 		=>  $paraf1,
-					'updated_at'	=> 	date('Y-m-d H:i:s')
-				]);
-				Inboxsurat::where('marking', $marking)->where('jenis', 'KELUARNONOMER')->delete();
-				if ($paraf1 != 'SELF'){
-					$qnamapjbt	= Pejabatsurat::where('pejabat', $paraf1)->first();
-					if (isset($qnamapjbt->pejabat)){
-						$pejabat 	= $qnamapjbt->pejabat;
-						SendMail::kiriminbox($marking,Session('nama'),$pejabat,$qnamapjbt->email,'KELUARNONOMER','PARAF','','1');
-						$teks 		= 'Surat telah kami kirimkan ke '.$pejabat.' untuk di periksa (paraf)';
-					} else {
-						SendMail::kiriminbox($marking,Session('nama'),$penandatangan,$email,'KELUARNONOMER','TTD','','1');
-						$teks 		= 'Surat telah kami kirimkan ke '.$penandatangan.' untuk di tandatangani secara elektronik';
-					}
-				} else {
-					SendMail::kiriminbox($marking,Session('nama'),$penandatangan,$email,'KELUARNONOMER','TTD','','1');
-					$teks 		= 'Surat telah kami kirimkan ke '.$penandatangan.' untuk di tandatangani secara elektronik';
-				}
-			}
-			if ($teks != ''){
-				return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => $teks]);
-				return back();
-			} else {
-				return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal menemukan Key : '.$marking]);
-				return back();
-			}
-		} else {
-			$rnamapjbt		= Pejabatsurat::where('id', $nmttd)->first();
-			$pejabat 		= $rnamapjbt->pejabat;
-			$nmpejabat 		= $rnamapjbt->nama;
-			$nippejabat 	= $rnamapjbt->nip;
-			$kodefakultas 	= $rnamapjbt->kode;
-			$idpejabat 		= $rnamapjbt->id;
-			$jenisnip 		= $rnamapjbt->jenis;
-			$emailpenerima 	= $rnamapjbt->email;
-			if ($jenisnip == '' OR $jenisnip == '-' OR is_null($jenisnip)){
-				$jenisnip 	= 'NIP';
-			}
+	// 		}
+	// 		$request->file('file')->move(public_path('scan/files'), $namafile);
+	// 		$getpejabat			= Pejabatsurat::where('pejabat', $kepada)->first();
+	// 		if (isset($getpejabat->id)){
+	// 			$idpejabat		= $getpejabat->id;
+	// 			$penandatangan	= $getpejabat->pejabat;
+	// 			$setttd			= $getpejabat->nama;
+	// 			$kodepjbt		= $getpejabat->kode;
+	// 			$email			= $getpejabat->email;
+	// 		} else {
+	// 			$idpejabat		= 0;
+	// 			$penandatangan	= '';
+	// 			$setttd			= '';
+	// 			$kodepjbt		= '';
+	// 			$email			= '';
+	// 		}
+	// 		if ($paraf1 == '' OR is_null($paraf1)){ $paraf1 = 'SELF'; }
+	// 		if ($idsurat == 'KELUARNONOMER'){
+	// 			$input = Suratkeluartnpnomor::where('marking', $marking)->update([
+	// 				'isisurat'		=> 	$namafile,
+	// 				'idpejabat' 	=>  $idpejabat,
+	// 				'pejabat' 		=>  $penandatangan,
+	// 				'namapejabat' 	=>  $setttd,
+	// 				'pembuat' 		=>  Session('email'),
+	// 				'kelompok' 		=>  Session('jabatan'),
+	// 				'tandatangan' 	=>  'Antri TTE',
+	// 				'paraf1' 		=>  $paraf1,
+	// 				'updated_at'	=> 	date('Y-m-d H:i:s')
+	// 			]);
+	// 			Inboxsurat::where('marking', $marking)->where('jenis', 'KELUARNONOMER')->delete();
+	// 			if ($paraf1 != 'SELF'){
+	// 				$qnamapjbt	= Pejabatsurat::where('pejabat', $paraf1)->first();
+	// 				if (isset($qnamapjbt->pejabat)){
+	// 					$pejabat 	= $qnamapjbt->pejabat;
+	// 					SendMail::kiriminbox($marking,Session('nama'),$pejabat,$qnamapjbt->email,'KELUARNONOMER','PARAF','','1');
+	// 					$teks 		= 'Surat telah kami kirimkan ke '.$pejabat.' untuk di periksa (paraf)';
+	// 				} else {
+	// 					SendMail::kiriminbox($marking,Session('nama'),$penandatangan,$email,'KELUARNONOMER','TTD','','1');
+	// 					$teks 		= 'Surat telah kami kirimkan ke '.$penandatangan.' untuk di tandatangani secara elektronik';
+	// 				}
+	// 			} else {
+	// 				SendMail::kiriminbox($marking,Session('nama'),$penandatangan,$email,'KELUARNONOMER','TTD','','1');
+	// 				$teks 		= 'Surat telah kami kirimkan ke '.$penandatangan.' untuk di tandatangani secara elektronik';
+	// 			}
+	// 		}
+	// 		if ($teks != ''){
+	// 			return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => $teks]);
+	// 			return back();
+	// 		} else {
+	// 			return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal menemukan Key : '.$marking]);
+	// 			return back();
+	// 		}
+	// 	} else {
+	// 		$rnamapjbt		= Pejabatsurat::where('id', $nmttd)->first();
+	// 		$pejabat 		= $rnamapjbt->pejabat;
+	// 		$nmpejabat 		= $rnamapjbt->nama;
+	// 		$nippejabat 	= $rnamapjbt->nip;
+	// 		$kodefakultas 	= $rnamapjbt->kode;
+	// 		$idpejabat 		= $rnamapjbt->id;
+	// 		$jenisnip 		= $rnamapjbt->jenis;
+	// 		$emailpenerima 	= $rnamapjbt->email;
+	// 		if ($jenisnip == '' OR $jenisnip == '-' OR is_null($jenisnip)){
+	// 			$jenisnip 	= 'NIP';
+	// 		}
 			
-			$periksa = '';
-			if ($pejabat == $paraf1){ $periksa = 'KEMBAR'; }
-			if ($pejabat == $paraf2){ $periksa = 'KEMBAR'; }
-			if ($pejabat == $paraf3){ $periksa = 'KEMBAR'; }
-			if ($pejabat == $paraf4){ $periksa = 'KEMBAR'; }
-			if ($periksa == 'KEMBAR'){
-				return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Penandatangan Tidak Boleh Ikut memaraf..!!']);
-				return back();
-			} else {
-				$nippejabat 	= preg_replace('/\s+/', '', $nippejabat);
-				$setttd			= $nmpejabat.'<br />'.$jenisnip.''.$nippejabat;
-				if ($kepada == 'SKDANPERATURAN'){
-					$jenis			= $request->input('val02');
-					$tanggal		= $request->input('val03');
-					$dasarsuratyy	= $request->input('val10');
-					$idsurat		= $request->input('val11');
-					$judul			= $request->input('val12');
-					$tanggalundang	= $request->input('val13');
-					$idpjbperundang	= $request->input('val14');
-					$nomor			= $request->input('val15');
-					$dasarsuratno	= $request->input('val16');
-					$pjbtperundang	= '';
-					$nmpjbtperundang= '';
-					$nippjbperundang= '';
+	// 		$periksa = '';
+	// 		if ($pejabat == $paraf1){ $periksa = 'KEMBAR'; }
+	// 		if ($pejabat == $paraf2){ $periksa = 'KEMBAR'; }
+	// 		if ($pejabat == $paraf3){ $periksa = 'KEMBAR'; }
+	// 		if ($pejabat == $paraf4){ $periksa = 'KEMBAR'; }
+	// 		if ($periksa == 'KEMBAR'){
+	// 			return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Penandatangan Tidak Boleh Ikut memaraf..!!']);
+	// 			return back();
+	// 		} else {
+	// 			$nippejabat 	= preg_replace('/\s+/', '', $nippejabat);
+	// 			$setttd			= $nmpejabat.'<br />'.$jenisnip.''.$nippejabat;
+	// 			if ($kepada == 'SKDANPERATURAN'){
+	// 				$jenis			= $request->input('val02');
+	// 				$tanggal		= $request->input('val03');
+	// 				$dasarsuratyy	= $request->input('val10');
+	// 				$idsurat		= $request->input('val11');
+	// 				$judul			= $request->input('val12');
+	// 				$tanggalundang	= $request->input('val13');
+	// 				$idpjbperundang	= $request->input('val14');
+	// 				$nomor			= $request->input('val15');
+	// 				$dasarsuratno	= $request->input('val16');
+	// 				$pjbtperundang	= '';
+	// 				$nmpjbtperundang= '';
+	// 				$nippjbperundang= '';
 					
-					if ($idpjbperundang != ''){
-						$getpengundang	= Pejabatsurat::where('id', $idpjbperundang)->first();
-						if (isset($getpengundang->id)){
-							$pjbtperundang 		= $getpengundang->pejabat;
-							$nmpjbtperundang 	= $getpengundang->nama;
-							$nippjbperundang 	= $getpengundang->nip;
-						}
-					}
+	// 				if ($idpjbperundang != ''){
+	// 					$getpengundang	= Pejabatsurat::where('id', $idpjbperundang)->first();
+	// 					if (isset($getpengundang->id)){
+	// 						$pjbtperundang 		= $getpengundang->pejabat;
+	// 						$nmpjbtperundang 	= $getpengundang->nama;
+	// 						$nippjbperundang 	= $getpengundang->nip;
+	// 					}
+	// 				}
 					
-					$dasarsurat		= '';
-					$ceksuratmasuk	= Suratmasuk::where('noagenda', $dasarsuratno)->where('yersrt', $dasarsuratyy)->where('fakultas', Session('fakultas'))->first();
-					if (isset($ceksuratmasuk->id)){
-						$dasarsurat	= $ceksuratmasuk->scansurat;
-					}
-					$tahun			= date("Y");
-					$getarrsurat	= explode('-', $tanggal);
-					if (isset($getarrsurat[2])){
-						$tahun 		= $getarrsurat[0];
-					}
-					$kelompok		= $jenis;
-					$kode			= 'SKPP';
-					if ($jenis == 'SKDANPERATURAN' OR $jenis == 'SKDANPERATURANTTE'){
-						$kelompok 	= 'SKDANPERATURAN';
-						$kode 		= 'SK';
-					}
-					if ($jenis == 'PERATURANTTE' OR $jenis == 'PERATURAN'){
-						$kelompok 	= 'PERATURAN';
-						$kode 		= 'PP';
-					}
-					if ($jenis == 'INSTRUKSITTE' OR $jenis == 'INSTRUKSI'){
-						$kelompok 	= 'INSTRUKSI';
-						$kode 		= 'INS';
-					}
-					if ($jenis == 'PERATURANTTE' OR $jenis == 'SKDANPERATURANTTE' OR $jenis == 'INSTRUKSITTE'){
-						$jenissrt = 'TTE';
-					} else {
-						$jenissrt = 'BIASA';
-					}
-					if ($idsurat == 'new'){
-						$ceksudah = Tabelskdanperaturan::where('kelompok', $kelompok)->where('tanggal', $tanggal)->where('nomor', $nomor)->where('fakultas', Session('fakultas'))->count();
-					} else {
-						$ceksudah = Tabelskdanperaturan::where('id', '!=', $idsurat)->where('kelompok', $kelompok)->where('tanggal', $tanggal)->where('nomor', $nomor)->where('fakultas', Session('fakultas'))->count();
-					}
-					if ($ceksudah == 0){
-						$marking	= Session('fakultas').'-'.$kode.'-'.$tahun.$nomor;
-						if ($idsurat == 'new'){
-							$input	= Tabelskdanperaturan::create([
-								'kelompok'			=> $kelompok,
-								'marking'			=> $marking,
-								'nomor'				=> $nomor,
-								'tahun'				=> $tahun,
-								'tanggal'			=> $tanggal,
-								'penandatangan'		=> $pejabat,
-								'idpejabat'			=> $nmttd,
-								'nmpejabat'			=> $nmpejabat,
-								'nippejabat'		=> $nippejabat,
-								'pjbtperundang'		=> $pjbtperundang,
-								'idpjbperundang'	=> $idpjbperundang,
-								'nmpjbtperundang'	=> $nmpjbtperundang,
-								'nippjbperundang'	=> $nippjbperundang,
-								'tglpjbperundang'	=> $tanggalundang,
-								'judul'				=> $judul,
-								'scansurat'			=> '',
-								'dasarsurat'		=> $dasarsurat,
-								'dasarsuratno'		=> $dasarsuratno,
-								'dasarsuratyy'		=> $dasarsuratyy,
-								'kodefas'			=> 'TU.00.00.1',
-								'kodesub'			=> '',
-								'paraf1'			=> $paraf1,
-								'paraf2'			=> $paraf2,
-								'paraf3'			=> $paraf3,
-								'paraf4'			=> $paraf4,
-								'tandatangan'		=> 'Tandatangan Manual',
-								'fakultas'			=> Session('fakultas'),
-								'inputor'			=> Session('email'),
-								'arsip'				=> '',
-								'catatan'			=> '',
-							]);
-							$idsurat= $input->id;
-						} else {
-							$input	= Tabelskdanperaturan::where('id', $idsurat)->update([
-								'marking'			=> $marking,
-								'tahun'				=> $tahun,
-								'penandatangan'		=> $pejabat,
-								'idpejabat'			=> $nmttd,
-								'nmpejabat'			=> $nmpejabat,
-								'nippejabat'		=> $nippejabat,
-								'pjbtperundang'		=> $pjbtperundang,
-								'idpjbperundang'	=> $idpjbperundang,
-								'nmpjbtperundang'	=> $nmpjbtperundang,
-								'nippjbperundang'	=> $nippjbperundang,
-								'tglpjbperundang'	=> $tanggalundang,
-								'judul'				=> $judul,
-								'dasarsurat'		=> $dasarsurat,
-								'dasarsuratno'		=> $dasarsuratno,
-								'dasarsuratyy'		=> $dasarsuratyy,
-								'paraf1'			=> $paraf1,
-								'paraf2'			=> $paraf2,
-								'paraf3'			=> $paraf3,
-								'paraf4'			=> $paraf4,
-								'inputor'			=> Session('email'),
-								'updated_at'		=> date("Y-m-d H:i:s")
-							]);
-						}
-						if ($input){
-							if ($request->hasFile('file')) {
-								if ($request->input('val11') != 'new'){
-									$getdata = Tabelskdanperaturan::where('id', $idsurat)->first();
-									if (isset($getdata->scansurat)){
-										$output_file 	= '/scan/files/'. $scansurat;
-										if (file_exists(public_path($output_file))){
-											Storage::disk('local')->delete($output_file);
-										}
-									}
-								}
-								$namafile		= $marking.'.pdf';
-								$request->file('file')->move(public_path('scan/files'), $namafile);
-								Tabelskdanperaturan::where('id', $idsurat)->update([
-									'scansurat'	=> $namafile
-								]);
-							}
-							if ($jenissrt == 'TTE'){
-								$qnamapjbt	= Pejabatsurat::where('pejabat', $request->input('val06'))->first();
-								if (isset($qnamapjbt->pejabat)){
-									SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','SKDANPERATURAN','1');
-								} else {
-									SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','SKDANPERATURAN','1');
-								}
-								Tabelskdanperaturan::where('id', $idsurat)->update([
-									'tandatangan'	=> ''
-								]);
-							}
-							return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tahun '.$tahun.' Tanggal Penetapan '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
-							return back();
-						} else {
-							return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
-							return back();
-						}
-					} else {
-						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Nomor SK '.$nomor.' Sudah ada, Cek Isian Anda']);
-						return back();
-					}
-				} else if ($kepada == 'RIWAYATSK'){
-					$jenis			= $request->input('val02');
-					$tanggal		= $request->input('val03');
-					$dasarsuratyy	= $request->input('val10');
-					$idsurat		= $request->input('val11');
-					$judul			= $request->input('val12');
-					$tanggalundang	= $request->input('val13');
-					$idpjbperundang	= $request->input('val14');
-					$nomor			= $request->input('val15');
-					$kepada			= $request->input('val16');
-					$pjbtperundang	= '';
-					$nmpjbtperundang= '';
-					$nippjbperundang= '';
-					$dasarsuratno	= '';
-					$dasarsurat		= '';
-					$tahun			= date("Y");
-					$getarrsurat	= explode('-', $tanggal);
-					if (isset($getarrsurat[2])){
-						$tahun 		= $getarrsurat[0];
-					}
-					$kelompok		= $jenis;
-					$kode			= 'SKPP';
-					if ($idsurat == 'new'){
-						$ceksudah = Tabelskdanperaturan::where('kelompok', $kelompok)->where('tanggal', $tanggal)->where('nomor', $nomor)->where('fakultas', Session('fakultas'))->count();
-					} else {
-						$ceksudah = Tabelskdanperaturan::where('id', '!=', $idsurat)->where('kelompok', $kelompok)->where('tanggal', $tanggal)->where('nomor', $nomor)->where('fakultas', Session('fakultas'))->count();
-					}
-					if ($ceksudah == 0){
-						$marking	= Session('fakultas').'-'.$kode.'-'.$tahun.$nomor;
-						if ($idsurat == 'new'){
-							$input	= Tabelskdanperaturan::create([
-								'kelompok'			=> $kelompok,
-								'marking'			=> $marking,
-								'nomor'				=> $nomor,
-								'tahun'				=> $tahun,
-								'tanggal'			=> $tanggal,
-								'penandatangan'		=> $pejabat,
-								'idpejabat'			=> $nmttd,
-								'nmpejabat'			=> $nmpejabat,
-								'nippejabat'		=> $nippejabat,
-								'pjbtperundang'		=> '',
-								'idpjbperundang'	=> '',
-								'nmpjbtperundang'	=> '',
-								'nippjbperundang'	=> '',
-								'tglpjbperundang'	=> '',
-								'judul'				=> $judul,
-								'scansurat'			=> '',
-								'dasarsurat'		=> '',
-								'dasarsuratno'		=> '',
-								'dasarsuratyy'		=> '',
-								'kodefas'			=> 'TU.00.00.1',
-								'kodesub'			=> '',
-								'paraf1'			=> 'SELF',
-								'paraf2'			=> '',
-								'paraf3'			=> '',
-								'paraf4'			=> '',
-								'tandatangan'		=> 'Tandatangan Manual',
-								'fakultas'			=> Session('fakultas'),
-								'inputor'			=> Session('email'),
-								'arsip'				=> '',
-								'catatan'			=> '',
-								'sparaf1'			=> $kepada,
-							]);
-							$idsurat= $input->id;
-						} else {
-							$input	= Tabelskdanperaturan::where('id', $idsurat)->update([
-								'marking'			=> $marking,
-								'tahun'				=> $tahun,
-								'penandatangan'		=> $pejabat,
-								'idpejabat'			=> $nmttd,
-								'nmpejabat'			=> $nmpejabat,
-								'nippejabat'		=> $nippejabat,
-								'judul'				=> $judul,
-								'inputor'			=> Session('email'),
-								'updated_at'		=> date("Y-m-d H:i:s"),
-								'sparaf1'			=> $kepada,
-							]);
-						}
-						if ($input){
-							if ($request->hasFile('file')) {
-								if ($request->input('val11') != 'new'){
-									$getdata = Tabelskdanperaturan::where('id', $idsurat)->first();
-									if (isset($getdata->scansurat)){
-										$output_file 	= '/scan/files/'. $scansurat;
-										if (file_exists(public_path($output_file))){
-											Storage::disk('local')->delete($output_file);
-										}
-									}
-								}
-								$namafile		= $marking.'.pdf';
-								$request->file('file')->move(public_path('scan/files'), $namafile);
-								Tabelskdanperaturan::where('id', $idsurat)->update([
-									'scansurat'	=> $namafile
-								]);
-							}
-							return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tahun '.$tahun.' Tanggal Penetapan '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
-							return back();
-						} else {
-							return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
-							return back();
-						}
-					} else {
-						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Nomor SK '.$nomor.' Sudah ada, Cek Isian Anda']);
-						return back();
-					}
-				} else if ($kepada == 'RIWAYATSURAT'){
-					$jenis			= $request->input('val02');
-					$tanggal		= $request->input('val03');
-					$idsurat		= $request->input('val11');
-					$perihal		= $request->input('val12');
-					$nomor			= $request->input('val15');
-					$kepada			= $request->input('val16');
-					$tahun			= date("Y");
-					$getarrsurat	= explode('-', $tanggal);
-					if (isset($getarrsurat[2])){
-						$tahun 		= $getarrsurat[0];
-						$mm			= $getarrsurat[1];
-						$dd			= $getarrsurat[2];
-					} else {
-						$tahun 		= date('Y');
-						$mm			= date('m');
-						$dd			= date('d');
-					}
+	// 				$dasarsurat		= '';
+	// 				$ceksuratmasuk	= Suratmasuk::where('noagenda', $dasarsuratno)->where('yersrt', $dasarsuratyy)->where('fakultas', Session('fakultas'))->first();
+	// 				if (isset($ceksuratmasuk->id)){
+	// 					$dasarsurat	= $ceksuratmasuk->scansurat;
+	// 				}
+	// 				$tahun			= date("Y");
+	// 				$getarrsurat	= explode('-', $tanggal);
+	// 				if (isset($getarrsurat[2])){
+	// 					$tahun 		= $getarrsurat[0];
+	// 				}
+	// 				$kelompok		= $jenis;
+	// 				$kode			= 'SKPP';
+	// 				if ($jenis == 'SKDANPERATURAN' OR $jenis == 'SKDANPERATURANTTE'){
+	// 					$kelompok 	= 'SKDANPERATURAN';
+	// 					$kode 		= 'SK';
+	// 				}
+	// 				if ($jenis == 'PERATURANTTE' OR $jenis == 'PERATURAN'){
+	// 					$kelompok 	= 'PERATURAN';
+	// 					$kode 		= 'PP';
+	// 				}
+	// 				if ($jenis == 'INSTRUKSITTE' OR $jenis == 'INSTRUKSI'){
+	// 					$kelompok 	= 'INSTRUKSI';
+	// 					$kode 		= 'INS';
+	// 				}
+	// 				if ($jenis == 'PERATURANTTE' OR $jenis == 'SKDANPERATURANTTE' OR $jenis == 'INSTRUKSITTE'){
+	// 					$jenissrt = 'TTE';
+	// 				} else {
+	// 					$jenissrt = 'BIASA';
+	// 				}
+	// 				if ($idsurat == 'new'){
+	// 					$ceksudah = Tabelskdanperaturan::where('kelompok', $kelompok)->where('tanggal', $tanggal)->where('nomor', $nomor)->where('fakultas', Session('fakultas'))->count();
+	// 				} else {
+	// 					$ceksudah = Tabelskdanperaturan::where('id', '!=', $idsurat)->where('kelompok', $kelompok)->where('tanggal', $tanggal)->where('nomor', $nomor)->where('fakultas', Session('fakultas'))->count();
+	// 				}
+	// 				if ($ceksudah == 0){
+	// 					$marking	= Session('fakultas').'-'.$kode.'-'.$tahun.$nomor;
+	// 					if ($idsurat == 'new'){
+	// 						$input	= Tabelskdanperaturan::create([
+	// 							'kelompok'			=> $kelompok,
+	// 							'marking'			=> $marking,
+	// 							'nomor'				=> $nomor,
+	// 							'tahun'				=> $tahun,
+	// 							'tanggal'			=> $tanggal,
+	// 							'penandatangan'		=> $pejabat,
+	// 							'idpejabat'			=> $nmttd,
+	// 							'nmpejabat'			=> $nmpejabat,
+	// 							'nippejabat'		=> $nippejabat,
+	// 							'pjbtperundang'		=> $pjbtperundang,
+	// 							'idpjbperundang'	=> $idpjbperundang,
+	// 							'nmpjbtperundang'	=> $nmpjbtperundang,
+	// 							'nippjbperundang'	=> $nippjbperundang,
+	// 							'tglpjbperundang'	=> $tanggalundang,
+	// 							'judul'				=> $judul,
+	// 							'scansurat'			=> '',
+	// 							'dasarsurat'		=> $dasarsurat,
+	// 							'dasarsuratno'		=> $dasarsuratno,
+	// 							'dasarsuratyy'		=> $dasarsuratyy,
+	// 							'kodefas'			=> 'TU.00.00.1',
+	// 							'kodesub'			=> '',
+	// 							'paraf1'			=> $paraf1,
+	// 							'paraf2'			=> $paraf2,
+	// 							'paraf3'			=> $paraf3,
+	// 							'paraf4'			=> $paraf4,
+	// 							'tandatangan'		=> 'Tandatangan Manual',
+	// 							'fakultas'			=> Session('fakultas'),
+	// 							'inputor'			=> Session('email'),
+	// 							'arsip'				=> '',
+	// 							'catatan'			=> '',
+	// 						]);
+	// 						$idsurat= $input->id;
+	// 					} else {
+	// 						$input	= Tabelskdanperaturan::where('id', $idsurat)->update([
+	// 							'marking'			=> $marking,
+	// 							'tahun'				=> $tahun,
+	// 							'penandatangan'		=> $pejabat,
+	// 							'idpejabat'			=> $nmttd,
+	// 							'nmpejabat'			=> $nmpejabat,
+	// 							'nippejabat'		=> $nippejabat,
+	// 							'pjbtperundang'		=> $pjbtperundang,
+	// 							'idpjbperundang'	=> $idpjbperundang,
+	// 							'nmpjbtperundang'	=> $nmpjbtperundang,
+	// 							'nippjbperundang'	=> $nippjbperundang,
+	// 							'tglpjbperundang'	=> $tanggalundang,
+	// 							'judul'				=> $judul,
+	// 							'dasarsurat'		=> $dasarsurat,
+	// 							'dasarsuratno'		=> $dasarsuratno,
+	// 							'dasarsuratyy'		=> $dasarsuratyy,
+	// 							'paraf1'			=> $paraf1,
+	// 							'paraf2'			=> $paraf2,
+	// 							'paraf3'			=> $paraf3,
+	// 							'paraf4'			=> $paraf4,
+	// 							'inputor'			=> Session('email'),
+	// 							'updated_at'		=> date("Y-m-d H:i:s")
+	// 						]);
+	// 					}
+	// 					if ($input){
+	// 						if ($request->hasFile('file')) {
+	// 							if ($request->input('val11') != 'new'){
+	// 								$getdata = Tabelskdanperaturan::where('id', $idsurat)->first();
+	// 								if (isset($getdata->scansurat)){
+	// 									$output_file 	= '/scan/files/'. $scansurat;
+	// 									if (file_exists(public_path($output_file))){
+	// 										Storage::disk('local')->delete($output_file);
+	// 									}
+	// 								}
+	// 							}
+	// 							$namafile		= $marking.'.pdf';
+	// 							$request->file('file')->move(public_path('scan/files'), $namafile);
+	// 							Tabelskdanperaturan::where('id', $idsurat)->update([
+	// 								'scansurat'	=> $namafile
+	// 							]);
+	// 						}
+	// 						if ($jenissrt == 'TTE'){
+	// 							$qnamapjbt	= Pejabatsurat::where('pejabat', $request->input('val06'))->first();
+	// 							if (isset($qnamapjbt->pejabat)){
+	// 								SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','SKDANPERATURAN','1');
+	// 							} else {
+	// 								SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','SKDANPERATURAN','1');
+	// 							}
+	// 							Tabelskdanperaturan::where('id', $idsurat)->update([
+	// 								'tandatangan'	=> ''
+	// 							]);
+	// 						}
+	// 						return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tahun '.$tahun.' Tanggal Penetapan '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+	// 						return back();
+	// 					} else {
+	// 						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+	// 						return back();
+	// 					}
+	// 				} else {
+	// 					return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Nomor SK '.$nomor.' Sudah ada, Cek Isian Anda']);
+	// 					return back();
+	// 				}
+	// 			} else if ($kepada == 'RIWAYATSK'){
+	// 				$jenis			= $request->input('val02');
+	// 				$tanggal		= $request->input('val03');
+	// 				$dasarsuratyy	= $request->input('val10');
+	// 				$idsurat		= $request->input('val11');
+	// 				$judul			= $request->input('val12');
+	// 				$tanggalundang	= $request->input('val13');
+	// 				$idpjbperundang	= $request->input('val14');
+	// 				$nomor			= $request->input('val15');
+	// 				$kepada			= $request->input('val16');
+	// 				$pjbtperundang	= '';
+	// 				$nmpjbtperundang= '';
+	// 				$nippjbperundang= '';
+	// 				$dasarsuratno	= '';
+	// 				$dasarsurat		= '';
+	// 				$tahun			= date("Y");
+	// 				$getarrsurat	= explode('-', $tanggal);
+	// 				if (isset($getarrsurat[2])){
+	// 					$tahun 		= $getarrsurat[0];
+	// 				}
+	// 				$kelompok		= $jenis;
+	// 				$kode			= 'SKPP';
+	// 				if ($idsurat == 'new'){
+	// 					$ceksudah = Tabelskdanperaturan::where('kelompok', $kelompok)->where('tanggal', $tanggal)->where('nomor', $nomor)->where('fakultas', Session('fakultas'))->count();
+	// 				} else {
+	// 					$ceksudah = Tabelskdanperaturan::where('id', '!=', $idsurat)->where('kelompok', $kelompok)->where('tanggal', $tanggal)->where('nomor', $nomor)->where('fakultas', Session('fakultas'))->count();
+	// 				}
+	// 				if ($ceksudah == 0){
+	// 					$marking	= Session('fakultas').'-'.$kode.'-'.$tahun.$nomor;
+	// 					if ($idsurat == 'new'){
+	// 						$input	= Tabelskdanperaturan::create([
+	// 							'kelompok'			=> $kelompok,
+	// 							'marking'			=> $marking,
+	// 							'nomor'				=> $nomor,
+	// 							'tahun'				=> $tahun,
+	// 							'tanggal'			=> $tanggal,
+	// 							'penandatangan'		=> $pejabat,
+	// 							'idpejabat'			=> $nmttd,
+	// 							'nmpejabat'			=> $nmpejabat,
+	// 							'nippejabat'		=> $nippejabat,
+	// 							'pjbtperundang'		=> '',
+	// 							'idpjbperundang'	=> '',
+	// 							'nmpjbtperundang'	=> '',
+	// 							'nippjbperundang'	=> '',
+	// 							'tglpjbperundang'	=> '',
+	// 							'judul'				=> $judul,
+	// 							'scansurat'			=> '',
+	// 							'dasarsurat'		=> '',
+	// 							'dasarsuratno'		=> '',
+	// 							'dasarsuratyy'		=> '',
+	// 							'kodefas'			=> 'TU.00.00.1',
+	// 							'kodesub'			=> '',
+	// 							'paraf1'			=> 'SELF',
+	// 							'paraf2'			=> '',
+	// 							'paraf3'			=> '',
+	// 							'paraf4'			=> '',
+	// 							'tandatangan'		=> 'Tandatangan Manual',
+	// 							'fakultas'			=> Session('fakultas'),
+	// 							'inputor'			=> Session('email'),
+	// 							'arsip'				=> '',
+	// 							'catatan'			=> '',
+	// 							'sparaf1'			=> $kepada,
+	// 						]);
+	// 						$idsurat= $input->id;
+	// 					} else {
+	// 						$input	= Tabelskdanperaturan::where('id', $idsurat)->update([
+	// 							'marking'			=> $marking,
+	// 							'tahun'				=> $tahun,
+	// 							'penandatangan'		=> $pejabat,
+	// 							'idpejabat'			=> $nmttd,
+	// 							'nmpejabat'			=> $nmpejabat,
+	// 							'nippejabat'		=> $nippejabat,
+	// 							'judul'				=> $judul,
+	// 							'inputor'			=> Session('email'),
+	// 							'updated_at'		=> date("Y-m-d H:i:s"),
+	// 							'sparaf1'			=> $kepada,
+	// 						]);
+	// 					}
+	// 					if ($input){
+	// 						if ($request->hasFile('file')) {
+	// 							if ($request->input('val11') != 'new'){
+	// 								$getdata = Tabelskdanperaturan::where('id', $idsurat)->first();
+	// 								if (isset($getdata->scansurat)){
+	// 									$output_file 	= '/scan/files/'. $scansurat;
+	// 									if (file_exists(public_path($output_file))){
+	// 										Storage::disk('local')->delete($output_file);
+	// 									}
+	// 								}
+	// 							}
+	// 							$namafile		= $marking.'.pdf';
+	// 							$request->file('file')->move(public_path('scan/files'), $namafile);
+	// 							Tabelskdanperaturan::where('id', $idsurat)->update([
+	// 								'scansurat'	=> $namafile
+	// 							]);
+	// 						}
+	// 						return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tahun '.$tahun.' Tanggal Penetapan '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+	// 						return back();
+	// 					} else {
+	// 						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+	// 						return back();
+	// 					}
+	// 				} else {
+	// 					return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Nomor SK '.$nomor.' Sudah ada, Cek Isian Anda']);
+	// 					return back();
+	// 				}
+	// 			} else if ($kepada == 'RIWAYATSURAT'){
+	// 				$jenis			= $request->input('val02');
+	// 				$tanggal		= $request->input('val03');
+	// 				$idsurat		= $request->input('val11');
+	// 				$perihal		= $request->input('val12');
+	// 				$nomor			= $request->input('val15');
+	// 				$kepada			= $request->input('val16');
+	// 				$tahun			= date("Y");
+	// 				$getarrsurat	= explode('-', $tanggal);
+	// 				if (isset($getarrsurat[2])){
+	// 					$tahun 		= $getarrsurat[0];
+	// 					$mm			= $getarrsurat[1];
+	// 					$dd			= $getarrsurat[2];
+	// 				} else {
+	// 					$tahun 		= date('Y');
+	// 					$mm			= date('m');
+	// 					$dd			= date('d');
+	// 				}
 					
-					if ($idsurat == 'new'){
-						$ceksudah = Suratkeluar::where('nomor', $nomor)->where('tanggal', $tanggal)->where('fakultas', Session('fakultas'))->count();
-					} else {
-						$ceksudah = Suratkeluar::where('id', '!=', $idsurat)->where('nomor', $nomor)->where('tanggal', $tanggal)->where('fakultas', Session('fakultas'))->count();
-					}
-					if ($ceksudah == 0){
-						$marking	= Session('fakultas').'-'.$kodefakultas.'-'.$tahun.'.'.$nomor;
-						if ($idsurat == 'new'){
-							$input 		= Suratkeluar::create([
-								'marking' 		=>  $marking,
-								'jenissrt' 		=>  'BIASA',
-								'nomor' 		=>  $nomor,
-								'anakno' 		=>  '',
-								'kodefak' 		=>  $kodefakultas,
-								'unit' 			=>  $unit,
-								'tglsurat' 		=>  $tanggal,
-								'daysrt' 		=>  $dd,
-								'monsrt' 		=>  $mm,
-								'yersrt' 		=>  $tahun,
-								'dasarsurat' 	=>  '',
-								'kepada' 		=>  $kepada,
-								'alamat' 		=>  '',
-								'perihal' 		=>  $perihal,
-								'lampiran' 		=>  '',
-								'isisurat' 		=>  '',
-								'idpejabat' 	=>  $nmttd,
-								'pejabat' 		=>  $penandatangan,
-								'namapejabat' 	=>  $setttd,
-								'tembusan' 		=>  '',
-								'sifat' 		=>  'Biasa',
-								'klasifikasi' 	=>  'Biasa',
-								'pembuat' 		=>  Session('email'),
-								'kelompok' 		=>  Session('previlage'),
-								'status' 		=>  'NEW',
-								'arsip' 		=>  '',
-								'footnote' 		=>  '',
-								'tandatangan' 	=>  '',
-								'paraf1' 		=>  '',
-								'paraf2' 		=>  '',
-								'paraf3' 		=>  '',
-								'paraf4' 		=>  '',
-								'ruangarsip' 	=>  '',
-								'ordnerarsip' 	=>  '',
-								'lemariarsip' 	=>  '',
-								'faskode' 		=>  '',
-								'fasmasa' 		=>  '',
-								'fasket' 		=>  '',
-								'subkode' 		=>  '',
-								'submasa' 		=>  '',
-								'subket' 		=>  '',
-								'font' 			=>  '',
-								'ukuran' 		=>  '',
-								'lebarttd' 		=>  '',
-								'filelampiran' 	=>  '',
-								'fakultas' 		=>  Session('fakultas')
-							]);
-							$idsurat	= $input->id;
-						} else {
-							$getkepadalm= Suratkeluar::where('id', $idsurat)->first();
-							if (isset($getkepadalm->kepada)){
-								$kpdlm 	= $getkepadalm->kepada; 
-							} else {
-								$kpdlm	= '';
-							}
-							$input 		= Suratkeluar::where('id', $idsurat)->update([
-								'kepada' 		=>  $kepada,
-								'alamat' 		=>  $kpdlm,
-								'pembuat'		=> 	Session('email'),
-								'kelompok'		=> 	Session('previlage'),
-								'updated_at'	=>	date("Y-m-d H:i:s")
-							]);
-						}
-						if ($input){
-							if ($request->hasFile('file')) {
-								if ($request->input('val11') != 'new'){
-									$getdata = Suratkeluar::where('id', $idsurat)->first();
-									if (isset($getdata->isisurat)){
-										$output_file 	= '/scan/files/'. $isisurat;
-										if (file_exists(public_path($output_file))){
-											Storage::disk('local')->delete($output_file);
-										}
-									}
-								}
-								$namafile		= $marking.'.pdf';
-								$request->file('file')->move(public_path('scan/files'), $namafile);
-								Suratkeluar::where('id', $idsurat)->update([
-									'isisurat'	=> $namafile
-								]);
-							}
-							return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tahun '.$tahun.' Tanggal Penetapan '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
-							return back();
-						} else {
-							return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
-							return back();
-						}
-					} else {
-						if ($idsurat == 'new'){
-							$getkepadalm= Suratkeluar::where('nomor', $nomor)->where('tanggal', $tanggal)->where('fakultas', Session('fakultas'))->first();
-							if (isset($getkepadalm->kepada)){
-								$kpdlm 	= $getkepadalm->kepada; 
-							} else {
-								$kpdlm	= '';
-							}
-							Suratkeluar::where('nomor', $nomor)->where('tanggal', $tanggal)->where('fakultas', Session('fakultas'))->update([
-								'kepada'		=> 	$email,
-								'alamat' 		=> 	$kpdlm,
-								'pembuat'		=> 	Session('email'),
-								'kelompok'		=> 	Session('previlage'),
-								'updated_at'	=>	date("Y-m-d H:i:s")
-							]);
-						} else {
-							$getkepadalm= Suratkeluar::where('id', $idsurat)->first();
-							if (isset($getkepadalm->kepada)){
-								$kpdlm 	= $getkepadalm->kepada; 
-							} else {
-								$kpdlm	= '';
-							}
-							Suratkeluar::where('id', $idsurat)->update([
-								'kepada'		=> 	$email,
-								'alamat' 		=> 	$kpdlm,
-								'pembuat'		=> 	Session('email'),
-								'kelompok'		=> 	Session('previlage'),
-								'updated_at'	=>	date("Y-m-d H:i:s")
-							]);
-						}
-						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Nomor Surat '.$nomor.' Sudah ada, Surat Akan Kami Linkkan dengan Email '.$email]);
-						return back();
-					}
-				} else if ($kepada == 'SKDOSPEM'){
-					$rom  				= Antrian::where('id', $idsurat)->first();
-					$jenjang			= $rom->jenis;
-					$nama				= $rom->instansi;
-					$alamat				= $rom->alamat;
-					$kota				= $rom->kota;
-					$mhs 				= $rom->nama;
-					$nim 				= $rom->nim;
-					$ps 				= $rom->ps;
-					$hape 				= $rom->hape;
-					$smt				= $rom->smt;
-					$judul				= $rom->judul;
-					$dos1 				= $rom->dos1;
-					$dos2 				= $rom->dos2;
-					$jur 				= $rom->jurusan;
-					$lokasi				= $rom->lokasi;
-					$bulan				= $rom->bulan;
-					$whatfor			= $rom->whatfor;
-					$whatfor2			= $rom->whatfor2;
-					$kodjenis			= $rom->kodjenis;
-					$ket				= $rom->ket;
-					$ortu				= $rom->ortu;
-					$jabortu			= $rom->jabortu;
-					$golortu			= $rom->golortu;
-					$niportu			= $rom->niportu;
-					$kerjaortu			= $rom->kerjaortu;
-					$tmpkrjortu			= $rom->tmpkrjortu;
-					$tmplahir			= $rom->tmplahir;
-					$tgllahir			= $rom->tgllahir;
-					$pada				= $rom->pada;
-					$alasan				= $rom->alasan;
-					$dosen				= $rom->dosen;
-					$matkul				= $rom->matkul;
-					$cutismt			= $rom->cutismt;
-					$cutislm			= $rom->cutislm;
-					$cutita				= $rom->cutita;
-					$asal				= $rom->asal;
-					$tembusan1			= $rom->tembusan1;
-					$tembusan2			= $rom->tembusan2;
-					$tembusan3			= $rom->tembusan3;
-					$tembusan4			= $rom->tembusan4;
-					$tembusan5			= $rom->tembusan5;
-					$nosurat			= $rom->nosurat;
-					$tglsurat			= $rom->tglsurat;
-					$tandatangan		= $rom->tandatangan;
-					$aktife				= $rom->aktife;
-					$tglttd				= $rom->updated_at;
-					$fakultas			= $rom->fakultas;
-					$keterangan			= $rom->keterangan;
-					$namasaja			= $nmpejabat;
-					$ceksurat			= explode("-SCO-", $tandatangan);
-					if (isset($ceksurat[1]) OR $tandatangan == 'SIgned With TTE'){
-						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
-						return back();
-					} else {
-						if ($tglsurat == $tanggal AND file_exists(public_path('scan/files/'.$keterangan))){
-							return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali, Bila Ingin Memperbaharui, Ubah Tanggal SK ini']);
-							return back();
-						} else {
-							if ($fakultas == 'Vokasi' OR $fakultas == 'PASCAUB'){
-								$dekan = 'Direktur';
-							} else {
-								$dekan = 'Dekan';
-							}
-							$getnamafakultas	= 	User::where('fakultas', $rom->fakultas)->where('fakpanjang', '!=', '')->first();
-							if (isset($getnamafakultas->fakpanjang)){
-								$fakpanjang 	= 	$getnamafakultas->fakpanjang;
-							} else { $fakpanjang = ''; }
-							if ($tglsurat == '0000-00-00' OR is_null($tglsurat) OR $tglsurat == ''){
-								$tglsurat 	= $tanggal;
-							}
-							$arrytgl	= explode("-", $tglsurat);
-							$yy			= $arrytgl[0];
-							$mm			= $arrytgl[1];
-							$dd			= $arrytgl[2];
-							$mmsk		= (int)$mm;
-							$mmsk		= $kalender[$mmsk];
-							$tglsurat	= $dd.' '.$mmsk.' '.$yy;
-							if ($jenjang == 'Doktor S3'){
-								$setjen		= 'Disertasi';
-								$jenjang	= 'Doktor';
-								$kodejenjang= 'S-3';
-							} else if ($jenjang == 'Magister S2'){
-								$setjen		= 'Tesis';
-								$jenjang	= 'Magister';
-								$kodejenjang= 'S-2';
-							} else if ($jenjang == 'Sarjana S1'){
-								$setjen		= 'Skripsi';
-								$jenjang	= 'Sarjana';
-								$kodejenjang= 'S-1';
-							} else {
-								$setjen		= 'Tugas Akhir';
-								$jenjang	= 'Diploma';
-								$kodejenjang= 'D-3';	
-							}
-							$angkatan1	= '';
-							$angkatan2	= '';
-							$arrnime 	= str_split($nim);
-							foreach($arrnime as $rnim){
-								if ($angkatan1 == ''){ $angkatan1 = $rnim; }
-								if ($angkatan2 == ''){ $angkatan2 = $rnim; }
-							}
-							$angkatan 	= $angkatan1.$angkatan2;
-							$intangkatan= (int)$angkatan;
-							$angkatan3 	= $intangkatan + 1;
-							if ($intangkatan < 10){
-								$angkatan= '200'.$intangkatan.'/200'.$angkatan3;
-							} else {
-								$angkatan= '20'.$intangkatan.'/20'.$angkatan3;
-							}
-							$pbimbing1		= '';
-							$pbimbing2		= '';
-							$pbimbing3		= '';
-							$nipbimbing1	= '';
-							$nipbimbing2	= '';
-							$nipbimbing3	= '';
-							$jabakademik1	= '';
-							$jabakademik2	= '';
-							$jabakademik3	= '';
-							$tulispbimbing3	= '';
-							$getpersetujuan	= Antrian::where('nim', $nim)->where('ket', $ket)->where('kerjaortu', 'SETUJU')->groupBy('dos1')->get();
-							if (!empty($getpersetujuan)){
-								foreach ($getpersetujuan as $rowdos){
-									if ($rowdos->pada == 'Ketua Komisi Pembimbing'){
-										$pbimbing1 	= $rowdos->dos1;
-										$nipbimbing1= $rowdos->dos2;
-									} else {
-										if ($pbimbing2 == ''){
-											$pbimbing2 	= $rowdos->dos1;
-											$nipbimbing2= $rowdos->dos2;			
-										} else {
-											$pbimbing3 	= $rowdos->dos1;
-											$nipbimbing3= $rowdos->dos2;	
-										}
-									}
-								}
-							}
-							if ($nipbimbing1 != ''){
-								$getjab1		= Dosen::where('nip', $nipbimbing1)->where('fakultas', $fakultas)->first();
-								if (isset($getjab1->fungsional)){
-									$pbimbing1 		= $getjab1->gelar;
-									$jabakademik1 	= $getjab1->fungsional;
-								}
-							}
-							if ($nipbimbing2 != ''){
-								$getjab2		= Dosen::where('nip', $nipbimbing2)->where('fakultas', $fakultas)->first();
-								if (isset($getjab2->fungsional)){
-									$pbimbing2 		= $getjab2->gelar;
-									$jabakademik2 	= $getjab2->fungsional;
-								}
-							}
-							if ($nipbimbing3 != ''){
-								$getjab3		= Dosen::where('nip', $nipbimbing3)->where('fakultas', $fakultas)->first();
-								if (isset($getjab3->fungsional)){
-									$pbimbing3 		= $getjab3->gelar;
-									$jabakademik3 	= $getjab3->fungsional;
-								}
-								$tulispbimbing3	= '
-								<tr>
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>3.</td>
-									<td colspan="4">'.$pbimbing3.'</td>
-									</tr>
-								<tr>
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td colspan="4">( '.$jabakademik3.' ) sebagai Anggota</td>
-								</tr>';
-							}
-							$marking		= $fakultas.'-SKDOSPEM-'.$idsurat;
-							$output_file 	= '/scan/files/'. $marking.'.pdf';
-							if (file_exists(public_path($output_file))){
-								Storage::disk('local')->delete($output_file);
-							}
-							$namafile		= $marking.'.pdf';
-							$alamatweb		= $homebase.'/viewdocbyname/'.$marking.'.pdf';
-							$setview		= 'DOWNLOAD';
-							$spasi			= '';
-							$ukuranfont		= '12';
-							$jenisfontte	= '<font size="7" color="blue">';
-							$fontstyle		= 'style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;"';
-							$qrcode 		= QrCode::format('png')->merge('https://sco.ub.ac.id/logo-ub.png', 0.1, true)->size(150)->generate($alamatweb);
-							$qrimage 		= 'scan/generate/qrimg-'. $marking.'.png';
-							Storage::disk('local')->put($qrimage, $qrcode);
-							$jamtte			= date("H:m:i");
-							$lebarttd 		= '50%';
-							$getnamasaja 	= Simpegpegawai::where('nip_baru', $nippejabat)->first();
-							if (isset($getnamasaja->nama)){
-								$namasaja	= $getnamasaja->nama;
-							}
-							$tuliskodettd	= '<table width="300" border="0" cellpadding="0" cellspacing="0" style="font-size: '.$ukuranfont.'px; font-family: Bookman Old Style;"> 
-								<tr><td colspan="2">Ditetapkan di '.$swandhanakota.'</td></tr>
-								<tr><td colspan="2">pada tanggal '.$tglsurat.'</td></tr>
-								<tr><td colspan="2">'.$pejabat.',</td> </tr>
-								<tr>
-									<td width="100"><img src="'.$homebase.'/scan/generate/qrimg-'.$marking.'.png" width="100" /></td>
-									<td align="left" valign="center" width="150">
-										<font color="white">&nbsp;</font>'.$jenisfontte.'<br />
-											TTE oleh :<br />
-											<strong>'.$namasaja.'</strong><br />
-											'.$tanggal.' '.$jamtte.'<br /><br />
-											Verifikasi melalui<br /> https://tte.kominfo.go.id/verifyPDF
-										</font>
-									</td>
-								</tr>
-								<tr><td colspan="2">'.$nmpejabat.'</td></tr>
-								<tr><td colspan="2">NIP'.$nippejabat.'</td></tr>
-							</table>';
+	// 				if ($idsurat == 'new'){
+	// 					$ceksudah = Suratkeluar::where('nomor', $nomor)->where('tanggal', $tanggal)->where('fakultas', Session('fakultas'))->count();
+	// 				} else {
+	// 					$ceksudah = Suratkeluar::where('id', '!=', $idsurat)->where('nomor', $nomor)->where('tanggal', $tanggal)->where('fakultas', Session('fakultas'))->count();
+	// 				}
+	// 				if ($ceksudah == 0){
+	// 					$marking	= Session('fakultas').'-'.$kodefakultas.'-'.$tahun.'.'.$nomor;
+	// 					if ($idsurat == 'new'){
+	// 						$input 		= Suratkeluar::create([
+	// 							'marking' 		=>  $marking,
+	// 							'jenissrt' 		=>  'BIASA',
+	// 							'nomor' 		=>  $nomor,
+	// 							'anakno' 		=>  '',
+	// 							'kodefak' 		=>  $kodefakultas,
+	// 							'unit' 			=>  $unit,
+	// 							'tglsurat' 		=>  $tanggal,
+	// 							'daysrt' 		=>  $dd,
+	// 							'monsrt' 		=>  $mm,
+	// 							'yersrt' 		=>  $tahun,
+	// 							'dasarsurat' 	=>  '',
+	// 							'kepada' 		=>  $kepada,
+	// 							'alamat' 		=>  '',
+	// 							'perihal' 		=>  $perihal,
+	// 							'lampiran' 		=>  '',
+	// 							'isisurat' 		=>  '',
+	// 							'idpejabat' 	=>  $nmttd,
+	// 							'pejabat' 		=>  $penandatangan,
+	// 							'namapejabat' 	=>  $setttd,
+	// 							'tembusan' 		=>  '',
+	// 							'sifat' 		=>  'Biasa',
+	// 							'klasifikasi' 	=>  'Biasa',
+	// 							'pembuat' 		=>  Session('email'),
+	// 							'kelompok' 		=>  Session('previlage'),
+	// 							'status' 		=>  'NEW',
+	// 							'arsip' 		=>  '',
+	// 							'footnote' 		=>  '',
+	// 							'tandatangan' 	=>  '',
+	// 							'paraf1' 		=>  '',
+	// 							'paraf2' 		=>  '',
+	// 							'paraf3' 		=>  '',
+	// 							'paraf4' 		=>  '',
+	// 							'ruangarsip' 	=>  '',
+	// 							'ordnerarsip' 	=>  '',
+	// 							'lemariarsip' 	=>  '',
+	// 							'faskode' 		=>  '',
+	// 							'fasmasa' 		=>  '',
+	// 							'fasket' 		=>  '',
+	// 							'subkode' 		=>  '',
+	// 							'submasa' 		=>  '',
+	// 							'subket' 		=>  '',
+	// 							'font' 			=>  '',
+	// 							'ukuran' 		=>  '',
+	// 							'lebarttd' 		=>  '',
+	// 							'filelampiran' 	=>  '',
+	// 							'fakultas' 		=>  Session('fakultas')
+	// 						]);
+	// 						$idsurat	= $input->id;
+	// 					} else {
+	// 						$getkepadalm= Suratkeluar::where('id', $idsurat)->first();
+	// 						if (isset($getkepadalm->kepada)){
+	// 							$kpdlm 	= $getkepadalm->kepada; 
+	// 						} else {
+	// 							$kpdlm	= '';
+	// 						}
+	// 						$input 		= Suratkeluar::where('id', $idsurat)->update([
+	// 							'kepada' 		=>  $kepada,
+	// 							'alamat' 		=>  $kpdlm,
+	// 							'pembuat'		=> 	Session('email'),
+	// 							'kelompok'		=> 	Session('previlage'),
+	// 							'updated_at'	=>	date("Y-m-d H:i:s")
+	// 						]);
+	// 					}
+	// 					if ($input){
+	// 						if ($request->hasFile('file')) {
+	// 							if ($request->input('val11') != 'new'){
+	// 								$getdata = Suratkeluar::where('id', $idsurat)->first();
+	// 								if (isset($getdata->isisurat)){
+	// 									$output_file 	= '/scan/files/'. $isisurat;
+	// 									if (file_exists(public_path($output_file))){
+	// 										Storage::disk('local')->delete($output_file);
+	// 									}
+	// 								}
+	// 							}
+	// 							$namafile		= $marking.'.pdf';
+	// 							$request->file('file')->move(public_path('scan/files'), $namafile);
+	// 							Suratkeluar::where('id', $idsurat)->update([
+	// 								'isisurat'	=> $namafile
+	// 							]);
+	// 						}
+	// 						return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tahun '.$tahun.' Tanggal Penetapan '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+	// 						return back();
+	// 					} else {
+	// 						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+	// 						return back();
+	// 					}
+	// 				} else {
+	// 					if ($idsurat == 'new'){
+	// 						$getkepadalm= Suratkeluar::where('nomor', $nomor)->where('tanggal', $tanggal)->where('fakultas', Session('fakultas'))->first();
+	// 						if (isset($getkepadalm->kepada)){
+	// 							$kpdlm 	= $getkepadalm->kepada; 
+	// 						} else {
+	// 							$kpdlm	= '';
+	// 						}
+	// 						Suratkeluar::where('nomor', $nomor)->where('tanggal', $tanggal)->where('fakultas', Session('fakultas'))->update([
+	// 							'kepada'		=> 	$email,
+	// 							'alamat' 		=> 	$kpdlm,
+	// 							'pembuat'		=> 	Session('email'),
+	// 							'kelompok'		=> 	Session('previlage'),
+	// 							'updated_at'	=>	date("Y-m-d H:i:s")
+	// 						]);
+	// 					} else {
+	// 						$getkepadalm= Suratkeluar::where('id', $idsurat)->first();
+	// 						if (isset($getkepadalm->kepada)){
+	// 							$kpdlm 	= $getkepadalm->kepada; 
+	// 						} else {
+	// 							$kpdlm	= '';
+	// 						}
+	// 						Suratkeluar::where('id', $idsurat)->update([
+	// 							'kepada'		=> 	$email,
+	// 							'alamat' 		=> 	$kpdlm,
+	// 							'pembuat'		=> 	Session('email'),
+	// 							'kelompok'		=> 	Session('previlage'),
+	// 							'updated_at'	=>	date("Y-m-d H:i:s")
+	// 						]);
+	// 					}
+	// 					return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Nomor Surat '.$nomor.' Sudah ada, Surat Akan Kami Linkkan dengan Email '.$email]);
+	// 					return back();
+	// 				}
+	// 			} else if ($kepada == 'SKDOSPEM'){
+	// 				$rom  				= Antrian::where('id', $idsurat)->first();
+	// 				$jenjang			= $rom->jenis;
+	// 				$nama				= $rom->instansi;
+	// 				$alamat				= $rom->alamat;
+	// 				$kota				= $rom->kota;
+	// 				$mhs 				= $rom->nama;
+	// 				$nim 				= $rom->nim;
+	// 				$ps 				= $rom->ps;
+	// 				$hape 				= $rom->hape;
+	// 				$smt				= $rom->smt;
+	// 				$judul				= $rom->judul;
+	// 				$dos1 				= $rom->dos1;
+	// 				$dos2 				= $rom->dos2;
+	// 				$jur 				= $rom->jurusan;
+	// 				$lokasi				= $rom->lokasi;
+	// 				$bulan				= $rom->bulan;
+	// 				$whatfor			= $rom->whatfor;
+	// 				$whatfor2			= $rom->whatfor2;
+	// 				$kodjenis			= $rom->kodjenis;
+	// 				$ket				= $rom->ket;
+	// 				$ortu				= $rom->ortu;
+	// 				$jabortu			= $rom->jabortu;
+	// 				$golortu			= $rom->golortu;
+	// 				$niportu			= $rom->niportu;
+	// 				$kerjaortu			= $rom->kerjaortu;
+	// 				$tmpkrjortu			= $rom->tmpkrjortu;
+	// 				$tmplahir			= $rom->tmplahir;
+	// 				$tgllahir			= $rom->tgllahir;
+	// 				$pada				= $rom->pada;
+	// 				$alasan				= $rom->alasan;
+	// 				$dosen				= $rom->dosen;
+	// 				$matkul				= $rom->matkul;
+	// 				$cutismt			= $rom->cutismt;
+	// 				$cutislm			= $rom->cutislm;
+	// 				$cutita				= $rom->cutita;
+	// 				$asal				= $rom->asal;
+	// 				$tembusan1			= $rom->tembusan1;
+	// 				$tembusan2			= $rom->tembusan2;
+	// 				$tembusan3			= $rom->tembusan3;
+	// 				$tembusan4			= $rom->tembusan4;
+	// 				$tembusan5			= $rom->tembusan5;
+	// 				$nosurat			= $rom->nosurat;
+	// 				$tglsurat			= $rom->tglsurat;
+	// 				$tandatangan		= $rom->tandatangan;
+	// 				$aktife				= $rom->aktife;
+	// 				$tglttd				= $rom->updated_at;
+	// 				$fakultas			= $rom->fakultas;
+	// 				$keterangan			= $rom->keterangan;
+	// 				$namasaja			= $nmpejabat;
+	// 				$ceksurat			= explode("-SCO-", $tandatangan);
+	// 				if (isset($ceksurat[1]) OR $tandatangan == 'SIgned With TTE'){
+	// 					return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+	// 					return back();
+	// 				} else {
+	// 					if ($tglsurat == $tanggal AND file_exists(public_path('scan/files/'.$keterangan))){
+	// 						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali, Bila Ingin Memperbaharui, Ubah Tanggal SK ini']);
+	// 						return back();
+	// 					} else {
+	// 						if ($fakultas == 'Vokasi' OR $fakultas == 'PASCAUB'){
+	// 							$dekan = 'Direktur';
+	// 						} else {
+	// 							$dekan = 'Dekan';
+	// 						}
+	// 						$getnamafakultas	= 	User::where('fakultas', $rom->fakultas)->where('fakpanjang', '!=', '')->first();
+	// 						if (isset($getnamafakultas->fakpanjang)){
+	// 							$fakpanjang 	= 	$getnamafakultas->fakpanjang;
+	// 						} else { $fakpanjang = ''; }
+	// 						if ($tglsurat == '0000-00-00' OR is_null($tglsurat) OR $tglsurat == ''){
+	// 							$tglsurat 	= $tanggal;
+	// 						}
+	// 						$arrytgl	= explode("-", $tglsurat);
+	// 						$yy			= $arrytgl[0];
+	// 						$mm			= $arrytgl[1];
+	// 						$dd			= $arrytgl[2];
+	// 						$mmsk		= (int)$mm;
+	// 						$mmsk		= $kalender[$mmsk];
+	// 						$tglsurat	= $dd.' '.$mmsk.' '.$yy;
+	// 						if ($jenjang == 'Doktor S3'){
+	// 							$setjen		= 'Disertasi';
+	// 							$jenjang	= 'Doktor';
+	// 							$kodejenjang= 'S-3';
+	// 						} else if ($jenjang == 'Magister S2'){
+	// 							$setjen		= 'Tesis';
+	// 							$jenjang	= 'Magister';
+	// 							$kodejenjang= 'S-2';
+	// 						} else if ($jenjang == 'Sarjana S1'){
+	// 							$setjen		= 'Skripsi';
+	// 							$jenjang	= 'Sarjana';
+	// 							$kodejenjang= 'S-1';
+	// 						} else {
+	// 							$setjen		= 'Tugas Akhir';
+	// 							$jenjang	= 'Diploma';
+	// 							$kodejenjang= 'D-3';	
+	// 						}
+	// 						$angkatan1	= '';
+	// 						$angkatan2	= '';
+	// 						$arrnime 	= str_split($nim);
+	// 						foreach($arrnime as $rnim){
+	// 							if ($angkatan1 == ''){ $angkatan1 = $rnim; }
+	// 							if ($angkatan2 == ''){ $angkatan2 = $rnim; }
+	// 						}
+	// 						$angkatan 	= $angkatan1.$angkatan2;
+	// 						$intangkatan= (int)$angkatan;
+	// 						$angkatan3 	= $intangkatan + 1;
+	// 						if ($intangkatan < 10){
+	// 							$angkatan= '200'.$intangkatan.'/200'.$angkatan3;
+	// 						} else {
+	// 							$angkatan= '20'.$intangkatan.'/20'.$angkatan3;
+	// 						}
+	// 						$pbimbing1		= '';
+	// 						$pbimbing2		= '';
+	// 						$pbimbing3		= '';
+	// 						$nipbimbing1	= '';
+	// 						$nipbimbing2	= '';
+	// 						$nipbimbing3	= '';
+	// 						$jabakademik1	= '';
+	// 						$jabakademik2	= '';
+	// 						$jabakademik3	= '';
+	// 						$tulispbimbing3	= '';
+	// 						$getpersetujuan	= Antrian::where('nim', $nim)->where('ket', $ket)->where('kerjaortu', 'SETUJU')->groupBy('dos1')->get();
+	// 						if (!empty($getpersetujuan)){
+	// 							foreach ($getpersetujuan as $rowdos){
+	// 								if ($rowdos->pada == 'Ketua Komisi Pembimbing'){
+	// 									$pbimbing1 	= $rowdos->dos1;
+	// 									$nipbimbing1= $rowdos->dos2;
+	// 								} else {
+	// 									if ($pbimbing2 == ''){
+	// 										$pbimbing2 	= $rowdos->dos1;
+	// 										$nipbimbing2= $rowdos->dos2;			
+	// 									} else {
+	// 										$pbimbing3 	= $rowdos->dos1;
+	// 										$nipbimbing3= $rowdos->dos2;	
+	// 									}
+	// 								}
+	// 							}
+	// 						}
+	// 						if ($nipbimbing1 != ''){
+	// 							$getjab1		= Dosen::where('nip', $nipbimbing1)->where('fakultas', $fakultas)->first();
+	// 							if (isset($getjab1->fungsional)){
+	// 								$pbimbing1 		= $getjab1->gelar;
+	// 								$jabakademik1 	= $getjab1->fungsional;
+	// 							}
+	// 						}
+	// 						if ($nipbimbing2 != ''){
+	// 							$getjab2		= Dosen::where('nip', $nipbimbing2)->where('fakultas', $fakultas)->first();
+	// 							if (isset($getjab2->fungsional)){
+	// 								$pbimbing2 		= $getjab2->gelar;
+	// 								$jabakademik2 	= $getjab2->fungsional;
+	// 							}
+	// 						}
+	// 						if ($nipbimbing3 != ''){
+	// 							$getjab3		= Dosen::where('nip', $nipbimbing3)->where('fakultas', $fakultas)->first();
+	// 							if (isset($getjab3->fungsional)){
+	// 								$pbimbing3 		= $getjab3->gelar;
+	// 								$jabakademik3 	= $getjab3->fungsional;
+	// 							}
+	// 							$tulispbimbing3	= '
+	// 							<tr>
+	// 								<td>&nbsp;</td>
+	// 								<td>&nbsp;</td>
+	// 								<td>3.</td>
+	// 								<td colspan="4">'.$pbimbing3.'</td>
+	// 								</tr>
+	// 							<tr>
+	// 								<td>&nbsp;</td>
+	// 								<td>&nbsp;</td>
+	// 								<td>&nbsp;</td>
+	// 								<td colspan="4">( '.$jabakademik3.' ) sebagai Anggota</td>
+	// 							</tr>';
+	// 						}
+	// 						$marking		= $fakultas.'-SKDOSPEM-'.$idsurat;
+	// 						$output_file 	= '/scan/files/'. $marking.'.pdf';
+	// 						if (file_exists(public_path($output_file))){
+	// 							Storage::disk('local')->delete($output_file);
+	// 						}
+	// 						$namafile		= $marking.'.pdf';
+	// 						$alamatweb		= $homebase.'/viewdocbyname/'.$marking.'.pdf';
+	// 						$setview		= 'DOWNLOAD';
+	// 						$spasi			= '';
+	// 						$ukuranfont		= '12';
+	// 						$jenisfontte	= '<font size="7" color="blue">';
+	// 						$fontstyle		= 'style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;"';
+	// 						$qrcode 		= QrCode::format('png')->merge('https://sco.ub.ac.id/logo-ub.png', 0.1, true)->size(150)->generate($alamatweb);
+	// 						$qrimage 		= 'scan/generate/qrimg-'. $marking.'.png';
+	// 						Storage::disk('local')->put($qrimage, $qrcode);
+	// 						$jamtte			= date("H:m:i");
+	// 						$lebarttd 		= '50%';
+	// 						$getnamasaja 	= Simpegpegawai::where('nip_baru', $nippejabat)->first();
+	// 						if (isset($getnamasaja->nama)){
+	// 							$namasaja	= $getnamasaja->nama;
+	// 						}
+	// 						$tuliskodettd	= '<table width="300" border="0" cellpadding="0" cellspacing="0" style="font-size: '.$ukuranfont.'px; font-family: Bookman Old Style;"> 
+	// 							<tr><td colspan="2">Ditetapkan di '.$swandhanakota.'</td></tr>
+	// 							<tr><td colspan="2">pada tanggal '.$tglsurat.'</td></tr>
+	// 							<tr><td colspan="2">'.$pejabat.',</td> </tr>
+	// 							<tr>
+	// 								<td width="100"><img src="'.$homebase.'/scan/generate/qrimg-'.$marking.'.png" width="100" /></td>
+	// 								<td align="left" valign="center" width="150">
+	// 									<font color="white">&nbsp;</font>'.$jenisfontte.'<br />
+	// 										TTE oleh :<br />
+	// 										<strong>'.$namasaja.'</strong><br />
+	// 										'.$tanggal.' '.$jamtte.'<br /><br />
+	// 										Verifikasi melalui<br /> https://tte.kominfo.go.id/verifyPDF
+	// 									</font>
+	// 								</td>
+	// 							</tr>
+	// 							<tr><td colspan="2">'.$nmpejabat.'</td></tr>
+	// 							<tr><td colspan="2">NIP'.$nippejabat.'</td></tr>
+	// 						</table>';
 						
-							$info = array(
-								'Name' 			=> 'Smart and Collaborative Office',
-								'Location' 		=> config('global.swandhanauniv'),
-								'Reason' 		=> 'Dokumen ini ditandatangani secara elektronik',
-								'ContactInfo' 	=> $homebase,
-							);
-							$page_format	= array(
-								'MediaBox' => array ('llx' => 0, 'lly' => 0, 'urx' => 215, 'ury' => 330),
-								'Dur' => 3,
-								'PZ' => 1,
-							);
-							$data['judul']    			= $rom->judul;
-							$data['universitasbesar']   = strtoupper($universitas);
-							$data['universitas']        = $universitas;
-							$data['nomor']          	= $nomor;
-							$data['tahun']          	= $yy;
-							$data['jenjangbesar']       = strtoupper($jenjang);
-							$data['jenjang']          	= $jenjang;
-							$data['peesbesar']          = strtoupper($ps);
-							$data['pees']          		= $ps;
-							$data['angkatan']          	= $angkatan;
-							$data['pbimbing1']          = $pbimbing1;
-							$data['jabakademik1']       = $jabakademik1;
-							$data['pbimbing2']          = $pbimbing2;
-							$data['jabakademik2']       = $jabakademik2;
-							$data['tulispbimbing3']     = $tulispbimbing3;
-							$data['nama']          		= $mhs;
-							$data['nim']          		= $nim;
-							$data['kodejenjang']        = $kodejenjang;
-							$data['tandatangan']        = $tuliskodettd;
-							$data['setjen']				= $setjen;
-							$data['setjenbesar']		= strtoupper($setjen);
-							$data['dekanbesar']			= strtoupper($dekan);
-							if ($fakultas == 'FMIPA'){
-								$data['fakpanjang']     = 'Fakultas MIPA';
-								$data['fakultasbesar']  = 'FAKULTAS MIPA';
-								$text 					= view('cetak.akademik.skdospem', $data);
-							} else {
-								$data['fakpanjang']     = $fakpanjang;
-								$data['fakultasbesar']  = strtoupper($fakpanjang);
-								$text 					= view('vokasi.cetak.sempro.skdospem', $data);
-							}
-							PDFCREATOR::SetCreator(Session('nama'));
-							PDFCREATOR::SetAuthor(Session('previlage'));
-							PDFCREATOR::SetTitle($kodjenis);
-							PDFCREATOR::SetSubject($mhs);
-							PDFCREATOR::SetKeywords($nim);
-							PDFCREATOR::setPrintHeader(false);
-							PDFCREATOR::setPrintFooter(false);
-							PDFCREATOR::SetMargins(5, 0, 5);
-							PDFCREATOR::setFontSubsetting(true);
-							PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
-							PDFCREATOR::AddPage('P', $page_format, false, false);
-							$bMargin = PDFCREATOR::getBreakMargin();
-							$auto_page_break = PDFCREATOR::getAutoPageBreak();
-							PDFCREATOR::SetAutoPageBreak(false, 0);
-							$img_file = 'bgbssn.png';
-							PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
-							PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
-							PDFCREATOR::setPageMark();
-							PDFCREATOR::writeHTML($text, true, 0, true, 0);
-							PDFCREATOR::setFooterMargin(0);
-							$pdfdoc = PDFCREATOR::Output('', 'S');
-							PDFCREATOR::reset();
-							Storage::disk('local')->delete($output_file);
-							Storage::disk('local')->put('/scan/files/'.$marking.'.pdf', $pdfdoc);
-							$ceksek 	= Tabelskdanperaturan::where('marking', $marking)->count();
-							if ($ceksek == 0){
-								$kerjanya = Tabelskdanperaturan::create([
-									'kelompok'			=> 	'KEPUTUSAN',
-									'marking'			=> 	$marking,
-									'nomor' 			=>  $request->input('val02'),
-									'tahun' 			=>  $tahun,
-									'tanggal' 			=>  $request->input('val03'),
-									'penandatangan' 	=>  $pejabat,
-									'nmpejabat' 		=>  $nmpejabat,
-									'nippejabat' 		=>  $nippejabat,
-									'judul' 			=>  $rom->kodjenis.' an. '.$rom->nama.' NIM '.$rom->nim,
-									'scansurat' 		=>  $marking,
-									'kodefas' 			=>  'HK.04.03',
-									'kodesub' 			=>  'TD.06.01',
-									'paraf1' 			=>  $request->input('val06'),
-									'paraf2' 			=>  $paraf2,
-									'paraf3' 			=>  $paraf3,
-									'paraf4' 			=>  $paraf4,
-									'fakultas' 			=>  Session('fakultas'),
-									'inputor' 			=>  Session('email'),
-									'updated_at'		=>	date("Y-m-d H:i:s")
-								]);
-							} else {
-								$kerjanya = Tabelskdanperaturan::where('marking', $marking)->update([
-									'kelompok'			=> 	'KEPUTUSAN',
-									'marking'			=> 	$marking,
-									'nomor' 			=>  $request->input('val02'),
-									'tahun' 			=>  $tahun,
-									'tanggal' 			=>  $request->input('val03'),
-									'penandatangan' 	=>  $pejabat,
-									'nmpejabat' 		=>  $nmpejabat,
-									'nippejabat' 		=>  $nippejabat,
-									'judul' 			=>  $rom->kodjenis.' an. '.$rom->nama.' NIM '.$rom->nim,
-									'scansurat' 		=>  $marking,
-									'kodefas' 			=>  'HK.04.03',
-									'kodesub' 			=>  'TD.06.01',
-									'paraf1' 			=>  $request->input('val06'),
-									'paraf2' 			=>  $paraf2,
-									'paraf3' 			=>  $paraf3,
-									'paraf4' 			=>  $paraf4,
-									'fakultas' 			=>  Session('fakultas'),
-									'inputor' 			=>  Session('email'),
-									'updated_at'		=>	date("Y-m-d H:i:s")
-								]);
-							}
-							if ($kerjanya){
-								Antrian::where('id', $idsurat)->update([
-									'nosurat'		=> $nomor,
-									'tglsurat'		=> $request->input('val03'),
-									'pejabat'		=> $pejabat,
-									'nmpejabat'		=> $nmpejabat,
-									'nippejabat'	=> $nippejabat,
-									'keterangan'	=> $marking.'.pdf'
-								]);
-								Inboxsurat::where('marking', $marking)->where('catatan', 'SKDANPERATURAN')->delete();
-								$qnamapjbt	= Pejabatsurat::where('pejabat', $request->input('val06'))->first();
-								if (isset($qnamapjbt->pejabat)){
-									SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','SKDANPERATURAN','1');
-								} else {
-									SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','SKDANPERATURAN','1');
-								}
-								return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tahun '.$tahun.' Tanggal Penetapan '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
-								return back();
-							}else{
-								return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
-								return back();
-							}
-						}
-					}
-				} else if ($kepada == 'SKDOSPENGUJI'){
-					$rom  				= Antrian::where('id', $idsurat)->first();
-					$jenjang			= $rom->jenis;
-					$nama				= $rom->instansi;
-					$alamat				= $rom->alamat;
-					$kota				= $rom->kota;
-					$mhs 				= $rom->nama;
-					$nim 				= $rom->nim;
-					$ps 				= $rom->ps;
-					$hape 				= $rom->hape;
-					$smt				= $rom->smt;
-					$judul				= $rom->judul;
-					$dos1 				= $rom->dos1;
-					$dos2 				= $rom->dos2;
-					$jur 				= $rom->jurusan;
-					$lokasi				= $rom->lokasi;
-					$bulan				= $rom->bulan;
-					$whatfor			= $rom->whatfor;
-					$whatfor2			= $rom->whatfor2;
-					$kodjenis			= $rom->kodjenis;
-					$ket				= $rom->ket;
-					$ortu				= $rom->ortu;
-					$jabortu			= $rom->jabortu;
-					$golortu			= $rom->golortu;
-					$niportu			= $rom->niportu;
-					$kerjaortu			= $rom->kerjaortu;
-					$tmpkrjortu			= $rom->tmpkrjortu;
-					$tmplahir			= $rom->tmplahir;
-					$tgllahir			= $rom->tgllahir;
-					$pada				= $rom->pada;
-					$alasan				= $rom->alasan;
-					$dosen				= $rom->dosen;
-					$matkul				= $rom->matkul;
-					$cutismt			= $rom->cutismt;
-					$cutislm			= $rom->cutislm;
-					$cutita				= $rom->cutita;
-					$asal				= $rom->asal;
-					$tembusan1			= $rom->tembusan1;
-					$tembusan2			= $rom->tembusan2;
-					$tembusan3			= $rom->tembusan3;
-					$tembusan4			= $rom->tembusan4;
-					$tembusan5			= $rom->tembusan5;
-					$nosurat			= $rom->nosurat;
-					$tglsurat			= $rom->tglsurat;
-					$tandatangan		= $rom->tandatangan;
-					$keterangan			= $rom->keterangan;
-					$aktife				= $rom->aktife;
-					$tglttd				= $rom->updated_at;
-					$fakultas			= $rom->fakultas;
-					$namasaja			= $nmpejabat;
-					$ceksurat			= explode("-SCO-", $tandatangan);
-					if (isset($ceksurat[1]) OR $tandatangan == 'SIgned With TTE'){
-						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
-						return back();
-					} else {
-						if ($tglsurat == $tanggal AND file_exists(public_path('scan/files/'.$keterangan))){
-							return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali, Bila Ingin Memperbaharui, Ubah Tanggal SK ini']);
-							return back();
-						} else {
-							if ($fakultas == 'Vokasi' OR $fakultas == 'PASCAUB'){
-								$dekan = 'Direktur';
-							} else {
-								$dekan = 'Dekan';
-							}
-							$periode			= 	'';
-							$jenis				= 	'';
-							$tglujian			= 	'';
-							$getjenisujian		= 	AntrianUjian::where('id', $ket)->first();
-							if (isset($getjenisujian->id)){
-								$jenis			= 	$getjenisujian->jenis;
-								$tglujian		= 	$getjenisujian->tanggal;
-								if ($tglujian == '0000-00-00' OR is_null($tglujian) OR $tglujian == ''){
-									$tglujian 	= $tanggal;
-								}
-								$arrytgl		= explode("-", $tglujian);
-								$yy				= $arrytgl[0];
-								$mm				= $arrytgl[1];
-								$dd				= $arrytgl[2];
-								$mmsk			= (int)$mm;
-								$mmsk			= $kalender[$mmsk];
-								$tglujian		= $dd.' '.$mmsk.' '.$yy;
-								$periode		= strtoupper($mmsk);
-								$periode		= $periode.' '.$yy; 
-							}
-							$getnamafakultas	= 	User::where('fakultas', $rom->fakultas)->where('fakpanjang', '!=', '')->first();
-							if (isset($getnamafakultas->fakpanjang)){
-								$fakpanjang 	= 	$getnamafakultas->fakpanjang;
-							} else { $fakpanjang = ''; }
-							if ($tglsurat == '0000-00-00' OR is_null($tglsurat) OR $tglsurat == ''){
-								$tglsurat 	= $tanggal;
-							}
-							$arrytgl	= explode("-", $tglsurat);
-							$yy			= $arrytgl[0];
-							$mm			= $arrytgl[1];
-							$dd			= $arrytgl[2];
-							$mmsk		= (int)$arrytgl[1];
-							$mmsk		= $kalender[$mmsk];
-							$tglsurat	= $dd.' '.$mmsk.' '.$yy;
-							if ($rom->jenis == 'Doktor S3'){
-								$setjen		= 'Disertasi';
-								$jenjang	= 'Doktor';
-								$kodejenjang= 'S-3';
-							} else if ($rom->jenis == 'Magister S2'){
-								$setjen		= 'Tesis';
-								$jenjang	= 'Magister';
-								$kodejenjang= 'S-2';
-							} else if ($rom->jenis == 'Sarjana S1'){
-								$setjen		= 'Skripsi';
-								$jenjang	= 'Sarjana';
-								$kodejenjang= 'S-1';
-							} else {
-								$setjen		= 'Tugas Akhir';
-								$jenjang	= 'Diploma';
-								$kodejenjang= 'D-3';	
-							}
-							if ($jenis == 'sempro'){
-								$setjen = 'Proposal '.$setjen;
-							} else if ($jenis == 'semhas'){
-								$setjen = 'Seminar Hasil Penelitian '.$setjen;
-							} else if ($jenis == 'ujian'){
-								//tetap
-							} else {
-								if ($jenis != ''){
-									$setjen = $jenis;
-								}
-							}
+	// 						$info = array(
+	// 							'Name' 			=> 'Smart and Collaborative Office',
+	// 							'Location' 		=> config('global.swandhanauniv'),
+	// 							'Reason' 		=> 'Dokumen ini ditandatangani secara elektronik',
+	// 							'ContactInfo' 	=> $homebase,
+	// 						);
+	// 						$page_format	= array(
+	// 							'MediaBox' => array ('llx' => 0, 'lly' => 0, 'urx' => 215, 'ury' => 330),
+	// 							'Dur' => 3,
+	// 							'PZ' => 1,
+	// 						);
+	// 						$data['judul']    			= $rom->judul;
+	// 						$data['universitasbesar']   = strtoupper($universitas);
+	// 						$data['universitas']        = $universitas;
+	// 						$data['nomor']          	= $nomor;
+	// 						$data['tahun']          	= $yy;
+	// 						$data['jenjangbesar']       = strtoupper($jenjang);
+	// 						$data['jenjang']          	= $jenjang;
+	// 						$data['peesbesar']          = strtoupper($ps);
+	// 						$data['pees']          		= $ps;
+	// 						$data['angkatan']          	= $angkatan;
+	// 						$data['pbimbing1']          = $pbimbing1;
+	// 						$data['jabakademik1']       = $jabakademik1;
+	// 						$data['pbimbing2']          = $pbimbing2;
+	// 						$data['jabakademik2']       = $jabakademik2;
+	// 						$data['tulispbimbing3']     = $tulispbimbing3;
+	// 						$data['nama']          		= $mhs;
+	// 						$data['nim']          		= $nim;
+	// 						$data['kodejenjang']        = $kodejenjang;
+	// 						$data['tandatangan']        = $tuliskodettd;
+	// 						$data['setjen']				= $setjen;
+	// 						$data['setjenbesar']		= strtoupper($setjen);
+	// 						$data['dekanbesar']			= strtoupper($dekan);
+	// 						if ($fakultas == 'FMIPA'){
+	// 							$data['fakpanjang']     = 'Fakultas MIPA';
+	// 							$data['fakultasbesar']  = 'FAKULTAS MIPA';
+	// 							$text 					= view('cetak.akademik.skdospem', $data);
+	// 						} else {
+	// 							$data['fakpanjang']     = $fakpanjang;
+	// 							$data['fakultasbesar']  = strtoupper($fakpanjang);
+	// 							$text 					= view('vokasi.cetak.sempro.skdospem', $data);
+	// 						}
+	// 						PDFCREATOR::SetCreator(Session('nama'));
+	// 						PDFCREATOR::SetAuthor(Session('previlage'));
+	// 						PDFCREATOR::SetTitle($kodjenis);
+	// 						PDFCREATOR::SetSubject($mhs);
+	// 						PDFCREATOR::SetKeywords($nim);
+	// 						PDFCREATOR::setPrintHeader(false);
+	// 						PDFCREATOR::setPrintFooter(false);
+	// 						PDFCREATOR::SetMargins(5, 0, 5);
+	// 						PDFCREATOR::setFontSubsetting(true);
+	// 						PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+	// 						PDFCREATOR::AddPage('P', $page_format, false, false);
+	// 						$bMargin = PDFCREATOR::getBreakMargin();
+	// 						$auto_page_break = PDFCREATOR::getAutoPageBreak();
+	// 						PDFCREATOR::SetAutoPageBreak(false, 0);
+	// 						$img_file = 'bgbssn.png';
+	// 						PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
+	// 						PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
+	// 						PDFCREATOR::setPageMark();
+	// 						PDFCREATOR::writeHTML($text, true, 0, true, 0);
+	// 						PDFCREATOR::setFooterMargin(0);
+	// 						$pdfdoc = PDFCREATOR::Output('', 'S');
+	// 						PDFCREATOR::reset();
+	// 						Storage::disk('local')->delete($output_file);
+	// 						Storage::disk('local')->put('/scan/files/'.$marking.'.pdf', $pdfdoc);
+	// 						$ceksek 	= Tabelskdanperaturan::where('marking', $marking)->count();
+	// 						if ($ceksek == 0){
+	// 							$kerjanya = Tabelskdanperaturan::create([
+	// 								'kelompok'			=> 	'KEPUTUSAN',
+	// 								'marking'			=> 	$marking,
+	// 								'nomor' 			=>  $request->input('val02'),
+	// 								'tahun' 			=>  $tahun,
+	// 								'tanggal' 			=>  $request->input('val03'),
+	// 								'penandatangan' 	=>  $pejabat,
+	// 								'nmpejabat' 		=>  $nmpejabat,
+	// 								'nippejabat' 		=>  $nippejabat,
+	// 								'judul' 			=>  $rom->kodjenis.' an. '.$rom->nama.' NIM '.$rom->nim,
+	// 								'scansurat' 		=>  $marking,
+	// 								'kodefas' 			=>  'HK.04.03',
+	// 								'kodesub' 			=>  'TD.06.01',
+	// 								'paraf1' 			=>  $request->input('val06'),
+	// 								'paraf2' 			=>  $paraf2,
+	// 								'paraf3' 			=>  $paraf3,
+	// 								'paraf4' 			=>  $paraf4,
+	// 								'fakultas' 			=>  Session('fakultas'),
+	// 								'inputor' 			=>  Session('email'),
+	// 								'updated_at'		=>	date("Y-m-d H:i:s")
+	// 							]);
+	// 						} else {
+	// 							$kerjanya = Tabelskdanperaturan::where('marking', $marking)->update([
+	// 								'kelompok'			=> 	'KEPUTUSAN',
+	// 								'marking'			=> 	$marking,
+	// 								'nomor' 			=>  $request->input('val02'),
+	// 								'tahun' 			=>  $tahun,
+	// 								'tanggal' 			=>  $request->input('val03'),
+	// 								'penandatangan' 	=>  $pejabat,
+	// 								'nmpejabat' 		=>  $nmpejabat,
+	// 								'nippejabat' 		=>  $nippejabat,
+	// 								'judul' 			=>  $rom->kodjenis.' an. '.$rom->nama.' NIM '.$rom->nim,
+	// 								'scansurat' 		=>  $marking,
+	// 								'kodefas' 			=>  'HK.04.03',
+	// 								'kodesub' 			=>  'TD.06.01',
+	// 								'paraf1' 			=>  $request->input('val06'),
+	// 								'paraf2' 			=>  $paraf2,
+	// 								'paraf3' 			=>  $paraf3,
+	// 								'paraf4' 			=>  $paraf4,
+	// 								'fakultas' 			=>  Session('fakultas'),
+	// 								'inputor' 			=>  Session('email'),
+	// 								'updated_at'		=>	date("Y-m-d H:i:s")
+	// 							]);
+	// 						}
+	// 						if ($kerjanya){
+	// 							Antrian::where('id', $idsurat)->update([
+	// 								'nosurat'		=> $nomor,
+	// 								'tglsurat'		=> $request->input('val03'),
+	// 								'pejabat'		=> $pejabat,
+	// 								'nmpejabat'		=> $nmpejabat,
+	// 								'nippejabat'	=> $nippejabat,
+	// 								'keterangan'	=> $marking.'.pdf'
+	// 							]);
+	// 							Inboxsurat::where('marking', $marking)->where('catatan', 'SKDANPERATURAN')->delete();
+	// 							$qnamapjbt	= Pejabatsurat::where('pejabat', $request->input('val06'))->first();
+	// 							if (isset($qnamapjbt->pejabat)){
+	// 								SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','SKDANPERATURAN','1');
+	// 							} else {
+	// 								SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','SKDANPERATURAN','1');
+	// 							}
+	// 							return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tahun '.$tahun.' Tanggal Penetapan '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+	// 							return back();
+	// 						}else{
+	// 							return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+	// 							return back();
+	// 						}
+	// 					}
+	// 				}
+	// 			} else if ($kepada == 'SKDOSPENGUJI'){
+	// 				$rom  				= Antrian::where('id', $idsurat)->first();
+	// 				$jenjang			= $rom->jenis;
+	// 				$nama				= $rom->instansi;
+	// 				$alamat				= $rom->alamat;
+	// 				$kota				= $rom->kota;
+	// 				$mhs 				= $rom->nama;
+	// 				$nim 				= $rom->nim;
+	// 				$ps 				= $rom->ps;
+	// 				$hape 				= $rom->hape;
+	// 				$smt				= $rom->smt;
+	// 				$judul				= $rom->judul;
+	// 				$dos1 				= $rom->dos1;
+	// 				$dos2 				= $rom->dos2;
+	// 				$jur 				= $rom->jurusan;
+	// 				$lokasi				= $rom->lokasi;
+	// 				$bulan				= $rom->bulan;
+	// 				$whatfor			= $rom->whatfor;
+	// 				$whatfor2			= $rom->whatfor2;
+	// 				$kodjenis			= $rom->kodjenis;
+	// 				$ket				= $rom->ket;
+	// 				$ortu				= $rom->ortu;
+	// 				$jabortu			= $rom->jabortu;
+	// 				$golortu			= $rom->golortu;
+	// 				$niportu			= $rom->niportu;
+	// 				$kerjaortu			= $rom->kerjaortu;
+	// 				$tmpkrjortu			= $rom->tmpkrjortu;
+	// 				$tmplahir			= $rom->tmplahir;
+	// 				$tgllahir			= $rom->tgllahir;
+	// 				$pada				= $rom->pada;
+	// 				$alasan				= $rom->alasan;
+	// 				$dosen				= $rom->dosen;
+	// 				$matkul				= $rom->matkul;
+	// 				$cutismt			= $rom->cutismt;
+	// 				$cutislm			= $rom->cutislm;
+	// 				$cutita				= $rom->cutita;
+	// 				$asal				= $rom->asal;
+	// 				$tembusan1			= $rom->tembusan1;
+	// 				$tembusan2			= $rom->tembusan2;
+	// 				$tembusan3			= $rom->tembusan3;
+	// 				$tembusan4			= $rom->tembusan4;
+	// 				$tembusan5			= $rom->tembusan5;
+	// 				$nosurat			= $rom->nosurat;
+	// 				$tglsurat			= $rom->tglsurat;
+	// 				$tandatangan		= $rom->tandatangan;
+	// 				$keterangan			= $rom->keterangan;
+	// 				$aktife				= $rom->aktife;
+	// 				$tglttd				= $rom->updated_at;
+	// 				$fakultas			= $rom->fakultas;
+	// 				$namasaja			= $nmpejabat;
+	// 				$ceksurat			= explode("-SCO-", $tandatangan);
+	// 				if (isset($ceksurat[1]) OR $tandatangan == 'SIgned With TTE'){
+	// 					return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+	// 					return back();
+	// 				} else {
+	// 					if ($tglsurat == $tanggal AND file_exists(public_path('scan/files/'.$keterangan))){
+	// 						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali, Bila Ingin Memperbaharui, Ubah Tanggal SK ini']);
+	// 						return back();
+	// 					} else {
+	// 						if ($fakultas == 'Vokasi' OR $fakultas == 'PASCAUB'){
+	// 							$dekan = 'Direktur';
+	// 						} else {
+	// 							$dekan = 'Dekan';
+	// 						}
+	// 						$periode			= 	'';
+	// 						$jenis				= 	'';
+	// 						$tglujian			= 	'';
+	// 						$getjenisujian		= 	AntrianUjian::where('id', $ket)->first();
+	// 						if (isset($getjenisujian->id)){
+	// 							$jenis			= 	$getjenisujian->jenis;
+	// 							$tglujian		= 	$getjenisujian->tanggal;
+	// 							if ($tglujian == '0000-00-00' OR is_null($tglujian) OR $tglujian == ''){
+	// 								$tglujian 	= $tanggal;
+	// 							}
+	// 							$arrytgl		= explode("-", $tglujian);
+	// 							$yy				= $arrytgl[0];
+	// 							$mm				= $arrytgl[1];
+	// 							$dd				= $arrytgl[2];
+	// 							$mmsk			= (int)$mm;
+	// 							$mmsk			= $kalender[$mmsk];
+	// 							$tglujian		= $dd.' '.$mmsk.' '.$yy;
+	// 							$periode		= strtoupper($mmsk);
+	// 							$periode		= $periode.' '.$yy; 
+	// 						}
+	// 						$getnamafakultas	= 	User::where('fakultas', $rom->fakultas)->where('fakpanjang', '!=', '')->first();
+	// 						if (isset($getnamafakultas->fakpanjang)){
+	// 							$fakpanjang 	= 	$getnamafakultas->fakpanjang;
+	// 						} else { $fakpanjang = ''; }
+	// 						if ($tglsurat == '0000-00-00' OR is_null($tglsurat) OR $tglsurat == ''){
+	// 							$tglsurat 	= $tanggal;
+	// 						}
+	// 						$arrytgl	= explode("-", $tglsurat);
+	// 						$yy			= $arrytgl[0];
+	// 						$mm			= $arrytgl[1];
+	// 						$dd			= $arrytgl[2];
+	// 						$mmsk		= (int)$arrytgl[1];
+	// 						$mmsk		= $kalender[$mmsk];
+	// 						$tglsurat	= $dd.' '.$mmsk.' '.$yy;
+	// 						if ($rom->jenis == 'Doktor S3'){
+	// 							$setjen		= 'Disertasi';
+	// 							$jenjang	= 'Doktor';
+	// 							$kodejenjang= 'S-3';
+	// 						} else if ($rom->jenis == 'Magister S2'){
+	// 							$setjen		= 'Tesis';
+	// 							$jenjang	= 'Magister';
+	// 							$kodejenjang= 'S-2';
+	// 						} else if ($rom->jenis == 'Sarjana S1'){
+	// 							$setjen		= 'Skripsi';
+	// 							$jenjang	= 'Sarjana';
+	// 							$kodejenjang= 'S-1';
+	// 						} else {
+	// 							$setjen		= 'Tugas Akhir';
+	// 							$jenjang	= 'Diploma';
+	// 							$kodejenjang= 'D-3';	
+	// 						}
+	// 						if ($jenis == 'sempro'){
+	// 							$setjen = 'Proposal '.$setjen;
+	// 						} else if ($jenis == 'semhas'){
+	// 							$setjen = 'Seminar Hasil Penelitian '.$setjen;
+	// 						} else if ($jenis == 'ujian'){
+	// 							//tetap
+	// 						} else {
+	// 							if ($jenis != ''){
+	// 								$setjen = $jenis;
+	// 							}
+	// 						}
 							
-							$angkatan1	= '';
-							$angkatan2	= '';
-							$arrnime 	= str_split($nim);
-							foreach($arrnime as $rnim){
-								if ($angkatan1 == ''){ $angkatan1 = $rnim; }
-								if ($angkatan2 == ''){ $angkatan2 = $rnim; }
-							}
-							$angkatan 	= $angkatan1.$angkatan2;
-							$intangkatan= (int)$angkatan;
-							$angkatan3 	= $intangkatan + 1;
-							if ($intangkatan < 10){
-								$angkatan= '200'.$intangkatan.'/200'.$angkatan3;
-							} else {
-								$angkatan= '20'.$intangkatan.'/20'.$angkatan3;
-							}
-							if ($rom->jenis == 'Doktor S3'){
-								$getpembimbing	= Biodata::where('nimmhs', $nim)->first();
-								if (isset($getpembimbing->id)){
-									$bimbing1	= $getpembimbing->bimbing1;
-									$bimbing2	= $getpembimbing->bimbing2;
-									$bimbing3	= $getpembimbing->bimbing3;
-									$getbimb1	= Dosen::where('id', $bimbing1)->first();
-									if (isset($getbimb1->gelar)){
-										$bimbing1 = $getbimb1->gelar;
-									}
-									$getbimb2	= Dosen::where('id', $bimbing2)->first();
-									if (isset($getbimb2->gelar)){
-										$bimbing2 = $getbimb2->gelar;
-									}
-									$getbimb3	= Dosen::where('id', $bimbing3)->first();
-									if (isset($getbimb3->gelar)){
-										$bimbing3 = $getbimb3->gelar;
-									}
-								} else {
-									$bimbing1	= '';
-									$bimbing2	= '';
-									$bimbing3	= '';
-								}
-								$tulispbimbing2	= '';
-								$nomor			= 1;
-								$getpersetujuan	= Antrian::where('nim', $nim)->where('ket', $ket)->where('kodjenis', 'Nilai Ujian')->groupBy('dos1')->orderBy('id', 'ASC')->get();
-								if (!empty($getpersetujuan)){
-									foreach ($getpersetujuan as $rowdos){
-										if ($rowdos->dos1 == $bimbing1 OR $bimbing1 == '' OR is_null($bimbing1) OR $rowdos->lokasi == 'KETUA'){
-											$bimbing1 = $rowdos->dos1;
-										} else if ($rowdos->dos1 == $bimbing2 OR $bimbing2 == '' OR is_null($bimbing2)){
-											$bimbing2 = $rowdos->dos1;
-										} else if ($rowdos->dos1 == $bimbing3 OR $bimbing3 == '' OR is_null($bimbing3)){
-											$bimbing3 = $rowdos->dos1;
-										} else {
-											$tulispbimbing2	= $tulispbimbing2.'
-												<tr>
-													<td>Penguji '.$nomor.'</td>
-													<td>'.$rowdos->dos1.'</td>
-												</tr>';
-											$nomor++;
-										}
-									}
-								}
-								$tulispbimbing	= '<tr>
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td colspan="5">
-										<table border="1" width="450" cellpadding="0" cellspacing="0">
-											<tr>
-												<td width="200" align="center">Promotor dan Penguji</td>
-												<td width="250" align="center">Nama</td>
-											</tr>
-											<tr>
-												<td width="200">Promotor</td>
-												<td width="250">'.$bimbing1.'</td>
-											</tr>
-											<tr>
-												<td>Ko-Promotor 1</td>
-												<td>'.$bimbing2.'</td>
-											</tr>
-											<tr>
-												<td>Ko-Promotor 2</td>
-												<td>'.$bimbing3.'</td>
-											</tr>'.$tulispbimbing2.'</table></td></tr>';
-							} else {
-								$pbimbing1		= '';
-								$nipbimbing1	= '';
-								$tulispbimbing2	= '';
-								$nomor			= 2;
-								$getpersetujuan	= Antrian::where('nim', $nim)->where('ket', $ket)->where('kodjenis', 'Nilai Ujian')->groupBy('dos1')->orderBy('lokasi', 'DESC')->get();
-								if (!empty($getpersetujuan)){
-									foreach ($getpersetujuan as $rowdos){
-										if ($rowdos->lokasi == 'KETUA' OR $pbimbing1 == ''){
-											$pbimbing1 	= $rowdos->dos1;
-											$nipbimbing1= $rowdos->dos2;
-										} else {
-											$tulispbimbing2	= $tulispbimbing2.'
-												<tr>
-													<td>&nbsp;</td>
-													<td>&nbsp;</td>
-													<td>'.$nomor.'.</td>
-													<td colspan="4">'.$rowdos->dos1.'</td>
-													</tr>
-												<tr>
-													<td>&nbsp;</td>
-													<td>&nbsp;</td>
-													<td>&nbsp;</td>
-													<td colspan="4">sebagai Anggota</td>
-												</tr>';
-											$nomor++;
-										}
-									}
-								}
-								$tulispbimbing	= '
-												<tr>
-													<td>&nbsp;</td>
-													<td>&nbsp;</td>
-													<td>1.</td>
-													<td colspan="4">'.$pbimbing1.'</td>
-													</tr>
-												<tr>
-													<td>&nbsp;</td>
-													<td>&nbsp;</td>
-													<td>&nbsp;</td>
-													<td colspan="4">sebagai Ketua</td>
-												</tr>'.$tulispbimbing2;
-							}
-							$marking		= $fakultas.'-SKDOSPENGUJI-'.$idsurat;
-							$output_file 	= '/scan/files/'. $marking.'.pdf';
-							if (file_exists(public_path($output_file))){
-								Storage::disk('local')->delete($output_file);
-							}
-							$namafile		= $marking.'.pdf';
-							$alamatweb		= $homebase.'/viewdocbyname/'.$marking.'.pdf';
-							$setview		= 'DOWNLOAD';
-							$spasi			= '';
-							$ukuranfont		= '12';
-							$jenisfontte	= '<font size="7" color="blue">';
-							$fontstyle		= 'style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;"';
-							$qrcode 		= QrCode::format('png')->merge('https://sco.ub.ac.id/logo-ub.png', 0.1, true)->size(150)->generate($alamatweb);
-							$qrimage 		= 'scan/generate/qrimg-'. $marking.'.png';
-							Storage::disk('local')->put($qrimage, $qrcode);
-							$jamtte			= date("H:m:i");
-							$lebarttd 		= '50%';
-							$getnamasaja 	= Simpegpegawai::where('nip_baru', $nippejabat)->first();
-							if (isset($getnamasaja->nama)){
-								$namasaja	= $getnamasaja->nama;
-							}
-							$info = array(
-								'Name' 			=> 'Smart and Collaborative Office',
-								'Location' 		=> config('global.swandhanauniv'),
-								'Reason' 		=> 'Dokumen ini ditandatangani secara elektronik',
-								'ContactInfo' 	=> $homebase,
-							);
-							$page_format	= array(
-								'MediaBox' => array ('llx' => 0, 'lly' => 0, 'urx' => 215, 'ury' => 330),
-								'Dur' => 3,
-								'PZ' => 1,
-							);
-							if ($fakultas == 'FMIPA'){
-								$data['fakpanjang']     = 'Fakultas MIPA';
-								$data['fakultasbesar']  = 'FAKULTAS MIPA';
-								$tuliskodettd	= '<table width="300" border="0" cellpadding="0" cellspacing="0" style="font-size: '.$ukuranfont.'px; font-family: Bookman Old Style;"> 
-														<tr><td colspan="2">Ditetapkan di '.$swandhanakota.'</td></tr>
-														<tr><td colspan="2">pada tanggal '.$tglsurat.'</td></tr>
-														<tr><td colspan="2">Dekan Fakultas MIPA,</td> </tr>
-														<tr>
-															<td width="100"><img src="'.$homebase.'/scan/generate/qrimg-'.$marking.'.png" width="100" /></td>
-															<td align="left" valign="center" width="150">
-																<font color="white">&nbsp;</font>'.$jenisfontte.'<br />
-																	TTE oleh :<br />
-																	<strong>'.$namasaja.'</strong><br />
-																	'.$tanggal.' '.$jamtte.'<br /><br />
-																	Verifikasi melalui<br /> https://tte.kominfo.go.id/verifyPDF
-																</font>
-															</td>
-														</tr>
-														<tr><td colspan="2">'.$nmpejabat.'</td></tr>
-														<tr><td colspan="2">NIP'.$nippejabat.'</td></tr>
-													</table>';
-							} else {
-								$data['fakpanjang']     = $fakpanjang;
-								$data['fakultasbesar']  = strtoupper($fakpanjang);
-								$tuliskodettd	= '<table width="300" border="0" cellpadding="0" cellspacing="0" style="font-size: '.$ukuranfont.'px; font-family: Bookman Old Style;"> 
-														<tr><td colspan="2">Ditetapkan di '.$swandhanakota.'</td></tr>
-														<tr><td colspan="2">pada tanggal '.$tglsurat.'</td></tr>
-														<tr><td colspan="2">'.$pejabat.',</td> </tr>
-														<tr>
-															<td width="100"><img src="'.$homebase.'/scan/generate/qrimg-'.$marking.'.png" width="100" /></td>
-															<td align="left" valign="center" width="150">
-																<font color="white">&nbsp;</font>'.$jenisfontte.'<br />
-																	TTE oleh :<br />
-																	<strong>'.$namasaja.'</strong><br />
-																	'.$tanggal.' '.$jamtte.'<br /><br />
-																	Verifikasi melalui<br /> https://tte.kominfo.go.id/verifyPDF
-																</font>
-															</td>
-														</tr>
-														<tr><td colspan="2">'.$nmpejabat.'</td></tr>
-														<tr><td colspan="2">NIP'.$nippejabat.'</td></tr>
-													</table>';
-							}
-							$data['judul']    			= $rom->judul;
-							$data['universitasbesar']   = strtoupper($universitas);
-							$data['universitas']        = $universitas;
-							$data['nomor']          	= $nomor;
-							$data['tahun']          	= $yy;
-							$data['jenjangbesar']       = strtoupper($jenjang);
-							$data['jenjang']          	= $jenjang;
-							$data['peesbesar']          = strtoupper($ps);
-							$data['pees']          		= $ps;
-							$data['angkatan']          	= $angkatan;
-							$data['tulispbimbing']     	= $tulispbimbing;
-							$data['nama']          		= $mhs;
-							$data['nim']          		= $nim;
-							$data['kodejenjang']        = $kodejenjang;
-							$data['tandatangan']        = $tuliskodettd;
-							$data['setjen']				= $setjen;
-							$data['periode']			= $periode;
-							$data['tglujian']			= $tglujian;
-							$data['setjenbesar']		= strtoupper($setjen);
-							$data['dekanbesar']			= strtoupper($dekan);
-							if ($jenjang == 'Doktor S3'){
-								$text 					= view('cetak.akademik.skdospengujis3', $data);
-							} else {
-								$text 					= view('cetak.akademik.skdospenguji', $data);
-							}
-							PDFCREATOR::SetCreator(Session('nama'));
-							PDFCREATOR::SetAuthor(Session('previlage'));
-							PDFCREATOR::SetTitle($kodjenis);
-							PDFCREATOR::SetSubject($mhs);
-							PDFCREATOR::SetKeywords($nim);
-							PDFCREATOR::setPrintHeader(false);
-							PDFCREATOR::setPrintFooter(false);
-							PDFCREATOR::SetMargins(5, 0, 5);
-							PDFCREATOR::setFontSubsetting(true);
-							PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
-							PDFCREATOR::AddPage('P', $page_format, false, false);
-							$bMargin = PDFCREATOR::getBreakMargin();
-							$auto_page_break = PDFCREATOR::getAutoPageBreak();
-							PDFCREATOR::SetAutoPageBreak(false, 0);
-							$img_file = 'bgbssn.png';
-							PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
-							PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
-							PDFCREATOR::setPageMark();
-							PDFCREATOR::writeHTML($text, true, 0, true, 0);
-							PDFCREATOR::setFooterMargin(0);
-							$pdfdoc = PDFCREATOR::Output('', 'S');
-							PDFCREATOR::reset();
-							Storage::disk('local')->delete($output_file);
-							Storage::disk('local')->put('/scan/files/'.$marking.'.pdf', $pdfdoc);
-							$ceksek 	= Tabelskdanperaturan::where('marking', $marking)->count();
-							if ($ceksek == 0){
-								$kerjanya = Tabelskdanperaturan::create([
-									'kelompok'			=> 	'KEPUTUSAN',
-									'marking'			=> 	$marking,
-									'nomor' 			=>  $request->input('val02'),
-									'tahun' 			=>  $yy,
-									'tanggal' 			=>  $request->input('val03'),
-									'penandatangan' 	=>  $pejabat,
-									'nmpejabat' 		=>  $nmpejabat,
-									'nippejabat' 		=>  $nippejabat,
-									'judul' 			=>  $rom->kodjenis.' an. '.$rom->nama.' NIM '.$rom->nim,
-									'scansurat' 		=>  $marking,
-									'kodefas' 			=>  'HK.04.03',
-									'kodesub' 			=>  'TD.06.01',
-									'paraf1' 			=>  $request->input('val06'),
-									'paraf2' 			=>  $paraf2,
-									'paraf3' 			=>  $paraf3,
-									'paraf4' 			=>  $paraf4,
-									'fakultas' 			=>  Session('fakultas'),
-									'inputor' 			=>  Session('email'),
-									'updated_at'		=>	date("Y-m-d H:i:s")
-								]);
-							} else {
-								$kerjanya = Tabelskdanperaturan::where('marking', $marking)->update([
-									'kelompok'			=> 	'KEPUTUSAN',
-									'marking'			=> 	$marking,
-									'nomor' 			=>  $request->input('val02'),
-									'tahun' 			=>  $yy,
-									'tanggal' 			=>  $request->input('val03'),
-									'penandatangan' 	=>  $pejabat,
-									'nmpejabat' 		=>  $nmpejabat,
-									'nippejabat' 		=>  $nippejabat,
-									'judul' 			=>  $rom->kodjenis.' an. '.$rom->nama.' NIM '.$rom->nim,
-									'scansurat' 		=>  $marking,
-									'kodefas' 			=>  'HK.04.03',
-									'kodesub' 			=>  'TD.06.01',
-									'paraf1' 			=>  $request->input('val06'),
-									'paraf2' 			=>  $paraf2,
-									'paraf3' 			=>  $paraf3,
-									'paraf4' 			=>  $paraf4,
-									'fakultas' 			=>  Session('fakultas'),
-									'inputor' 			=>  Session('email'),
-									'updated_at'		=>	date("Y-m-d H:i:s")
-								]);
-							}
-							if ($kerjanya){
-								Antrian::where('id', $idsurat)->update([
-									'nosurat'		=> $nomor,
-									'tglsurat'		=> $request->input('val03'),
-									'pejabat'		=> $pejabat,
-									'nmpejabat'		=> $nmpejabat,
-									'nippejabat'	=> $nippejabat,
-									'keterangan'	=> $marking.'.pdf'
-								]);
-								Inboxsurat::where('marking', $marking)->where('catatan', 'SKDANPERATURAN')->delete();
-								$qnamapjbt	= Pejabatsurat::where('pejabat', $request->input('val06'))->first();
-								if (isset($qnamapjbt->pejabat)){
-									SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','SKDANPERATURAN','1');
-								} else {
-									SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','SKDANPERATURAN','1');
-								}
-								return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tahun '.$yy.' Tanggal Penetapan '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
-								return back();
+	// 						$angkatan1	= '';
+	// 						$angkatan2	= '';
+	// 						$arrnime 	= str_split($nim);
+	// 						foreach($arrnime as $rnim){
+	// 							if ($angkatan1 == ''){ $angkatan1 = $rnim; }
+	// 							if ($angkatan2 == ''){ $angkatan2 = $rnim; }
+	// 						}
+	// 						$angkatan 	= $angkatan1.$angkatan2;
+	// 						$intangkatan= (int)$angkatan;
+	// 						$angkatan3 	= $intangkatan + 1;
+	// 						if ($intangkatan < 10){
+	// 							$angkatan= '200'.$intangkatan.'/200'.$angkatan3;
+	// 						} else {
+	// 							$angkatan= '20'.$intangkatan.'/20'.$angkatan3;
+	// 						}
+	// 						if ($rom->jenis == 'Doktor S3'){
+	// 							$getpembimbing	= Biodata::where('nimmhs', $nim)->first();
+	// 							if (isset($getpembimbing->id)){
+	// 								$bimbing1	= $getpembimbing->bimbing1;
+	// 								$bimbing2	= $getpembimbing->bimbing2;
+	// 								$bimbing3	= $getpembimbing->bimbing3;
+	// 								$getbimb1	= Dosen::where('id', $bimbing1)->first();
+	// 								if (isset($getbimb1->gelar)){
+	// 									$bimbing1 = $getbimb1->gelar;
+	// 								}
+	// 								$getbimb2	= Dosen::where('id', $bimbing2)->first();
+	// 								if (isset($getbimb2->gelar)){
+	// 									$bimbing2 = $getbimb2->gelar;
+	// 								}
+	// 								$getbimb3	= Dosen::where('id', $bimbing3)->first();
+	// 								if (isset($getbimb3->gelar)){
+	// 									$bimbing3 = $getbimb3->gelar;
+	// 								}
+	// 							} else {
+	// 								$bimbing1	= '';
+	// 								$bimbing2	= '';
+	// 								$bimbing3	= '';
+	// 							}
+	// 							$tulispbimbing2	= '';
+	// 							$nomor			= 1;
+	// 							$getpersetujuan	= Antrian::where('nim', $nim)->where('ket', $ket)->where('kodjenis', 'Nilai Ujian')->groupBy('dos1')->orderBy('id', 'ASC')->get();
+	// 							if (!empty($getpersetujuan)){
+	// 								foreach ($getpersetujuan as $rowdos){
+	// 									if ($rowdos->dos1 == $bimbing1 OR $bimbing1 == '' OR is_null($bimbing1) OR $rowdos->lokasi == 'KETUA'){
+	// 										$bimbing1 = $rowdos->dos1;
+	// 									} else if ($rowdos->dos1 == $bimbing2 OR $bimbing2 == '' OR is_null($bimbing2)){
+	// 										$bimbing2 = $rowdos->dos1;
+	// 									} else if ($rowdos->dos1 == $bimbing3 OR $bimbing3 == '' OR is_null($bimbing3)){
+	// 										$bimbing3 = $rowdos->dos1;
+	// 									} else {
+	// 										$tulispbimbing2	= $tulispbimbing2.'
+	// 											<tr>
+	// 												<td>Penguji '.$nomor.'</td>
+	// 												<td>'.$rowdos->dos1.'</td>
+	// 											</tr>';
+	// 										$nomor++;
+	// 									}
+	// 								}
+	// 							}
+	// 							$tulispbimbing	= '<tr>
+	// 								<td>&nbsp;</td>
+	// 								<td>&nbsp;</td>
+	// 								<td colspan="5">
+	// 									<table border="1" width="450" cellpadding="0" cellspacing="0">
+	// 										<tr>
+	// 											<td width="200" align="center">Promotor dan Penguji</td>
+	// 											<td width="250" align="center">Nama</td>
+	// 										</tr>
+	// 										<tr>
+	// 											<td width="200">Promotor</td>
+	// 											<td width="250">'.$bimbing1.'</td>
+	// 										</tr>
+	// 										<tr>
+	// 											<td>Ko-Promotor 1</td>
+	// 											<td>'.$bimbing2.'</td>
+	// 										</tr>
+	// 										<tr>
+	// 											<td>Ko-Promotor 2</td>
+	// 											<td>'.$bimbing3.'</td>
+	// 										</tr>'.$tulispbimbing2.'</table></td></tr>';
+	// 						} else {
+	// 							$pbimbing1		= '';
+	// 							$nipbimbing1	= '';
+	// 							$tulispbimbing2	= '';
+	// 							$nomor			= 2;
+	// 							$getpersetujuan	= Antrian::where('nim', $nim)->where('ket', $ket)->where('kodjenis', 'Nilai Ujian')->groupBy('dos1')->orderBy('lokasi', 'DESC')->get();
+	// 							if (!empty($getpersetujuan)){
+	// 								foreach ($getpersetujuan as $rowdos){
+	// 									if ($rowdos->lokasi == 'KETUA' OR $pbimbing1 == ''){
+	// 										$pbimbing1 	= $rowdos->dos1;
+	// 										$nipbimbing1= $rowdos->dos2;
+	// 									} else {
+	// 										$tulispbimbing2	= $tulispbimbing2.'
+	// 											<tr>
+	// 												<td>&nbsp;</td>
+	// 												<td>&nbsp;</td>
+	// 												<td>'.$nomor.'.</td>
+	// 												<td colspan="4">'.$rowdos->dos1.'</td>
+	// 												</tr>
+	// 											<tr>
+	// 												<td>&nbsp;</td>
+	// 												<td>&nbsp;</td>
+	// 												<td>&nbsp;</td>
+	// 												<td colspan="4">sebagai Anggota</td>
+	// 											</tr>';
+	// 										$nomor++;
+	// 									}
+	// 								}
+	// 							}
+	// 							$tulispbimbing	= '
+	// 											<tr>
+	// 												<td>&nbsp;</td>
+	// 												<td>&nbsp;</td>
+	// 												<td>1.</td>
+	// 												<td colspan="4">'.$pbimbing1.'</td>
+	// 												</tr>
+	// 											<tr>
+	// 												<td>&nbsp;</td>
+	// 												<td>&nbsp;</td>
+	// 												<td>&nbsp;</td>
+	// 												<td colspan="4">sebagai Ketua</td>
+	// 											</tr>'.$tulispbimbing2;
+	// 						}
+	// 						$marking		= $fakultas.'-SKDOSPENGUJI-'.$idsurat;
+	// 						$output_file 	= '/scan/files/'. $marking.'.pdf';
+	// 						if (file_exists(public_path($output_file))){
+	// 							Storage::disk('local')->delete($output_file);
+	// 						}
+	// 						$namafile		= $marking.'.pdf';
+	// 						$alamatweb		= $homebase.'/viewdocbyname/'.$marking.'.pdf';
+	// 						$setview		= 'DOWNLOAD';
+	// 						$spasi			= '';
+	// 						$ukuranfont		= '12';
+	// 						$jenisfontte	= '<font size="7" color="blue">';
+	// 						$fontstyle		= 'style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;"';
+	// 						$qrcode 		= QrCode::format('png')->merge('https://sco.ub.ac.id/logo-ub.png', 0.1, true)->size(150)->generate($alamatweb);
+	// 						$qrimage 		= 'scan/generate/qrimg-'. $marking.'.png';
+	// 						Storage::disk('local')->put($qrimage, $qrcode);
+	// 						$jamtte			= date("H:m:i");
+	// 						$lebarttd 		= '50%';
+	// 						$getnamasaja 	= Simpegpegawai::where('nip_baru', $nippejabat)->first();
+	// 						if (isset($getnamasaja->nama)){
+	// 							$namasaja	= $getnamasaja->nama;
+	// 						}
+	// 						$info = array(
+	// 							'Name' 			=> 'Smart and Collaborative Office',
+	// 							'Location' 		=> config('global.swandhanauniv'),
+	// 							'Reason' 		=> 'Dokumen ini ditandatangani secara elektronik',
+	// 							'ContactInfo' 	=> $homebase,
+	// 						);
+	// 						$page_format	= array(
+	// 							'MediaBox' => array ('llx' => 0, 'lly' => 0, 'urx' => 215, 'ury' => 330),
+	// 							'Dur' => 3,
+	// 							'PZ' => 1,
+	// 						);
+	// 						if ($fakultas == 'FMIPA'){
+	// 							$data['fakpanjang']     = 'Fakultas MIPA';
+	// 							$data['fakultasbesar']  = 'FAKULTAS MIPA';
+	// 							$tuliskodettd	= '<table width="300" border="0" cellpadding="0" cellspacing="0" style="font-size: '.$ukuranfont.'px; font-family: Bookman Old Style;"> 
+	// 													<tr><td colspan="2">Ditetapkan di '.$swandhanakota.'</td></tr>
+	// 													<tr><td colspan="2">pada tanggal '.$tglsurat.'</td></tr>
+	// 													<tr><td colspan="2">Dekan Fakultas MIPA,</td> </tr>
+	// 													<tr>
+	// 														<td width="100"><img src="'.$homebase.'/scan/generate/qrimg-'.$marking.'.png" width="100" /></td>
+	// 														<td align="left" valign="center" width="150">
+	// 															<font color="white">&nbsp;</font>'.$jenisfontte.'<br />
+	// 																TTE oleh :<br />
+	// 																<strong>'.$namasaja.'</strong><br />
+	// 																'.$tanggal.' '.$jamtte.'<br /><br />
+	// 																Verifikasi melalui<br /> https://tte.kominfo.go.id/verifyPDF
+	// 															</font>
+	// 														</td>
+	// 													</tr>
+	// 													<tr><td colspan="2">'.$nmpejabat.'</td></tr>
+	// 													<tr><td colspan="2">NIP'.$nippejabat.'</td></tr>
+	// 												</table>';
+	// 						} else {
+	// 							$data['fakpanjang']     = $fakpanjang;
+	// 							$data['fakultasbesar']  = strtoupper($fakpanjang);
+	// 							$tuliskodettd	= '<table width="300" border="0" cellpadding="0" cellspacing="0" style="font-size: '.$ukuranfont.'px; font-family: Bookman Old Style;"> 
+	// 													<tr><td colspan="2">Ditetapkan di '.$swandhanakota.'</td></tr>
+	// 													<tr><td colspan="2">pada tanggal '.$tglsurat.'</td></tr>
+	// 													<tr><td colspan="2">'.$pejabat.',</td> </tr>
+	// 													<tr>
+	// 														<td width="100"><img src="'.$homebase.'/scan/generate/qrimg-'.$marking.'.png" width="100" /></td>
+	// 														<td align="left" valign="center" width="150">
+	// 															<font color="white">&nbsp;</font>'.$jenisfontte.'<br />
+	// 																TTE oleh :<br />
+	// 																<strong>'.$namasaja.'</strong><br />
+	// 																'.$tanggal.' '.$jamtte.'<br /><br />
+	// 																Verifikasi melalui<br /> https://tte.kominfo.go.id/verifyPDF
+	// 															</font>
+	// 														</td>
+	// 													</tr>
+	// 													<tr><td colspan="2">'.$nmpejabat.'</td></tr>
+	// 													<tr><td colspan="2">NIP'.$nippejabat.'</td></tr>
+	// 												</table>';
+	// 						}
+	// 						$data['judul']    			= $rom->judul;
+	// 						$data['universitasbesar']   = strtoupper($universitas);
+	// 						$data['universitas']        = $universitas;
+	// 						$data['nomor']          	= $nomor;
+	// 						$data['tahun']          	= $yy;
+	// 						$data['jenjangbesar']       = strtoupper($jenjang);
+	// 						$data['jenjang']          	= $jenjang;
+	// 						$data['peesbesar']          = strtoupper($ps);
+	// 						$data['pees']          		= $ps;
+	// 						$data['angkatan']          	= $angkatan;
+	// 						$data['tulispbimbing']     	= $tulispbimbing;
+	// 						$data['nama']          		= $mhs;
+	// 						$data['nim']          		= $nim;
+	// 						$data['kodejenjang']        = $kodejenjang;
+	// 						$data['tandatangan']        = $tuliskodettd;
+	// 						$data['setjen']				= $setjen;
+	// 						$data['periode']			= $periode;
+	// 						$data['tglujian']			= $tglujian;
+	// 						$data['setjenbesar']		= strtoupper($setjen);
+	// 						$data['dekanbesar']			= strtoupper($dekan);
+	// 						if ($jenjang == 'Doktor S3'){
+	// 							$text 					= view('cetak.akademik.skdospengujis3', $data);
+	// 						} else {
+	// 							$text 					= view('cetak.akademik.skdospenguji', $data);
+	// 						}
+	// 						PDFCREATOR::SetCreator(Session('nama'));
+	// 						PDFCREATOR::SetAuthor(Session('previlage'));
+	// 						PDFCREATOR::SetTitle($kodjenis);
+	// 						PDFCREATOR::SetSubject($mhs);
+	// 						PDFCREATOR::SetKeywords($nim);
+	// 						PDFCREATOR::setPrintHeader(false);
+	// 						PDFCREATOR::setPrintFooter(false);
+	// 						PDFCREATOR::SetMargins(5, 0, 5);
+	// 						PDFCREATOR::setFontSubsetting(true);
+	// 						PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+	// 						PDFCREATOR::AddPage('P', $page_format, false, false);
+	// 						$bMargin = PDFCREATOR::getBreakMargin();
+	// 						$auto_page_break = PDFCREATOR::getAutoPageBreak();
+	// 						PDFCREATOR::SetAutoPageBreak(false, 0);
+	// 						$img_file = 'bgbssn.png';
+	// 						PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
+	// 						PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
+	// 						PDFCREATOR::setPageMark();
+	// 						PDFCREATOR::writeHTML($text, true, 0, true, 0);
+	// 						PDFCREATOR::setFooterMargin(0);
+	// 						$pdfdoc = PDFCREATOR::Output('', 'S');
+	// 						PDFCREATOR::reset();
+	// 						Storage::disk('local')->delete($output_file);
+	// 						Storage::disk('local')->put('/scan/files/'.$marking.'.pdf', $pdfdoc);
+	// 						$ceksek 	= Tabelskdanperaturan::where('marking', $marking)->count();
+	// 						if ($ceksek == 0){
+	// 							$kerjanya = Tabelskdanperaturan::create([
+	// 								'kelompok'			=> 	'KEPUTUSAN',
+	// 								'marking'			=> 	$marking,
+	// 								'nomor' 			=>  $request->input('val02'),
+	// 								'tahun' 			=>  $yy,
+	// 								'tanggal' 			=>  $request->input('val03'),
+	// 								'penandatangan' 	=>  $pejabat,
+	// 								'nmpejabat' 		=>  $nmpejabat,
+	// 								'nippejabat' 		=>  $nippejabat,
+	// 								'judul' 			=>  $rom->kodjenis.' an. '.$rom->nama.' NIM '.$rom->nim,
+	// 								'scansurat' 		=>  $marking,
+	// 								'kodefas' 			=>  'HK.04.03',
+	// 								'kodesub' 			=>  'TD.06.01',
+	// 								'paraf1' 			=>  $request->input('val06'),
+	// 								'paraf2' 			=>  $paraf2,
+	// 								'paraf3' 			=>  $paraf3,
+	// 								'paraf4' 			=>  $paraf4,
+	// 								'fakultas' 			=>  Session('fakultas'),
+	// 								'inputor' 			=>  Session('email'),
+	// 								'updated_at'		=>	date("Y-m-d H:i:s")
+	// 							]);
+	// 						} else {
+	// 							$kerjanya = Tabelskdanperaturan::where('marking', $marking)->update([
+	// 								'kelompok'			=> 	'KEPUTUSAN',
+	// 								'marking'			=> 	$marking,
+	// 								'nomor' 			=>  $request->input('val02'),
+	// 								'tahun' 			=>  $yy,
+	// 								'tanggal' 			=>  $request->input('val03'),
+	// 								'penandatangan' 	=>  $pejabat,
+	// 								'nmpejabat' 		=>  $nmpejabat,
+	// 								'nippejabat' 		=>  $nippejabat,
+	// 								'judul' 			=>  $rom->kodjenis.' an. '.$rom->nama.' NIM '.$rom->nim,
+	// 								'scansurat' 		=>  $marking,
+	// 								'kodefas' 			=>  'HK.04.03',
+	// 								'kodesub' 			=>  'TD.06.01',
+	// 								'paraf1' 			=>  $request->input('val06'),
+	// 								'paraf2' 			=>  $paraf2,
+	// 								'paraf3' 			=>  $paraf3,
+	// 								'paraf4' 			=>  $paraf4,
+	// 								'fakultas' 			=>  Session('fakultas'),
+	// 								'inputor' 			=>  Session('email'),
+	// 								'updated_at'		=>	date("Y-m-d H:i:s")
+	// 							]);
+	// 						}
+	// 						if ($kerjanya){
+	// 							Antrian::where('id', $idsurat)->update([
+	// 								'nosurat'		=> $nomor,
+	// 								'tglsurat'		=> $request->input('val03'),
+	// 								'pejabat'		=> $pejabat,
+	// 								'nmpejabat'		=> $nmpejabat,
+	// 								'nippejabat'	=> $nippejabat,
+	// 								'keterangan'	=> $marking.'.pdf'
+	// 							]);
+	// 							Inboxsurat::where('marking', $marking)->where('catatan', 'SKDANPERATURAN')->delete();
+	// 							$qnamapjbt	= Pejabatsurat::where('pejabat', $request->input('val06'))->first();
+	// 							if (isset($qnamapjbt->pejabat)){
+	// 								SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','SKDANPERATURAN','1');
+	// 							} else {
+	// 								SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','SKDANPERATURAN','1');
+	// 							}
+	// 							return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tahun '.$yy.' Tanggal Penetapan '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+	// 							return back();
 								
-							} else{
-								return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
-								return back();
-							}
-						}
-					}
-				} else {
-					if ($pejabat == 'DEKAN' AND $paraf1 == 'SELF'){
-						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Yang ditandatangani Dekan Tidak Boleh di Paraf Sendiri']);
-						return back();
-					} else if ($pejabat == 'WAKIL DEKAN' AND $paraf1 == 'SELF'){
-						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Yang ditandatangani Wakil Dekan Tidak Boleh di Paraf Sendiri']);
-						return back();
-					} else if ($pejabat == 'REKTOR' AND $paraf1 == 'SELF'){
-						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Yang ditandatangani Rektor Tidak Boleh di Paraf Sendiri']);
-						return back();
-					} else if ($pejabat == 'WAKIL REKTOR' AND $paraf1 == 'SELF'){
-						return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Yang ditandatangani Wakil Rektor Tidak Boleh di Paraf Sendiri']);
-						return back();
-					} else {
-						$sudah 			= '';
-						$qdislws		= Suratkeluar::where('id', $idsurat)->first();
-						$marking		= $qdislws->marking;
-						$statfile		= $qdislws->paraf1;
-						$fakultas		= $qdislws->fakultas;
+	// 						} else{
+	// 							return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+	// 							return back();
+	// 						}
+	// 					}
+	// 				}
+	// 			} else {
+	// 				if ($pejabat == 'DEKAN' AND $paraf1 == 'SELF'){
+	// 					return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Yang ditandatangani Dekan Tidak Boleh di Paraf Sendiri']);
+	// 					return back();
+	// 				} else if ($pejabat == 'WAKIL DEKAN' AND $paraf1 == 'SELF'){
+	// 					return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Yang ditandatangani Wakil Dekan Tidak Boleh di Paraf Sendiri']);
+	// 					return back();
+	// 				} else if ($pejabat == 'REKTOR' AND $paraf1 == 'SELF'){
+	// 					return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Yang ditandatangani Rektor Tidak Boleh di Paraf Sendiri']);
+	// 					return back();
+	// 				} else if ($pejabat == 'WAKIL REKTOR' AND $paraf1 == 'SELF'){
+	// 					return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Yang ditandatangani Wakil Rektor Tidak Boleh di Paraf Sendiri']);
+	// 					return back();
+	// 				} else {
+	// 					$sudah 			= '';
+	// 					$qdislws		= Suratkeluar::where('id', $idsurat)->first();
+	// 					$marking		= $qdislws->marking;
+	// 					$statfile		= $qdislws->paraf1;
+	// 					$fakultas		= $qdislws->fakultas;
 						
-						$kerjanya 		= Suratkeluar::where('id', $idsurat)->update([
-							'jenissrt'		=> 	$request->input('val02'),
-							'perihal' 		=>  $perihal,
-							'dasarsurat' 	=>  $dasarsurat,
-							'kodefak' 		=>  $kodefakultas,
-							'kepada' 		=>  $kepada,
-							'alamat' 		=>  $alamat,
-							'idpejabat' 	=>  $idpejabat,
-							'pejabat' 		=>  $pejabat,
-							'namapejabat' 	=>  $setttd,
-							'paraf1' 		=>  $paraf1,
-							'paraf2' 		=>  $paraf2,
-							'paraf3' 		=>  $paraf3,
-							'paraf4' 		=>  $paraf4,
-							'pembuat'		=> 	Session('email'),
-							'kelompok'		=> 	Session('previlage'),
-							'updated_at'	=>	date("Y-m-d H:i:s")
-						]);
-						if ($perihal == 'SURAT PERJANJIAN BANTUAN BIAYA TUGAS/IJIN BELAJAR' OR $perihal == 'PERPANJANGAN SURAT PERJANJIAN BANTUAN BIAYA TUGAS/IJIN BELAJAR' OR $perihal =='SURAT KETERANGAN JAMINAN PEMBIAYAAN STUDI' OR $perihal == 'SURAT KETERANGAN PERPANJANGAN JAMINAN PEMBIAYAAN STUDI' OR $perihal == 'SURAT JAMINAN PEMBIAYAAN PERPANJANGAN MASA STUDI'){
-							if ($request->hasFile('file')) {
-								$ceksurat		= explode("-SCO-", $statfile);
-								if (isset($ceksurat[1])){
-									return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
-									return back();
-								} else {
-									$ceksurat		= explode("-OUT-", $statfile);
-									if (isset($ceksurat[1])){
-										return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
-										return back();
-									} else {
-										$output_file 	= '/scan/files/'. $marking.'.pdf';
-										if (file_exists(public_path($output_file))){
-											Storage::disk('local')->delete($output_file);
-										}
-										$namafile		= $marking.'.'.$request->file('file')->getClientOriginalExtension();
-										$request->file('file')->move(public_path('scan/files'), $namafile);
-										if ($kerjanya){
-											if (file_exists(public_path($output_file))){
-												if ($request->input('val02') != 'BIASA'){
-													Inboxsurat::where('marking', $marking)->where('jenis', 'KELUAR')->delete();
-													$qnamapjbt	= Pejabatsurat::where('pejabat', $paraf1)->first();
-													if (isset($qnamapjbt->pejabat)){
-														SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','','1');
-													} else {
-														SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','','1');
-													}
-												}
-												return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tanggal '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
-												return back();
-											} else {
-												return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
-												return back();		
-											}
-										}else{
-											return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
-											return back();
-										}
-									}
-								}			
-							} else {
-								$ceksurat		= explode("-SCO-", $statfile);
-								if (isset($ceksurat[1])){
-									return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
-									return back();
-								} else {
-									$ceksurat		= explode("-OUT-", $statfile);
-									if (isset($ceksurat[1])){
-										return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
-										return back();
-									} else {
-										Inboxsurat::where('marking', $marking)->where('jenis', 'KELUAR')->delete();
-										$qnamapjbt	= Pejabatsurat::where('pejabat', $paraf1)->first();
-										if (isset($qnamapjbt->pejabat)){
-											SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','','1');
-										} else {
-											SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','','1');
-										}
-										return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tanggal '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
-										return back();
-									}
-								}
-							}
-						} else {
-							$output_file 	= '/scan/generate/qrimg-'.$marking.'.png';
-							Storage::disk('local')->delete($output_file);
-							if ($request->hasFile('file')) {
-								$ceksurat		= explode("-SCO-", $qdislws->paraf1);
-								if (isset($ceksurat[1])){
-									return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
-									return back();
-								} else {
-									$ceksurat		= explode("-OUT-", $statfile);
-									if (isset($ceksurat[1])){
-										return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
-										return back();
-									} else {
-										$output_file 	= '/scan/files/'. $marking.'.pdf';
-										if (file_exists(public_path($output_file))){
-											Storage::disk('local')->delete($output_file);
-										}
-										$namafile		= $marking.'.'.$request->file('file')->getClientOriginalExtension();
-										$request->file('file')->move(public_path('scan/files'), $namafile);
-										if ($kerjanya){
-											if ($request->input('val02') != 'BIASA'){
-												Inboxsurat::where('marking', $marking)->where('jenis', 'KELUAR')->delete();
-												$qnamapjbt	= Pejabatsurat::where('pejabat', $paraf1)->first();
-												if (isset($qnamapjbt->pejabat)){
-													SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','','1');
-												} else {
-													SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','','1');
-												}
-											}
-											return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tanggal '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
-											return back();
-										} else {
-											return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
-											return back();
-										}
-									}
-								}
-							} else {
-								return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Berhasil di Update, Tanpa File Upload']);
-								return back();
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+	// 					$kerjanya 		= Suratkeluar::where('id', $idsurat)->update([
+	// 						'jenissrt'		=> 	$request->input('val02'),
+	// 						'perihal' 		=>  $perihal,
+	// 						'dasarsurat' 	=>  $dasarsurat,
+	// 						'kodefak' 		=>  $kodefakultas,
+	// 						'kepada' 		=>  $kepada,
+	// 						'alamat' 		=>  $alamat,
+	// 						'idpejabat' 	=>  $idpejabat,
+	// 						'pejabat' 		=>  $pejabat,
+	// 						'namapejabat' 	=>  $setttd,
+	// 						'paraf1' 		=>  $paraf1,
+	// 						'paraf2' 		=>  $paraf2,
+	// 						'paraf3' 		=>  $paraf3,
+	// 						'paraf4' 		=>  $paraf4,
+	// 						'pembuat'		=> 	Session('email'),
+	// 						'kelompok'		=> 	Session('previlage'),
+	// 						'updated_at'	=>	date("Y-m-d H:i:s")
+	// 					]);
+	// 					if ($perihal == 'SURAT PERJANJIAN BANTUAN BIAYA TUGAS/IJIN BELAJAR' OR $perihal == 'PERPANJANGAN SURAT PERJANJIAN BANTUAN BIAYA TUGAS/IJIN BELAJAR' OR $perihal =='SURAT KETERANGAN JAMINAN PEMBIAYAAN STUDI' OR $perihal == 'SURAT KETERANGAN PERPANJANGAN JAMINAN PEMBIAYAAN STUDI' OR $perihal == 'SURAT JAMINAN PEMBIAYAAN PERPANJANGAN MASA STUDI'){
+	// 						if ($request->hasFile('file')) {
+	// 							$ceksurat		= explode("-SCO-", $statfile);
+	// 							if (isset($ceksurat[1])){
+	// 								return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+	// 								return back();
+	// 							} else {
+	// 								$ceksurat		= explode("-OUT-", $statfile);
+	// 								if (isset($ceksurat[1])){
+	// 									return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+	// 									return back();
+	// 								} else {
+	// 									$output_file 	= '/scan/files/'. $marking.'.pdf';
+	// 									if (file_exists(public_path($output_file))){
+	// 										Storage::disk('local')->delete($output_file);
+	// 									}
+	// 									$namafile		= $marking.'.'.$request->file('file')->getClientOriginalExtension();
+	// 									$request->file('file')->move(public_path('scan/files'), $namafile);
+	// 									if ($kerjanya){
+	// 										if (file_exists(public_path($output_file))){
+	// 											if ($request->input('val02') != 'BIASA'){
+	// 												Inboxsurat::where('marking', $marking)->where('jenis', 'KELUAR')->delete();
+	// 												$qnamapjbt	= Pejabatsurat::where('pejabat', $paraf1)->first();
+	// 												if (isset($qnamapjbt->pejabat)){
+	// 													SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','','1');
+	// 												} else {
+	// 													SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','','1');
+	// 												}
+	// 											}
+	// 											return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tanggal '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+	// 											return back();
+	// 										} else {
+	// 											return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+	// 											return back();		
+	// 										}
+	// 									}else{
+	// 										return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+	// 										return back();
+	// 									}
+	// 								}
+	// 							}			
+	// 						} else {
+	// 							$ceksurat		= explode("-SCO-", $statfile);
+	// 							if (isset($ceksurat[1])){
+	// 								return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+	// 								return back();
+	// 							} else {
+	// 								$ceksurat		= explode("-OUT-", $statfile);
+	// 								if (isset($ceksurat[1])){
+	// 									return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+	// 									return back();
+	// 								} else {
+	// 									Inboxsurat::where('marking', $marking)->where('jenis', 'KELUAR')->delete();
+	// 									$qnamapjbt	= Pejabatsurat::where('pejabat', $paraf1)->first();
+	// 									if (isset($qnamapjbt->pejabat)){
+	// 										SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','','1');
+	// 									} else {
+	// 										SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','','1');
+	// 									}
+	// 									return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tanggal '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+	// 									return back();
+	// 								}
+	// 							}
+	// 						}
+	// 					} else {
+	// 						$output_file 	= '/scan/generate/qrimg-'.$marking.'.png';
+	// 						Storage::disk('local')->delete($output_file);
+	// 						if ($request->hasFile('file')) {
+	// 							$ceksurat		= explode("-SCO-", $qdislws->paraf1);
+	// 							if (isset($ceksurat[1])){
+	// 								return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+	// 								return back();
+	// 							} else {
+	// 								$ceksurat		= explode("-OUT-", $statfile);
+	// 								if (isset($ceksurat[1])){
+	// 									return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+	// 									return back();
+	// 								} else {
+	// 									$output_file 	= '/scan/files/'. $marking.'.pdf';
+	// 									if (file_exists(public_path($output_file))){
+	// 										Storage::disk('local')->delete($output_file);
+	// 									}
+	// 									$namafile		= $marking.'.'.$request->file('file')->getClientOriginalExtension();
+	// 									$request->file('file')->move(public_path('scan/files'), $namafile);
+	// 									if ($kerjanya){
+	// 										if ($request->input('val02') != 'BIASA'){
+	// 											Inboxsurat::where('marking', $marking)->where('jenis', 'KELUAR')->delete();
+	// 											$qnamapjbt	= Pejabatsurat::where('pejabat', $paraf1)->first();
+	// 											if (isset($qnamapjbt->pejabat)){
+	// 												SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','','1');
+	// 											} else {
+	// 												SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','','1');
+	// 											}
+	// 										}
+	// 										return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tanggal '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+	// 										return back();
+	// 									} else {
+	// 										return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+	// 										return back();
+	// 									}
+	// 								}
+	// 							}
+	// 						} else {
+	// 							return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Berhasil di Update, Tanpa File Upload']);
+	// 							return back();
+	// 						}
+	// 					}
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+    // new function
+    public function exUploadSuratTTE(Request $request) {
+        $nomor			= $request->input('val02');
+        $tanggal		= $request->input('val03');
+        $kepada			= $request->input('val04');
+        $nmttd			= $request->input('val05');
+        $paraf1			= $request->input('val06');
+        $paraf2			= $request->input('val07');
+        $paraf3			= $request->input('val08');
+        $paraf4			= $request->input('val09');
+        $marking		= $request->input('val10');
+        $idsurat		= $request->input('val11');
+        $perihal		= $request->input('val12');
+        $thnagenda		= $request->input('val13');
+        $noagenda		= $request->input('val14');
+        $alamat 		= Session('addressapps01');
+        $swandhanakota	= Session('kota01');
+        $universitas 	= Session('subsubdomainapps01');
+        $konseptor		= Session('email');
+        $homebase		= url("/");
+        $kalender 		= array("Bulan", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember");
+        $dasarsurat		= '';
+
+        // ===== TAMBAHAN: Deteksi dini apakah request terpotong karena limit server =====
+        $contentLength	= (int) $request->header('Content-Length');
+        $postMax		= $this->parseSizeToBytes(ini_get('post_max_size'));
+        $uploadMax		= $this->parseSizeToBytes(ini_get('upload_max_filesize'));
+        $requestTerpotong = false;
+        if ($postMax > 0 AND $contentLength > 0 AND $contentLength > $postMax) {
+            $requestTerpotong = true;
+        }
+        if (!$requestTerpotong AND $request->isMethod('post') AND $contentLength > 0 AND empty($_POST) AND empty($_FILES) AND $request->input('val05') == null) {
+            // PHP membuang seluruh POST karena post_max_size terlampaui
+            $requestTerpotong = true;
+        }
+        if ($requestTerpotong) {
+            return response()->json([
+                'icon'    => 'error',
+                'warna'   => '#bf441d',
+                'status'  => 'Error.!',
+                'message' => 'Request terpotong oleh server. Ukuran terkirim '.$contentLength.' bytes, batas post_max_size '.ini_get('post_max_size').', upload_max_filesize '.ini_get('upload_max_filesize').'. Silakan naikkan limit PHP/Nginx.'
+            ]);
+        }
+        // ===== END TAMBAHAN =====
+
+        if ($thnagenda != '' AND $noagenda != ''){
+            $datalm1  = Suratmasuk::where('noagenda', $noagenda)->where('yersrt', $thnagenda)->where('fakultas', Session('fakultas'))->first();
+            if (isset($datalm1->scansurat)){
+                $dasarsurat = $datalm1->scansurat;
+            }
+        }
+        if ($paraf2 == ''){ $paraf2 = ''; }
+        if ($paraf3 == ''){ $paraf3 = ''; }
+        if ($paraf4 == ''){ $paraf4 = ''; }
+        if ($nmttd == 'materai') {
+            if ($request->hasFile('file')) {
+                $getsurat 		= Suratkeluar::where('marking', $marking)->first();
+                if (isset($getsurat->id)){
+                    $ceksudahtte = AntrianTTE::where('idsurat', $getsurat->id)->where('jenis', 'KELUAR')->first();
+                    if (isset($ceksudahtte->id)){
+                        $nonik		= $ceksudahtte->nonik;
+                        $passphare	= $ceksudahtte->passphare;
+                        if ($nonik == '' OR is_null($nonik)){
+                            return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Pejabat : '.$ceksudahtte->pejabat.' Tidak Menggunakan TTE Tersertifikasi']);
+                            return back();
+                        } else {
+                            $output_file 	= '/scan/files/'. $getsurat->marking.'.pdf';
+                            try {
+                                Storage::disk('local')->delete($output_file);
+                            } catch (\Exception $e) {
+                            }
+                            $namafile	= $getsurat->marking.'.pdf';
+                            $request->file('file')->move(public_path('scan/files'), $namafile);
+                            if (file_exists(public_path($output_file))){
+                                $error		= '';
+                                $pesan		= '';
+                                $file 		= public_path($output_file);
+                                $passphare	= Crypt::decryptString($passphare);
+                                $client 	= new Client();
+                                $authHeader = [
+                                    'auth'    		=> ['esign', 'qwerty'],
+                                    'multipart'    	=> [
+                                        [
+                                            'name'		=> 'file',
+                                            'contents'	=> fopen($file, 'r')
+                                        ],
+                                        [
+                                            'name'		=> 'nik',
+                                            'contents'	=> $nonik
+                                        ],
+                                        [
+                                            'name'		=> 'passphrase',
+                                            'contents'	=> $passphare
+                                        ],
+                                        [
+                                            'name'		=> 'tampilan',
+                                            'contents'	=> 'invisible'
+                                        ],
+                                    ],
+                                ];
+                                try {
+                                    $response 	= $client->post('https://esign.ub.ac.id/api/sign/pdf', $authHeader);
+                                    $status		= (string)$response->getStatusCode();
+                                    $body		= (string)$response->getBody();
+                                    $hasil		= json_decode($body, true);
+                                    $tgltte		= date("Y-m-d H:i:s");
+                                    $waktutte	= 0;
+                                    $iddok		= '';
+                                    $waktutte 	= $response->getHeader('signing_time');
+                                    $waktutte	= $waktutte[0];
+                                    $tgltte 	= $response->getHeader('Date');
+                                    $tgltte		= $tgltte[0];
+                                    $iddok		= $response->getHeader('id_dokumen');
+                                    $iddok		= $iddok[0];
+                                    $error		= 'Signed at '.$tgltte.' Signing Time: '.$waktutte.' ID Dokumen: '.$iddok;
+                                    Suratkeluar::where('marking', $marking)->update([
+                                        'status' 		=>  'Final Form',
+                                        'tandatangan' 	=>  'Signed Using TTE',
+                                        'paraf1' 		=>  $iddok.'-SCO-DOWNLOAD',
+                                    ]);
+                                } catch (\GuzzleHttp\Exception\ClientException $e) {
+                                    $response 				= $e->getResponse();
+                                    $responseBodyAsString 	= $response->getBody()->getContents();
+                                    $pesan 					= json_decode($responseBodyAsString);
+                                    if ($pesan->error !== null){
+                                        $pesan 				= $pesan->error;
+                                    } else {
+                                        $pesan				= 'gagal - 413 Request Entity Too Large';
+                                    }
+                                    $error		= $error.$pesan.' Untuk ID '.$getsurat->id.'<br />';
+                                }
+                                return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => $error]);
+                                return back();
+                            } else {
+                                return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat : '.$output_file.' Gagal di Upload']);
+                                return back();
+                            }
+                        }
+                    } else {
+                        return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Belum dengan ID : '.$getsurat->id.' Belum Masuk Antrian TTE']);
+                        return back();
+                    }
+                    
+                } else {
+                    return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Marking : '.$marking.' Tidak di temukan']);
+                    return back();
+                }
+            } else {
+                return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'File Tidak di Pilih']);
+                return back();
+            }
+        } else if ($nmttd == 'nonomor') {
+            $getpejabat			= Pejabatsurat::where('id', $kepada)->first();
+            if (isset($getpejabat->id)){
+                $idpejabat		= $getpejabat->id;
+                $penandatangan	= $getpejabat->pejabat;
+                $setttd			= $getpejabat->nama;
+                $kodepjbt		= $getpejabat->kode;
+                $email			= $getpejabat->email;
+            } else {
+                $idpejabat		= 0;
+                $penandatangan	= '';
+                $setttd			= '';
+                $kodepjbt		= '';
+                $email			= '';
+            }
+            $getdatalama = Suratkeluartnpnomor::where('marking', $marking)->first();
+            if (isset($getdatalama->id)){
+                if ($getdatalama->tandatangan == ''){
+                    $input = Suratkeluartnpnomor::where('marking', $marking)->update([
+                        'isisurat'		=> 	$namafile,
+                        'idpejabat' 	=>  $idpejabat,
+                        'pejabat' 		=>  $penandatangan,
+                        'namapejabat' 	=>  $setttd,
+                        'paraf1' 		=>  $paraf1,
+                        'paraf2' 		=>  $paraf2,
+                        'paraf3' 		=>  $paraf3,
+                        'paraf4' 		=>  $paraf4,
+                        'updated_at'	=> 	date('Y-m-d H:i:s')
+                    ]);
+                    if ($input){
+                        $teks = '';
+                        Inboxsurat::where('marking', $marking)->where('jenis', 'KELUARNONOMER')->delete();
+                        if ($paraf1 != 'SELF'){
+                            $qnamapjbt	= Pejabatsurat::where('pejabat', $paraf1)->first();
+                            if (isset($qnamapjbt->pejabat)){
+                                $pejabat 	= $qnamapjbt->pejabat;
+                                SendMail::kiriminbox($marking,Session('nama'),$pejabat,$qnamapjbt->email,'KELUARNONOMER','PARAF','','1');
+                                $teks 		= 'Surat telah kami kirimkan ke '.$pejabat.' untuk di periksa (paraf)';
+                            } else {
+                                SendMail::kiriminbox($marking,Session('nama'),$penandatangan,$email,'KELUARNONOMER','TTD','','1');
+                                $teks 		= 'Surat telah kami kirimkan ke '.$penandatangan.' untuk di tandatangani secara elektronik';
+                            }
+                        } else {
+                            SendMail::kiriminbox($marking,Session('nama'),$penandatangan,$email,'KELUARNONOMER','TTD','','1');
+                            $teks 		= 'Surat telah kami kirimkan ke '.$penandatangan.' untuk di tandatangani secara elektronik';
+                        }
+                        if ($teks != ''){
+                            return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => $teks]);
+                            return back();
+                        } else {
+                            return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal menemukan Key : '.$marking]);
+                            return back();
+                        }
+                    } else {
+                        return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Update Gagal, Silahkan coba beberapa saat lagi']);
+                        return back();
+                    }
+                } else {
+                    return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat yang telah ditandatangani tidak bisa di ubah']);
+                    return back();
+                }
+                
+            } else {
+                return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Marking Tidak diTemukan']);
+                return back();
+            }
+        } else if ($nmttd == 'changesif') {
+            $getdatalama = JadwalPiket::where('id', $idsurat)->first();
+            if (isset($getdatalama->id)){
+                $start_date 	= $getdatalama->tanggal;
+                $presensimulai 	= $getdatalama->presensimulai;
+                $presensiakhir 	= $getdatalama->presensiakhir;
+                $ktl 			= $getdatalama->ktl;
+                $psw 			= $getdatalama->psw;
+                $getarrjam 		= explode('-', $perihal);
+                $mulaikerja		= $start_date.' '.$getarrjam[0].':00';
+                if ($perihal == '21:00-07:00' OR $perihal == '22:00-06:00'){
+                    $start_time = strtotime($start_date);
+                    $end_time 	= date('Y-m-d', strtotime("+1 day", $start_time));
+                    $akhirkerja	= $end_time.' '.$getarrjam[1].':00';
+                } else {
+                    $akhirkerja	= $start_date.' '.$getarrjam[1].':00';
+                }
+                $update = JadwalPiket::where('id', $idsurat)->update([
+                    'shift'			=> $perihal,
+                    'mulaikerja'	=> $mulaikerja,
+                    'akhirkerja'	=> $akhirkerja,
+                    'updated_at'	=> date('Y-m-d H:i:s')
+                ]);
+                if ($update){
+                    $pesan 	= '';
+                    if ($thnagenda != $ktl){
+                        JadwalPiket::where('id', $idsurat)->update([
+                            'ktl'	=> $thnagenda,
+                        ]);
+                        $ktl	= $thnagenda;
+                        $pesan 	= $pesan.' Data Keterlambatan di Hitung Manual';
+                    } else {
+                        if ($presensimulai == '0000-00-00 00:00:00' OR $presensimulai == null OR $presensimulai == ''){
+
+                        } else {
+                            $from	= strtotime($mulaikerja);
+                            $to		= strtotime($presensimulai);
+                            if ($to > $from){
+                                $from	= Carbon::createFromFormat('Y-m-d H:s:i', $mulaikerja);
+                                $to		= Carbon::createFromFormat('Y-m-d H:s:i', $presensimulai);
+                                $ktl 	= $from->DiffInSeconds($to);
+                            } else {
+                                $ktl = 0;
+                            }
+                        }
+                        JadwalPiket::where('id', $idsurat)->update([
+                            'ktl'	=> $ktl,
+                        ]);
+                        $pesan 	= $pesan.' Data Keterlambatan di Hitung Otomatis';
+                    }
+                    if ($noagenda != $psw){
+                        JadwalPiket::where('id', $idsurat)->update([
+                            'psw'	=> $noagenda,
+                        ]);
+                        $psw 	= $noagenda;
+                        $pesan 	= $pesan.' Data Pulang Sebelum Waktunya di Hitung Manual';
+                    } else {
+                        if ($presensiakhir == '0000-00-00 00:00:00' OR $presensiakhir == null OR $presensiakhir == ''){
+
+                        } else {
+                            $from	= strtotime($akhirkerja);
+                            $to		= strtotime($presensiakhir);
+                            if ($to < $from){
+                                $from	= Carbon::createFromFormat('Y-m-d H:s:i', $akhirkerja);
+                                $to		= Carbon::createFromFormat('Y-m-d H:s:i', $presensiakhir);
+                                $psw 	= $from->DiffInSeconds($to);
+                            } else {
+                                $psw = 0;
+                            }
+                        }
+                        JadwalPiket::where('id', $idsurat)->update([
+                            'psw'	=> $psw,
+                        ]);
+                        $pesan 	= $pesan.' Data Pulang Sebelum Waktunya di Hitung Otomatis';
+                    }
+                    $total 	= $ktl + $psw;
+                    JadwalPiket::where('id', $idsurat)->update([
+                        'total'	=> $total,
+                    ]);
+                    return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => $pesan]);
+                    return back();
+                } else {
+                    return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Update Gagal, Silahkan coba beberapa saat lagi']);
+                    return back();
+                }
+            } else {
+                return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Marking Tidak diTemukan']);
+                return back();
+            }
+        } else if ($nmttd == 'emeterai') {
+            $namafile 		= 'bermeterai-'.$marking.'.pdf';
+            $input = null;
+            $datadiri	= Suratkeluar::where('marking', $marking)->first();
+            if (!isset($datadiri->id)){
+                $datadiri	= Tabelskdanperaturan::where('marking', $marking)->first();
+                if (!isset($datadiri->id)){
+                    $datadiri	= Draftsk::where('marking', $marking)->first();
+                    if (!isset($datadiri->id)){
+                        $datadiri	= Suratkeluartnpnomor::where('marking', $marking)->first();
+                        if (isset($datadiri->id)){
+                            $input = Suratkeluartnpnomor::where('marking', $marking)->update([
+                                'lampiran'	=> $namafile,
+                                'arsip'		=> 'Archive By '.Session('nama').' at '.date('Y-m-d H:i:s')
+                            ]);
+                        }
+                    } else {
+                        $input = Draftsk::where('marking', $marking)->update([
+                            'lampiran'	=> $namafile,
+                            'arsip'		=> 'Archive By '.Session('nama').' at '.date('Y-m-d H:i:s')
+                        ]);
+                    }
+                } else {
+                    $input = Tabelskdanperaturan::where('marking', $marking)->update([
+                        'namaparaf3'	=> $namafile,
+                        'arsip'			=> 'Archive By '.Session('nama').' at '.date('Y-m-d H:i:s')
+                    ]);
+                }
+            } else {
+                $input = Suratkeluar::where('marking', $marking)->update([
+                    'lampiran'	=> $namafile,
+                    'arsip'		=> 'Archive By '.Session('nama').' at '.date('Y-m-d H:i:s')
+                ]);
+            }
+            if ($input){
+                $output_file 	= '/scan/files/'. $namafile;
+                try {
+                    Storage::disk('local')->delete($output_file);
+                } catch (\Exception $e) {
+
+                }
+                $request->file('file')->move(public_path('scan/files'), $namafile);
+                
+                return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Upload Mark '.$marking.' Success']);
+                return back();
+            } else {
+                return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal menemukan Key : '.$marking]);
+                return back();
+            }
+        } else if ($nmttd == 'custom') {
+            $namafile 	= $marking.'.pdf';
+            $input 		= null;
+            $teks		= '';
+            $output_file= '/scan/files/'. $namafile;
+            try {
+                Storage::disk('local')->delete($output_file);
+            } catch (\Exception $e) {
+
+            }
+            $request->file('file')->move(public_path('scan/files'), $namafile);
+            $getpejabat			= Pejabatsurat::where('pejabat', $kepada)->first();
+            if (isset($getpejabat->id)){
+                $idpejabat		= $getpejabat->id;
+                $penandatangan	= $getpejabat->pejabat;
+                $setttd			= $getpejabat->nama;
+                $kodepjbt		= $getpejabat->kode;
+                $email			= $getpejabat->email;
+            } else {
+                $idpejabat		= 0;
+                $penandatangan	= '';
+                $setttd			= '';
+                $kodepjbt		= '';
+                $email			= '';
+            }
+            if ($paraf1 == '' OR is_null($paraf1)){ $paraf1 = 'SELF'; }
+            if ($idsurat == 'KELUARNONOMER'){
+                $input = Suratkeluartnpnomor::where('marking', $marking)->update([
+                    'isisurat'		=> 	$namafile,
+                    'idpejabat' 	=>  $idpejabat,
+                    'pejabat' 		=>  $penandatangan,
+                    'namapejabat' 	=>  $setttd,
+                    'pembuat' 		=>  Session('email'),
+                    'kelompok' 		=>  Session('jabatan'),
+                    'tandatangan' 	=>  'Antri TTE',
+                    'paraf1' 		=>  $paraf1,
+                    'updated_at'	=> 	date('Y-m-d H:i:s')
+                ]);
+                Inboxsurat::where('marking', $marking)->where('jenis', 'KELUARNONOMER')->delete();
+                if ($paraf1 != 'SELF'){
+                    $qnamapjbt	= Pejabatsurat::where('pejabat', $paraf1)->first();
+                    if (isset($qnamapjbt->pejabat)){
+                        $pejabat 	= $qnamapjbt->pejabat;
+                        SendMail::kiriminbox($marking,Session('nama'),$pejabat,$qnamapjbt->email,'KELUARNONOMER','PARAF','','1');
+                        $teks 		= 'Surat telah kami kirimkan ke '.$pejabat.' untuk di periksa (paraf)';
+                    } else {
+                        SendMail::kiriminbox($marking,Session('nama'),$penandatangan,$email,'KELUARNONOMER','TTD','','1');
+                        $teks 		= 'Surat telah kami kirimkan ke '.$penandatangan.' untuk di tandatangani secara elektronik';
+                    }
+                } else {
+                    SendMail::kiriminbox($marking,Session('nama'),$penandatangan,$email,'KELUARNONOMER','TTD','','1');
+                    $teks 		= 'Surat telah kami kirimkan ke '.$penandatangan.' untuk di tandatangani secara elektronik';
+                }
+            }
+            if ($teks != ''){
+                return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => $teks]);
+                return back();
+            } else {
+                return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal menemukan Key : '.$marking]);
+                return back();
+            }
+        } else {
+            $rnamapjbt		= Pejabatsurat::where('id', $nmttd)->first();
+            $pejabat 		= $rnamapjbt->pejabat;
+            $nmpejabat 		= $rnamapjbt->nama;
+            $nippejabat 	= $rnamapjbt->nip;
+            $kodefakultas 	= $rnamapjbt->kode;
+            $idpejabat 		= $rnamapjbt->id;
+            $jenisnip 		= $rnamapjbt->jenis;
+            $emailpenerima 	= $rnamapjbt->email;
+            if ($jenisnip == '' OR $jenisnip == '-' OR is_null($jenisnip)){
+                $jenisnip 	= 'NIP';
+            }
+            
+            $periksa = '';
+            if ($pejabat == $paraf1){ $periksa = 'KEMBAR'; }
+            if ($pejabat == $paraf2){ $periksa = 'KEMBAR'; }
+            if ($pejabat == $paraf3){ $periksa = 'KEMBAR'; }
+            if ($pejabat == $paraf4){ $periksa = 'KEMBAR'; }
+            if ($periksa == 'KEMBAR'){
+                return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Penandatangan Tidak Boleh Ikut memaraf..!!']);
+                return back();
+            } else {
+                $nippejabat 	= preg_replace('/\s+/', '', $nippejabat);
+                $setttd			= $nmpejabat.'<br />'.$jenisnip.''.$nippejabat;
+                if ($kepada == 'SKDANPERATURAN'){
+                    $jenis			= $request->input('val02');
+                    $tanggal		= $request->input('val03');
+                    $dasarsuratyy	= $request->input('val10');
+                    $idsurat		= $request->input('val11');
+                    $judul			= $request->input('val12');
+                    $tanggalundang	= $request->input('val13');
+                    $idpjbperundang	= $request->input('val14');
+                    $nomor			= $request->input('val15');
+                    $dasarsuratno	= $request->input('val16');
+                    $pjbtperundang	= '';
+                    $nmpjbtperundang= '';
+                    $nippjbperundang= '';
+                    
+                    if ($idpjbperundang != ''){
+                        $getpengundang	= Pejabatsurat::where('id', $idpjbperundang)->first();
+                        if (isset($getpengundang->id)){
+                            $pjbtperundang 		= $getpengundang->pejabat;
+                            $nmpjbtperundang 	= $getpengundang->nama;
+                            $nippjbperundang 	= $getpengundang->nip;
+                        }
+                    }
+                    
+                    $dasarsurat		= '';
+                    $ceksuratmasuk	= Suratmasuk::where('noagenda', $dasarsuratno)->where('yersrt', $dasarsuratyy)->where('fakultas', Session('fakultas'))->first();
+                    if (isset($ceksuratmasuk->id)){
+                        $dasarsurat	= $ceksuratmasuk->scansurat;
+                    }
+                    $tahun			= date("Y");
+                    $getarrsurat	= explode('-', $tanggal);
+                    if (isset($getarrsurat[2])){
+                        $tahun 		= $getarrsurat[0];
+                    }
+                    $kelompok		= $jenis;
+                    $kode			= 'SKPP';
+                    if ($jenis == 'SKDANPERATURAN' OR $jenis == 'SKDANPERATURANTTE'){
+                        $kelompok 	= 'SKDANPERATURAN';
+                        $kode 		= 'SK';
+                    }
+                    if ($jenis == 'PERATURANTTE' OR $jenis == 'PERATURAN'){
+                        $kelompok 	= 'PERATURAN';
+                        $kode 		= 'PP';
+                    }
+                    if ($jenis == 'INSTRUKSITTE' OR $jenis == 'INSTRUKSI'){
+                        $kelompok 	= 'INSTRUKSI';
+                        $kode 		= 'INS';
+                    }
+                    if ($jenis == 'PERATURANTTE' OR $jenis == 'SKDANPERATURANTTE' OR $jenis == 'INSTRUKSITTE'){
+                        $jenissrt = 'TTE';
+                    } else {
+                        $jenissrt = 'BIASA';
+                    }
+                    if ($idsurat == 'new'){
+                        $ceksudah = Tabelskdanperaturan::where('kelompok', $kelompok)->where('tanggal', $tanggal)->where('nomor', $nomor)->where('fakultas', Session('fakultas'))->count();
+                    } else {
+                        $ceksudah = Tabelskdanperaturan::where('id', '!=', $idsurat)->where('kelompok', $kelompok)->where('tanggal', $tanggal)->where('nomor', $nomor)->where('fakultas', Session('fakultas'))->count();
+                    }
+                    if ($ceksudah == 0){
+                        $marking	= Session('fakultas').'-'.$kode.'-'.$tahun.$nomor;
+                        if ($idsurat == 'new'){
+                            $input	= Tabelskdanperaturan::create([
+                                'kelompok'			=> $kelompok,
+                                'marking'			=> $marking,
+                                'nomor'				=> $nomor,
+                                'tahun'				=> $tahun,
+                                'tanggal'			=> $tanggal,
+                                'penandatangan'		=> $pejabat,
+                                'idpejabat'			=> $nmttd,
+                                'nmpejabat'			=> $nmpejabat,
+                                'nippejabat'		=> $nippejabat,
+                                'pjbtperundang'		=> $pjbtperundang,
+                                'idpjbperundang'	=> $idpjbperundang,
+                                'nmpjbtperundang'	=> $nmpjbtperundang,
+                                'nippjbperundang'	=> $nippjbperundang,
+                                'tglpjbperundang'	=> $tanggalundang,
+                                'judul'				=> $judul,
+                                'scansurat'			=> '',
+                                'dasarsurat'		=> $dasarsurat,
+                                'dasarsuratno'		=> $dasarsuratno,
+                                'dasarsuratyy'		=> $dasarsuratyy,
+                                'kodefas'			=> 'TU.00.00.1',
+                                'kodesub'			=> '',
+                                'paraf1'			=> $paraf1,
+                                'paraf2'			=> $paraf2,
+                                'paraf3'			=> $paraf3,
+                                'paraf4'			=> $paraf4,
+                                'tandatangan'		=> 'Tandatangan Manual',
+                                'fakultas'			=> Session('fakultas'),
+                                'inputor'			=> Session('email'),
+                                'arsip'				=> '',
+                                'catatan'			=> '',
+                            ]);
+                            $idsurat= $input->id;
+                        } else {
+                            $input	= Tabelskdanperaturan::where('id', $idsurat)->update([
+                                'marking'			=> $marking,
+                                'tahun'				=> $tahun,
+                                'penandatangan'		=> $pejabat,
+                                'idpejabat'			=> $nmttd,
+                                'nmpejabat'			=> $nmpejabat,
+                                'nippejabat'		=> $nippejabat,
+                                'pjbtperundang'		=> $pjbtperundang,
+                                'idpjbperundang'	=> $idpjbperundang,
+                                'nmpjbtperundang'	=> $nmpjbtperundang,
+                                'nippjbperundang'	=> $nippjbperundang,
+                                'tglpjbperundang'	=> $tanggalundang,
+                                'judul'				=> $judul,
+                                'dasarsurat'		=> $dasarsurat,
+                                'dasarsuratno'		=> $dasarsuratno,
+                                'dasarsuratyy'		=> $dasarsuratyy,
+                                'paraf1'			=> $paraf1,
+                                'paraf2'			=> $paraf2,
+                                'paraf3'			=> $paraf3,
+                                'paraf4'			=> $paraf4,
+                                'inputor'			=> Session('email'),
+                                'updated_at'		=> date("Y-m-d H:i:s")
+                            ]);
+                        }
+                        if ($input){
+                            if ($request->hasFile('file')) {
+                                if ($request->input('val11') != 'new'){
+                                    $getdata = Tabelskdanperaturan::where('id', $idsurat)->first();
+                                    if (isset($getdata->scansurat)){
+                                        $output_file 	= '/scan/files/'. $scansurat;
+                                        if (file_exists(public_path($output_file))){
+                                            Storage::disk('local')->delete($output_file);
+                                        }
+                                    }
+                                }
+                                $namafile		= $marking.'.pdf';
+                                $request->file('file')->move(public_path('scan/files'), $namafile);
+                                Tabelskdanperaturan::where('id', $idsurat)->update([
+                                    'scansurat'	=> $namafile
+                                ]);
+                            }
+                            if ($jenissrt == 'TTE'){
+                                $qnamapjbt	= Pejabatsurat::where('pejabat', $request->input('val06'))->first();
+                                if (isset($qnamapjbt->pejabat)){
+                                    SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','SKDANPERATURAN','1');
+                                } else {
+                                    SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','SKDANPERATURAN','1');
+                                }
+                                Tabelskdanperaturan::where('id', $idsurat)->update([
+                                    'tandatangan'	=> ''
+                                ]);
+                            }
+                            return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tahun '.$tahun.' Tanggal Penetapan '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+                            return back();
+                        } else {
+                            return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+                            return back();
+                        }
+                    } else {
+                        return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Nomor SK '.$nomor.' Sudah ada, Cek Isian Anda']);
+                        return back();
+                    }
+                } else if ($kepada == 'RIWAYATSK'){
+                    $jenis			= $request->input('val02');
+                    $tanggal		= $request->input('val03');
+                    $dasarsuratyy	= $request->input('val10');
+                    $idsurat		= $request->input('val11');
+                    $judul			= $request->input('val12');
+                    $tanggalundang	= $request->input('val13');
+                    $idpjbperundang	= $request->input('val14');
+                    $nomor			= $request->input('val15');
+                    $kepada			= $request->input('val16');
+                    $pjbtperundang	= '';
+                    $nmpjbtperundang= '';
+                    $nippjbperundang= '';
+                    $dasarsuratno	= '';
+                    $dasarsurat		= '';
+                    $tahun			= date("Y");
+                    $getarrsurat	= explode('-', $tanggal);
+                    if (isset($getarrsurat[2])){
+                        $tahun 		= $getarrsurat[0];
+                    }
+                    $kelompok		= $jenis;
+                    $kode			= 'SKPP';
+                    if ($idsurat == 'new'){
+                        $ceksudah = Tabelskdanperaturan::where('kelompok', $kelompok)->where('tanggal', $tanggal)->where('nomor', $nomor)->where('fakultas', Session('fakultas'))->count();
+                    } else {
+                        $ceksudah = Tabelskdanperaturan::where('id', '!=', $idsurat)->where('kelompok', $kelompok)->where('tanggal', $tanggal)->where('nomor', $nomor)->where('fakultas', Session('fakultas'))->count();
+                    }
+                    if ($ceksudah == 0){
+                        $marking	= Session('fakultas').'-'.$kode.'-'.$tahun.$nomor;
+                        if ($idsurat == 'new'){
+                            $input	= Tabelskdanperaturan::create([
+                                'kelompok'			=> $kelompok,
+                                'marking'			=> $marking,
+                                'nomor'				=> $nomor,
+                                'tahun'				=> $tahun,
+                                'tanggal'			=> $tanggal,
+                                'penandatangan'		=> $pejabat,
+                                'idpejabat'			=> $nmttd,
+                                'nmpejabat'			=> $nmpejabat,
+                                'nippejabat'		=> $nippejabat,
+                                'pjbtperundang'		=> '',
+                                'idpjbperundang'	=> '',
+                                'nmpjbtperundang'	=> '',
+                                'nippjbperundang'	=> '',
+                                'tglpjbperundang'	=> '',
+                                'judul'				=> $judul,
+                                'scansurat'			=> '',
+                                'dasarsurat'		=> '',
+                                'dasarsuratno'		=> '',
+                                'dasarsuratyy'		=> '',
+                                'kodefas'			=> 'TU.00.00.1',
+                                'kodesub'			=> '',
+                                'paraf1'			=> 'SELF',
+                                'paraf2'			=> '',
+                                'paraf3'			=> '',
+                                'paraf4'			=> '',
+                                'tandatangan'		=> 'Tandatangan Manual',
+                                'fakultas'			=> Session('fakultas'),
+                                'inputor'			=> Session('email'),
+                                'arsip'				=> '',
+                                'catatan'			=> '',
+                                'sparaf1'			=> $kepada,
+                            ]);
+                            $idsurat= $input->id;
+                        } else {
+                            $input	= Tabelskdanperaturan::where('id', $idsurat)->update([
+                                'marking'			=> $marking,
+                                'tahun'				=> $tahun,
+                                'penandatangan'		=> $pejabat,
+                                'idpejabat'			=> $nmttd,
+                                'nmpejabat'			=> $nmpejabat,
+                                'nippejabat'		=> $nippejabat,
+                                'judul'				=> $judul,
+                                'inputor'			=> Session('email'),
+                                'updated_at'		=> date("Y-m-d H:i:s"),
+                                'sparaf1'			=> $kepada,
+                            ]);
+                        }
+                        if ($input){
+                            if ($request->hasFile('file')) {
+                                if ($request->input('val11') != 'new'){
+                                    $getdata = Tabelskdanperaturan::where('id', $idsurat)->first();
+                                    if (isset($getdata->scansurat)){
+                                        $output_file 	= '/scan/files/'. $scansurat;
+                                        if (file_exists(public_path($output_file))){
+                                            Storage::disk('local')->delete($output_file);
+                                        }
+                                    }
+                                }
+                                $namafile		= $marking.'.pdf';
+                                $request->file('file')->move(public_path('scan/files'), $namafile);
+                                Tabelskdanperaturan::where('id', $idsurat)->update([
+                                    'scansurat'	=> $namafile
+                                ]);
+                            }
+                            return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tahun '.$tahun.' Tanggal Penetapan '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+                            return back();
+                        } else {
+                            return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+                            return back();
+                        }
+                    } else {
+                        return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Nomor SK '.$nomor.' Sudah ada, Cek Isian Anda']);
+                        return back();
+                    }
+                } else if ($kepada == 'RIWAYATSURAT'){
+                    $jenis			= $request->input('val02');
+                    $tanggal		= $request->input('val03');
+                    $idsurat		= $request->input('val11');
+                    $perihal		= $request->input('val12');
+                    $nomor			= $request->input('val15');
+                    $kepada			= $request->input('val16');
+                    $tahun			= date("Y");
+                    $getarrsurat	= explode('-', $tanggal);
+                    if (isset($getarrsurat[2])){
+                        $tahun 		= $getarrsurat[0];
+                        $mm			= $getarrsurat[1];
+                        $dd			= $getarrsurat[2];
+                    } else {
+                        $tahun 		= date('Y');
+                        $mm			= date('m');
+                        $dd			= date('d');
+                    }
+                    
+                    if ($idsurat == 'new'){
+                        $ceksudah = Suratkeluar::where('nomor', $nomor)->where('tanggal', $tanggal)->where('fakultas', Session('fakultas'))->count();
+                    } else {
+                        $ceksudah = Suratkeluar::where('id', '!=', $idsurat)->where('nomor', $nomor)->where('tanggal', $tanggal)->where('fakultas', Session('fakultas'))->count();
+                    }
+                    if ($ceksudah == 0){
+                        $marking	= Session('fakultas').'-'.$kodefakultas.'-'.$tahun.'.'.$nomor;
+                        if ($idsurat == 'new'){
+                            $input 		= Suratkeluar::create([
+                                'marking' 		=>  $marking,
+                                'jenissrt' 		=>  'BIASA',
+                                'nomor' 		=>  $nomor,
+                                'anakno' 		=>  '',
+                                'kodefak' 		=>  $kodefakultas,
+                                'unit' 			=>  $unit,
+                                'tglsurat' 		=>  $tanggal,
+                                'daysrt' 		=>  $dd,
+                                'monsrt' 		=>  $mm,
+                                'yersrt' 		=>  $tahun,
+                                'dasarsurat' 	=>  '',
+                                'kepada' 		=>  $kepada,
+                                'alamat' 		=>  '',
+                                'perihal' 		=>  $perihal,
+                                'lampiran' 		=>  '',
+                                'isisurat' 		=>  '',
+                                'idpejabat' 	=>  $nmttd,
+                                'pejabat' 		=>  $penandatangan,
+                                'namapejabat' 	=>  $setttd,
+                                'tembusan' 		=>  '',
+                                'sifat' 		=>  'Biasa',
+                                'klasifikasi' 	=>  'Biasa',
+                                'pembuat' 		=>  Session('email'),
+                                'kelompok' 		=>  Session('previlage'),
+                                'status' 		=>  'NEW',
+                                'arsip' 		=>  '',
+                                'footnote' 		=>  '',
+                                'tandatangan' 	=>  '',
+                                'paraf1' 		=>  '',
+                                'paraf2' 		=>  '',
+                                'paraf3' 		=>  '',
+                                'paraf4' 		=>  '',
+                                'ruangarsip' 	=>  '',
+                                'ordnerarsip' 	=>  '',
+                                'lemariarsip' 	=>  '',
+                                'faskode' 		=>  '',
+                                'fasmasa' 		=>  '',
+                                'fasket' 		=>  '',
+                                'subkode' 		=>  '',
+                                'submasa' 		=>  '',
+                                'subket' 		=>  '',
+                                'font' 			=>  '',
+                                'ukuran' 		=>  '',
+                                'lebarttd' 		=>  '',
+                                'filelampiran' 	=>  '',
+                                'fakultas' 		=>  Session('fakultas')
+                            ]);
+                            $idsurat	= $input->id;
+                        } else {
+                            $getkepadalm= Suratkeluar::where('id', $idsurat)->first();
+                            if (isset($getkepadalm->kepada)){
+                                $kpdlm 	= $getkepadalm->kepada; 
+                            } else {
+                                $kpdlm	= '';
+                            }
+                            $input 		= Suratkeluar::where('id', $idsurat)->update([
+                                'kepada' 		=>  $kepada,
+                                'alamat' 		=>  $kpdlm,
+                                'pembuat'		=> 	Session('email'),
+                                'kelompok'		=> 	Session('previlage'),
+                                'updated_at'	=>	date("Y-m-d H:i:s")
+                            ]);
+                        }
+                        if ($input){
+                            if ($request->hasFile('file')) {
+                                if ($request->input('val11') != 'new'){
+                                    $getdata = Suratkeluar::where('id', $idsurat)->first();
+                                    if (isset($getdata->isisurat)){
+                                        $output_file 	= '/scan/files/'. $isisurat;
+                                        if (file_exists(public_path($output_file))){
+                                            Storage::disk('local')->delete($output_file);
+                                        }
+                                    }
+                                }
+                                $namafile		= $marking.'.pdf';
+                                $request->file('file')->move(public_path('scan/files'), $namafile);
+                                Suratkeluar::where('id', $idsurat)->update([
+                                    'isisurat'	=> $namafile
+                                ]);
+                            }
+                            return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tahun '.$tahun.' Tanggal Penetapan '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+                            return back();
+                        } else {
+                            return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+                            return back();
+                        }
+                    } else {
+                        if ($idsurat == 'new'){
+                            $getkepadalm= Suratkeluar::where('nomor', $nomor)->where('tanggal', $tanggal)->where('fakultas', Session('fakultas'))->first();
+                            if (isset($getkepadalm->kepada)){
+                                $kpdlm 	= $getkepadalm->kepada; 
+                            } else {
+                                $kpdlm	= '';
+                            }
+                            Suratkeluar::where('nomor', $nomor)->where('tanggal', $tanggal)->where('fakultas', Session('fakultas'))->update([
+                                'kepada'		=> 	$email,
+                                'alamat' 		=> 	$kpdlm,
+                                'pembuat'		=> 	Session('email'),
+                                'kelompok'		=> 	Session('previlage'),
+                                'updated_at'	=>	date("Y-m-d H:i:s")
+                            ]);
+                        } else {
+                            $getkepadalm= Suratkeluar::where('id', $idsurat)->first();
+                            if (isset($getkepadalm->kepada)){
+                                $kpdlm 	= $getkepadalm->kepada; 
+                            } else {
+                                $kpdlm	= '';
+                            }
+                            Suratkeluar::where('id', $idsurat)->update([
+                                'kepada'		=> 	$email,
+                                'alamat' 		=> 	$kpdlm,
+                                'pembuat'		=> 	Session('email'),
+                                'kelompok'		=> 	Session('previlage'),
+                                'updated_at'	=>	date("Y-m-d H:i:s")
+                            ]);
+                        }
+                        return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Nomor Surat '.$nomor.' Sudah ada, Surat Akan Kami Linkkan dengan Email '.$email]);
+                        return back();
+                    }
+                } else if ($kepada == 'SKDOSPEM'){
+                    $rom  				= Antrian::where('id', $idsurat)->first();
+                    $jenjang			= $rom->jenis;
+                    $nama				= $rom->instansi;
+                    $alamat				= $rom->alamat;
+                    $kota				= $rom->kota;
+                    $mhs 				= $rom->nama;
+                    $nim 				= $rom->nim;
+                    $ps 				= $rom->ps;
+                    $hape 				= $rom->hape;
+                    $smt				= $rom->smt;
+                    $judul				= $rom->judul;
+                    $dos1 				= $rom->dos1;
+                    $dos2 				= $rom->dos2;
+                    $jur 				= $rom->jurusan;
+                    $lokasi				= $rom->lokasi;
+                    $bulan				= $rom->bulan;
+                    $whatfor			= $rom->whatfor;
+                    $whatfor2			= $rom->whatfor2;
+                    $kodjenis			= $rom->kodjenis;
+                    $ket				= $rom->ket;
+                    $ortu				= $rom->ortu;
+                    $jabortu			= $rom->jabortu;
+                    $golortu			= $rom->golortu;
+                    $niportu			= $rom->niportu;
+                    $kerjaortu			= $rom->kerjaortu;
+                    $tmpkrjortu			= $rom->tmpkrjortu;
+                    $tmplahir			= $rom->tmplahir;
+                    $tgllahir			= $rom->tgllahir;
+                    $pada				= $rom->pada;
+                    $alasan				= $rom->alasan;
+                    $dosen				= $rom->dosen;
+                    $matkul				= $rom->matkul;
+                    $cutismt			= $rom->cutismt;
+                    $cutislm			= $rom->cutislm;
+                    $cutita				= $rom->cutita;
+                    $asal				= $rom->asal;
+                    $tembusan1			= $rom->tembusan1;
+                    $tembusan2			= $rom->tembusan2;
+                    $tembusan3			= $rom->tembusan3;
+                    $tembusan4			= $rom->tembusan4;
+                    $tembusan5			= $rom->tembusan5;
+                    $nosurat			= $rom->nosurat;
+                    $tglsurat			= $rom->tglsurat;
+                    $tandatangan		= $rom->tandatangan;
+                    $aktife				= $rom->aktife;
+                    $tglttd				= $rom->updated_at;
+                    $fakultas			= $rom->fakultas;
+                    $keterangan			= $rom->keterangan;
+                    $namasaja			= $nmpejabat;
+                    $ceksurat			= explode("-SCO-", $tandatangan);
+                    if (isset($ceksurat[1]) OR $tandatangan == 'SIgned With TTE'){
+                        return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+                        return back();
+                    } else {
+                        if ($tglsurat == $tanggal AND file_exists(public_path('scan/files/'.$keterangan))){
+                            return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali, Bila Ingin Memperbaharui, Ubah Tanggal SK ini']);
+                            return back();
+                        } else {
+                            if ($fakultas == 'Vokasi' OR $fakultas == 'PASCAUB'){
+                                $dekan = 'Direktur';
+                            } else {
+                                $dekan = 'Dekan';
+                            }
+                            $getnamafakultas	= 	User::where('fakultas', $rom->fakultas)->where('fakpanjang', '!=', '')->first();
+                            if (isset($getnamafakultas->fakpanjang)){
+                                $fakpanjang 	= 	$getnamafakultas->fakpanjang;
+                            } else { $fakpanjang = ''; }
+                            if ($tglsurat == '0000-00-00' OR is_null($tglsurat) OR $tglsurat == ''){
+                                $tglsurat 	= $tanggal;
+                            }
+                            $arrytgl	= explode("-", $tglsurat);
+                            $yy			= $arrytgl[0];
+                            $mm			= $arrytgl[1];
+                            $dd			= $arrytgl[2];
+                            $mmsk		= (int)$mm;
+                            $mmsk		= $kalender[$mmsk];
+                            $tglsurat	= $dd.' '.$mmsk.' '.$yy;
+                            if ($jenjang == 'Doktor S3'){
+                                $setjen		= 'Disertasi';
+                                $jenjang	= 'Doktor';
+                                $kodejenjang= 'S-3';
+                            } else if ($jenjang == 'Magister S2'){
+                                $setjen		= 'Tesis';
+                                $jenjang	= 'Magister';
+                                $kodejenjang= 'S-2';
+                            } else if ($jenjang == 'Sarjana S1'){
+                                $setjen		= 'Skripsi';
+                                $jenjang	= 'Sarjana';
+                                $kodejenjang= 'S-1';
+                            } else {
+                                $setjen		= 'Tugas Akhir';
+                                $jenjang	= 'Diploma';
+                                $kodejenjang= 'D-3';	
+                            }
+                            $angkatan1	= '';
+                            $angkatan2	= '';
+                            $arrnime 	= str_split($nim);
+                            foreach($arrnime as $rnim){
+                                if ($angkatan1 == ''){ $angkatan1 = $rnim; }
+                                if ($angkatan2 == ''){ $angkatan2 = $rnim; }
+                            }
+                            $angkatan 	= $angkatan1.$angkatan2;
+                            $intangkatan= (int)$angkatan;
+                            $angkatan3 	= $intangkatan + 1;
+                            if ($intangkatan < 10){
+                                $angkatan= '200'.$intangkatan.'/200'.$angkatan3;
+                            } else {
+                                $angkatan= '20'.$intangkatan.'/20'.$angkatan3;
+                            }
+                            $pbimbing1		= '';
+                            $pbimbing2		= '';
+                            $pbimbing3		= '';
+                            $nipbimbing1	= '';
+                            $nipbimbing2	= '';
+                            $nipbimbing3	= '';
+                            $jabakademik1	= '';
+                            $jabakademik2	= '';
+                            $jabakademik3	= '';
+                            $tulispbimbing3	= '';
+                            $getpersetujuan	= Antrian::where('nim', $nim)->where('ket', $ket)->where('kerjaortu', 'SETUJU')->groupBy('dos1')->get();
+                            if (!empty($getpersetujuan)){
+                                foreach ($getpersetujuan as $rowdos){
+                                    if ($rowdos->pada == 'Ketua Komisi Pembimbing'){
+                                        $pbimbing1 	= $rowdos->dos1;
+                                        $nipbimbing1= $rowdos->dos2;
+                                    } else {
+                                        if ($pbimbing2 == ''){
+                                            $pbimbing2 	= $rowdos->dos1;
+                                            $nipbimbing2= $rowdos->dos2;			
+                                        } else {
+                                            $pbimbing3 	= $rowdos->dos1;
+                                            $nipbimbing3= $rowdos->dos2;	
+                                        }
+                                    }
+                                }
+                            }
+                            if ($nipbimbing1 != ''){
+                                $getjab1		= Dosen::where('nip', $nipbimbing1)->where('fakultas', $fakultas)->first();
+                                if (isset($getjab1->fungsional)){
+                                    $pbimbing1 		= $getjab1->gelar;
+                                    $jabakademik1 	= $getjab1->fungsional;
+                                }
+                            }
+                            if ($nipbimbing2 != ''){
+                                $getjab2		= Dosen::where('nip', $nipbimbing2)->where('fakultas', $fakultas)->first();
+                                if (isset($getjab2->fungsional)){
+                                    $pbimbing2 		= $getjab2->gelar;
+                                    $jabakademik2 	= $getjab2->fungsional;
+                                }
+                            }
+                            if ($nipbimbing3 != ''){
+                                $getjab3		= Dosen::where('nip', $nipbimbing3)->where('fakultas', $fakultas)->first();
+                                if (isset($getjab3->fungsional)){
+                                    $pbimbing3 		= $getjab3->gelar;
+                                    $jabakademik3 	= $getjab3->fungsional;
+                                }
+                                $tulispbimbing3	= '
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>3.</td>
+                                    <td colspan="4">'.$pbimbing3.'</td>
+                                    </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td colspan="4">( '.$jabakademik3.' ) sebagai Anggota</td>
+                                </tr>';
+                            }
+                            $marking		= $fakultas.'-SKDOSPEM-'.$idsurat;
+                            $output_file 	= '/scan/files/'. $marking.'.pdf';
+                            if (file_exists(public_path($output_file))){
+                                Storage::disk('local')->delete($output_file);
+                            }
+                            $namafile		= $marking.'.pdf';
+                            $alamatweb		= $homebase.'/viewdocbyname/'.$marking.'.pdf';
+                            $setview		= 'DOWNLOAD';
+                            $spasi			= '';
+                            $ukuranfont		= '12';
+                            $jenisfontte	= '<font size="7" color="blue">';
+                            $fontstyle		= 'style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;"';
+                            $qrcode 		= QrCode::format('png')->merge('https://sco.ub.ac.id/logo-ub.png', 0.1, true)->size(150)->generate($alamatweb);
+                            $qrimage 		= 'scan/generate/qrimg-'. $marking.'.png';
+                            Storage::disk('local')->put($qrimage, $qrcode);
+                            $jamtte			= date("H:m:i");
+                            $lebarttd 		= '50%';
+                            $getnamasaja 	= Simpegpegawai::where('nip_baru', $nippejabat)->first();
+                            if (isset($getnamasaja->nama)){
+                                $namasaja	= $getnamasaja->nama;
+                            }
+                            $tuliskodettd	= '<table width="300" border="0" cellpadding="0" cellspacing="0" style="font-size: '.$ukuranfont.'px; font-family: Bookman Old Style;"> 
+                                <tr><td colspan="2">Ditetapkan di '.$swandhanakota.'</td></tr>
+                                <tr><td colspan="2">pada tanggal '.$tglsurat.'</td></tr>
+                                <tr><td colspan="2">'.$pejabat.',</td> </tr>
+                                <tr>
+                                    <td width="100"><img src="'.$homebase.'/scan/generate/qrimg-'.$marking.'.png" width="100" /></td>
+                                    <td align="left" valign="center" width="150">
+                                        <font color="white">&nbsp;</font>'.$jenisfontte.'<br />
+                                            TTE oleh :<br />
+                                            <strong>'.$namasaja.'</strong><br />
+                                            '.$tanggal.' '.$jamtte.'<br /><br />
+                                            Verifikasi melalui<br /> https://tte.kominfo.go.id/verifyPDF
+                                        </font>
+                                    </td>
+                                </tr>
+                                <tr><td colspan="2">'.$nmpejabat.'</td></tr>
+                                <tr><td colspan="2">NIP'.$nippejabat.'</td></tr>
+                            </table>';
+                        
+                            $info = array(
+                                'Name' 			=> 'Smart and Collaborative Office',
+                                'Location' 		=> config('global.swandhanauniv'),
+                                'Reason' 		=> 'Dokumen ini ditandatangani secara elektronik',
+                                'ContactInfo' 	=> $homebase,
+                            );
+                            $page_format	= array(
+                                'MediaBox' => array ('llx' => 0, 'lly' => 0, 'urx' => 215, 'ury' => 330),
+                                'Dur' => 3,
+                                'PZ' => 1,
+                            );
+                            $data['judul']    			= $rom->judul;
+                            $data['universitasbesar']   = strtoupper($universitas);
+                            $data['universitas']        = $universitas;
+                            $data['nomor']          	= $nomor;
+                            $data['tahun']          	= $yy;
+                            $data['jenjangbesar']       = strtoupper($jenjang);
+                            $data['jenjang']          	= $jenjang;
+                            $data['peesbesar']          = strtoupper($ps);
+                            $data['pees']          		= $ps;
+                            $data['angkatan']          	= $angkatan;
+                            $data['pbimbing1']          = $pbimbing1;
+                            $data['jabakademik1']       = $jabakademik1;
+                            $data['pbimbing2']          = $pbimbing2;
+                            $data['jabakademik2']       = $jabakademik2;
+                            $data['tulispbimbing3']     = $tulispbimbing3;
+                            $data['nama']          		= $mhs;
+                            $data['nim']          		= $nim;
+                            $data['kodejenjang']        = $kodejenjang;
+                            $data['tandatangan']        = $tuliskodettd;
+                            $data['setjen']				= $setjen;
+                            $data['setjenbesar']		= strtoupper($setjen);
+                            $data['dekanbesar']			= strtoupper($dekan);
+                            if ($fakultas == 'FMIPA'){
+                                $data['fakpanjang']     = 'Fakultas MIPA';
+                                $data['fakultasbesar']  = 'FAKULTAS MIPA';
+                                $text 					= view('cetak.akademik.skdospem', $data);
+                            } else {
+                                $data['fakpanjang']     = $fakpanjang;
+                                $data['fakultasbesar']  = strtoupper($fakpanjang);
+                                $text 					= view('vokasi.cetak.sempro.skdospem', $data);
+                            }
+                            PDFCREATOR::SetCreator(Session('nama'));
+                            PDFCREATOR::SetAuthor(Session('previlage'));
+                            PDFCREATOR::SetTitle($kodjenis);
+                            PDFCREATOR::SetSubject($mhs);
+                            PDFCREATOR::SetKeywords($nim);
+                            PDFCREATOR::setPrintHeader(false);
+                            PDFCREATOR::setPrintFooter(false);
+                            PDFCREATOR::SetMargins(5, 0, 5);
+                            PDFCREATOR::setFontSubsetting(true);
+                            PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+                            PDFCREATOR::AddPage('P', $page_format, false, false);
+                            $bMargin = PDFCREATOR::getBreakMargin();
+                            $auto_page_break = PDFCREATOR::getAutoPageBreak();
+                            PDFCREATOR::SetAutoPageBreak(false, 0);
+                            $img_file = 'bgbssn.png';
+                            PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
+                            PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
+                            PDFCREATOR::setPageMark();
+                            PDFCREATOR::writeHTML($text, true, 0, true, 0);
+                            PDFCREATOR::setFooterMargin(0);
+                            $pdfdoc = PDFCREATOR::Output('', 'S');
+                            PDFCREATOR::reset();
+                            Storage::disk('local')->delete($output_file);
+                            Storage::disk('local')->put('/scan/files/'.$marking.'.pdf', $pdfdoc);
+                            $ceksek 	= Tabelskdanperaturan::where('marking', $marking)->count();
+                            if ($ceksek == 0){
+                                $kerjanya = Tabelskdanperaturan::create([
+                                    'kelompok'			=> 	'KEPUTUSAN',
+                                    'marking'			=> 	$marking,
+                                    'nomor' 			=>  $request->input('val02'),
+                                    'tahun' 			=>  $tahun,
+                                    'tanggal' 			=>  $request->input('val03'),
+                                    'penandatangan' 	=>  $pejabat,
+                                    'nmpejabat' 		=>  $nmpejabat,
+                                    'nippejabat' 		=>  $nippejabat,
+                                    'judul' 			=>  $rom->kodjenis.' an. '.$rom->nama.' NIM '.$rom->nim,
+                                    'scansurat' 		=>  $marking,
+                                    'kodefas' 			=>  'HK.04.03',
+                                    'kodesub' 			=>  'TD.06.01',
+                                    'paraf1' 			=>  $request->input('val06'),
+                                    'paraf2' 			=>  $paraf2,
+                                    'paraf3' 			=>  $paraf3,
+                                    'paraf4' 			=>  $paraf4,
+                                    'fakultas' 			=>  Session('fakultas'),
+                                    'inputor' 			=>  Session('email'),
+                                    'updated_at'		=>	date("Y-m-d H:i:s")
+                                ]);
+                            } else {
+                                $kerjanya = Tabelskdanperaturan::where('marking', $marking)->update([
+                                    'kelompok'			=> 	'KEPUTUSAN',
+                                    'marking'			=> 	$marking,
+                                    'nomor' 			=>  $request->input('val02'),
+                                    'tahun' 			=>  $tahun,
+                                    'tanggal' 			=>  $request->input('val03'),
+                                    'penandatangan' 	=>  $pejabat,
+                                    'nmpejabat' 		=>  $nmpejabat,
+                                    'nippejabat' 		=>  $nippejabat,
+                                    'judul' 			=>  $rom->kodjenis.' an. '.$rom->nama.' NIM '.$rom->nim,
+                                    'scansurat' 		=>  $marking,
+                                    'kodefas' 			=>  'HK.04.03',
+                                    'kodesub' 			=>  'TD.06.01',
+                                    'paraf1' 			=>  $request->input('val06'),
+                                    'paraf2' 			=>  $paraf2,
+                                    'paraf3' 			=>  $paraf3,
+                                    'paraf4' 			=>  $paraf4,
+                                    'fakultas' 			=>  Session('fakultas'),
+                                    'inputor' 			=>  Session('email'),
+                                    'updated_at'		=>	date("Y-m-d H:i:s")
+                                ]);
+                            }
+                            if ($kerjanya){
+                                Antrian::where('id', $idsurat)->update([
+                                    'nosurat'		=> $nomor,
+                                    'tglsurat'		=> $request->input('val03'),
+                                    'pejabat'		=> $pejabat,
+                                    'nmpejabat'		=> $nmpejabat,
+                                    'nippejabat'	=> $nippejabat,
+                                    'keterangan'	=> $marking.'.pdf'
+                                ]);
+                                Inboxsurat::where('marking', $marking)->where('catatan', 'SKDANPERATURAN')->delete();
+                                $qnamapjbt	= Pejabatsurat::where('pejabat', $request->input('val06'))->first();
+                                if (isset($qnamapjbt->pejabat)){
+                                    SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','SKDANPERATURAN','1');
+                                } else {
+                                    SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','SKDANPERATURAN','1');
+                                }
+                                return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tahun '.$tahun.' Tanggal Penetapan '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+                                return back();
+                            }else{
+                                return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+                                return back();
+                            }
+                        }
+                    }
+                } else if ($kepada == 'SKDOSPENGUJI'){
+                    $rom  				= Antrian::where('id', $idsurat)->first();
+                    $jenjang			= $rom->jenis;
+                    $nama				= $rom->instansi;
+                    $alamat				= $rom->alamat;
+                    $kota				= $rom->kota;
+                    $mhs 				= $rom->nama;
+                    $nim 				= $rom->nim;
+                    $ps 				= $rom->ps;
+                    $hape 				= $rom->hape;
+                    $smt				= $rom->smt;
+                    $judul				= $rom->judul;
+                    $dos1 				= $rom->dos1;
+                    $dos2 				= $rom->dos2;
+                    $jur 				= $rom->jurusan;
+                    $lokasi				= $rom->lokasi;
+                    $bulan				= $rom->bulan;
+                    $whatfor			= $rom->whatfor;
+                    $whatfor2			= $rom->whatfor2;
+                    $kodjenis			= $rom->kodjenis;
+                    $ket				= $rom->ket;
+                    $ortu				= $rom->ortu;
+                    $jabortu			= $rom->jabortu;
+                    $golortu			= $rom->golortu;
+                    $niportu			= $rom->niportu;
+                    $kerjaortu			= $rom->kerjaortu;
+                    $tmpkrjortu			= $rom->tmpkrjortu;
+                    $tmplahir			= $rom->tmplahir;
+                    $tgllahir			= $rom->tgllahir;
+                    $pada				= $rom->pada;
+                    $alasan				= $rom->alasan;
+                    $dosen				= $rom->dosen;
+                    $matkul				= $rom->matkul;
+                    $cutismt			= $rom->cutismt;
+                    $cutislm			= $rom->cutislm;
+                    $cutita				= $rom->cutita;
+                    $asal				= $rom->asal;
+                    $tembusan1			= $rom->tembusan1;
+                    $tembusan2			= $rom->tembusan2;
+                    $tembusan3			= $rom->tembusan3;
+                    $tembusan4			= $rom->tembusan4;
+                    $tembusan5			= $rom->tembusan5;
+                    $nosurat			= $rom->nosurat;
+                    $tglsurat			= $rom->tglsurat;
+                    $tandatangan		= $rom->tandatangan;
+                    $keterangan			= $rom->keterangan;
+                    $aktife				= $rom->aktife;
+                    $tglttd				= $rom->updated_at;
+                    $fakultas			= $rom->fakultas;
+                    $namasaja			= $nmpejabat;
+                    $ceksurat			= explode("-SCO-", $tandatangan);
+                    if (isset($ceksurat[1]) OR $tandatangan == 'SIgned With TTE'){
+                        return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+                        return back();
+                    } else {
+                        if ($tglsurat == $tanggal AND file_exists(public_path('scan/files/'.$keterangan))){
+                            return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali, Bila Ingin Memperbaharui, Ubah Tanggal SK ini']);
+                            return back();
+                        } else {
+                            if ($fakultas == 'Vokasi' OR $fakultas == 'PASCAUB'){
+                                $dekan = 'Direktur';
+                            } else {
+                                $dekan = 'Dekan';
+                            }
+                            $periode			= 	'';
+                            $jenis				= 	'';
+                            $tglujian			= 	'';
+                            $getjenisujian		= 	AntrianUjian::where('id', $ket)->first();
+                            if (isset($getjenisujian->id)){
+                                $jenis			= 	$getjenisujian->jenis;
+                                $tglujian		= 	$getjenisujian->tanggal;
+                                if ($tglujian == '0000-00-00' OR is_null($tglujian) OR $tglujian == ''){
+                                    $tglujian 	= $tanggal;
+                                }
+                                $arrytgl		= explode("-", $tglujian);
+                                $yy				= $arrytgl[0];
+                                $mm				= $arrytgl[1];
+                                $dd				= $arrytgl[2];
+                                $mmsk			= (int)$mm;
+                                $mmsk			= $kalender[$mmsk];
+                                $tglujian		= $dd.' '.$mmsk.' '.$yy;
+                                $periode		= strtoupper($mmsk);
+                                $periode		= $periode.' '.$yy; 
+                            }
+                            $getnamafakultas	= 	User::where('fakultas', $rom->fakultas)->where('fakpanjang', '!=', '')->first();
+                            if (isset($getnamafakultas->fakpanjang)){
+                                $fakpanjang 	= 	$getnamafakultas->fakpanjang;
+                            } else { $fakpanjang = ''; }
+                            if ($tglsurat == '0000-00-00' OR is_null($tglsurat) OR $tglsurat == ''){
+                                $tglsurat 	= $tanggal;
+                            }
+                            $arrytgl	= explode("-", $tglsurat);
+                            $yy			= $arrytgl[0];
+                            $mm			= $arrytgl[1];
+                            $dd			= $arrytgl[2];
+                            $mmsk		= (int)$arrytgl[1];
+                            $mmsk		= $kalender[$mmsk];
+                            $tglsurat	= $dd.' '.$mmsk.' '.$yy;
+                            if ($rom->jenis == 'Doktor S3'){
+                                $setjen		= 'Disertasi';
+                                $jenjang	= 'Doktor';
+                                $kodejenjang= 'S-3';
+                            } else if ($rom->jenis == 'Magister S2'){
+                                $setjen		= 'Tesis';
+                                $jenjang	= 'Magister';
+                                $kodejenjang= 'S-2';
+                            } else if ($rom->jenis == 'Sarjana S1'){
+                                $setjen		= 'Skripsi';
+                                $jenjang	= 'Sarjana';
+                                $kodejenjang= 'S-1';
+                            } else {
+                                $setjen		= 'Tugas Akhir';
+                                $jenjang	= 'Diploma';
+                                $kodejenjang= 'D-3';	
+                            }
+                            if ($jenis == 'sempro'){
+                                $setjen = 'Proposal '.$setjen;
+                            } else if ($jenis == 'semhas'){
+                                $setjen = 'Seminar Hasil Penelitian '.$setjen;
+                            } else if ($jenis == 'ujian'){
+                                //tetap
+                            } else {
+                                if ($jenis != ''){
+                                    $setjen = $jenis;
+                                }
+                            }
+                            
+                            $angkatan1	= '';
+                            $angkatan2	= '';
+                            $arrnime 	= str_split($nim);
+                            foreach($arrnime as $rnim){
+                                if ($angkatan1 == ''){ $angkatan1 = $rnim; }
+                                if ($angkatan2 == ''){ $angkatan2 = $rnim; }
+                            }
+                            $angkatan 	= $angkatan1.$angkatan2;
+                            $intangkatan= (int)$angkatan;
+                            $angkatan3 	= $intangkatan + 1;
+                            if ($intangkatan < 10){
+                                $angkatan= '200'.$intangkatan.'/200'.$angkatan3;
+                            } else {
+                                $angkatan= '20'.$intangkatan.'/20'.$angkatan3;
+                            }
+                            if ($rom->jenis == 'Doktor S3'){
+                                $getpembimbing	= Biodata::where('nimmhs', $nim)->first();
+                                if (isset($getpembimbing->id)){
+                                    $bimbing1	= $getpembimbing->bimbing1;
+                                    $bimbing2	= $getpembimbing->bimbing2;
+                                    $bimbing3	= $getpembimbing->bimbing3;
+                                    $getbimb1	= Dosen::where('id', $bimbing1)->first();
+                                    if (isset($getbimb1->gelar)){
+                                        $bimbing1 = $getbimb1->gelar;
+                                    }
+                                    $getbimb2	= Dosen::where('id', $bimbing2)->first();
+                                    if (isset($getbimb2->gelar)){
+                                        $bimbing2 = $getbimb2->gelar;
+                                    }
+                                    $getbimb3	= Dosen::where('id', $bimbing3)->first();
+                                    if (isset($getbimb3->gelar)){
+                                        $bimbing3 = $getbimb3->gelar;
+                                    }
+                                } else {
+                                    $bimbing1	= '';
+                                    $bimbing2	= '';
+                                    $bimbing3	= '';
+                                }
+                                $tulispbimbing2	= '';
+                                $nomor			= 1;
+                                $getpersetujuan	= Antrian::where('nim', $nim)->where('ket', $ket)->where('kodjenis', 'Nilai Ujian')->groupBy('dos1')->orderBy('id', 'ASC')->get();
+                                if (!empty($getpersetujuan)){
+                                    foreach ($getpersetujuan as $rowdos){
+                                        if ($rowdos->dos1 == $bimbing1 OR $bimbing1 == '' OR is_null($bimbing1) OR $rowdos->lokasi == 'KETUA'){
+                                            $bimbing1 = $rowdos->dos1;
+                                        } else if ($rowdos->dos1 == $bimbing2 OR $bimbing2 == '' OR is_null($bimbing2)){
+                                            $bimbing2 = $rowdos->dos1;
+                                        } else if ($rowdos->dos1 == $bimbing3 OR $bimbing3 == '' OR is_null($bimbing3)){
+                                            $bimbing3 = $rowdos->dos1;
+                                        } else {
+                                            $tulispbimbing2	= $tulispbimbing2.'
+                                                <tr>
+                                                    <td>Penguji '.$nomor.'</td>
+                                                    <td>'.$rowdos->dos1.'</td>
+                                                </tr>';
+                                            $nomor++;
+                                        }
+                                    }
+                                }
+                                $tulispbimbing	= '<tr>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td colspan="5">
+                                        <table border="1" width="450" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td width="200" align="center">Promotor dan Penguji</td>
+                                                <td width="250" align="center">Nama</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="200">Promotor</td>
+                                                <td width="250">'.$bimbing1.'</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Ko-Promotor 1</td>
+                                                <td>'.$bimbing2.'</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Ko-Promotor 2</td>
+                                                <td>'.$bimbing3.'</td>
+                                            </tr>'.$tulispbimbing2.'</table></td></tr>';
+                            } else {
+                                $pbimbing1		= '';
+                                $nipbimbing1	= '';
+                                $tulispbimbing2	= '';
+                                $nomor			= 2;
+                                $getpersetujuan	= Antrian::where('nim', $nim)->where('ket', $ket)->where('kodjenis', 'Nilai Ujian')->groupBy('dos1')->orderBy('lokasi', 'DESC')->get();
+                                if (!empty($getpersetujuan)){
+                                    foreach ($getpersetujuan as $rowdos){
+                                        if ($rowdos->lokasi == 'KETUA' OR $pbimbing1 == ''){
+                                            $pbimbing1 	= $rowdos->dos1;
+                                            $nipbimbing1= $rowdos->dos2;
+                                        } else {
+                                            $tulispbimbing2	= $tulispbimbing2.'
+                                                <tr>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>'.$nomor.'.</td>
+                                                    <td colspan="4">'.$rowdos->dos1.'</td>
+                                                    </tr>
+                                                <tr>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td colspan="4">sebagai Anggota</td>
+                                                </tr>';
+                                            $nomor++;
+                                        }
+                                    }
+                                }
+                                $tulispbimbing	= '
+                                                <tr>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>1.</td>
+                                                    <td colspan="4">'.$pbimbing1.'</td>
+                                                    </tr>
+                                                <tr>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>&nbsp;</td>
+                                                    <td colspan="4">sebagai Ketua</td>
+                                                </tr>'.$tulispbimbing2;
+                            }
+                            $marking		= $fakultas.'-SKDOSPENGUJI-'.$idsurat;
+                            $output_file 	= '/scan/files/'. $marking.'.pdf';
+                            if (file_exists(public_path($output_file))){
+                                Storage::disk('local')->delete($output_file);
+                            }
+                            $namafile		= $marking.'.pdf';
+                            $alamatweb		= $homebase.'/viewdocbyname/'.$marking.'.pdf';
+                            $setview		= 'DOWNLOAD';
+                            $spasi			= '';
+                            $ukuranfont		= '12';
+                            $jenisfontte	= '<font size="7" color="blue">';
+                            $fontstyle		= 'style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;"';
+                            $qrcode 		= QrCode::format('png')->merge('https://sco.ub.ac.id/logo-ub.png', 0.1, true)->size(150)->generate($alamatweb);
+                            $qrimage 		= 'scan/generate/qrimg-'. $marking.'.png';
+                            Storage::disk('local')->put($qrimage, $qrcode);
+                            $jamtte			= date("H:m:i");
+                            $lebarttd 		= '50%';
+                            $getnamasaja 	= Simpegpegawai::where('nip_baru', $nippejabat)->first();
+                            if (isset($getnamasaja->nama)){
+                                $namasaja	= $getnamasaja->nama;
+                            }
+                            $info = array(
+                                'Name' 			=> 'Smart and Collaborative Office',
+                                'Location' 		=> config('global.swandhanauniv'),
+                                'Reason' 		=> 'Dokumen ini ditandatangani secara elektronik',
+                                'ContactInfo' 	=> $homebase,
+                            );
+                            $page_format	= array(
+                                'MediaBox' => array ('llx' => 0, 'lly' => 0, 'urx' => 215, 'ury' => 330),
+                                'Dur' => 3,
+                                'PZ' => 1,
+                            );
+                            if ($fakultas == 'FMIPA'){
+                                $data['fakpanjang']     = 'Fakultas MIPA';
+                                $data['fakultasbesar']  = 'FAKULTAS MIPA';
+                                $tuliskodettd	= '<table width="300" border="0" cellpadding="0" cellspacing="0" style="font-size: '.$ukuranfont.'px; font-family: Bookman Old Style;"> 
+                                                        <tr><td colspan="2">Ditetapkan di '.$swandhanakota.'</td></tr>
+                                                        <tr><td colspan="2">pada tanggal '.$tglsurat.'</td></tr>
+                                                        <tr><td colspan="2">Dekan Fakultas MIPA,</td> </tr>
+                                                        <tr>
+                                                            <td width="100"><img src="'.$homebase.'/scan/generate/qrimg-'.$marking.'.png" width="100" /></td>
+                                                            <td align="left" valign="center" width="150">
+                                                                <font color="white">&nbsp;</font>'.$jenisfontte.'<br />
+                                                                    TTE oleh :<br />
+                                                                    <strong>'.$namasaja.'</strong><br />
+                                                                    '.$tanggal.' '.$jamtte.'<br /><br />
+                                                                    Verifikasi melalui<br /> https://tte.kominfo.go.id/verifyPDF
+                                                                </font>
+                                                            </td>
+                                                        </tr>
+                                                        <tr><td colspan="2">'.$nmpejabat.'</td></tr>
+                                                        <tr><td colspan="2">NIP'.$nippejabat.'</td></tr>
+                                                    </table>';
+                            } else {
+                                $data['fakpanjang']     = $fakpanjang;
+                                $data['fakultasbesar']  = strtoupper($fakpanjang);
+                                $tuliskodettd	= '<table width="300" border="0" cellpadding="0" cellspacing="0" style="font-size: '.$ukuranfont.'px; font-family: Bookman Old Style;"> 
+                                                        <tr><td colspan="2">Ditetapkan di '.$swandhanakota.'</td></tr>
+                                                        <tr><td colspan="2">pada tanggal '.$tglsurat.'</td></tr>
+                                                        <tr><td colspan="2">'.$pejabat.',</td> </tr>
+                                                        <tr>
+                                                            <td width="100"><img src="'.$homebase.'/scan/generate/qrimg-'.$marking.'.png" width="100" /></td>
+                                                            <td align="left" valign="center" width="150">
+                                                                <font color="white">&nbsp;</font>'.$jenisfontte.'<br />
+                                                                    TTE oleh :<br />
+                                                                    <strong>'.$namasaja.'</strong><br />
+                                                                    '.$tanggal.' '.$jamtte.'<br /><br />
+                                                                    Verifikasi melalui<br /> https://tte.kominfo.go.id/verifyPDF
+                                                                </font>
+                                                            </td>
+                                                        </tr>
+                                                        <tr><td colspan="2">'.$nmpejabat.'</td></tr>
+                                                        <tr><td colspan="2">NIP'.$nippejabat.'</td></tr>
+                                                    </table>';
+                            }
+                            $data['judul']    			= $rom->judul;
+                            $data['universitasbesar']   = strtoupper($universitas);
+                            $data['universitas']        = $universitas;
+                            $data['nomor']          	= $nomor;
+                            $data['tahun']          	= $yy;
+                            $data['jenjangbesar']       = strtoupper($jenjang);
+                            $data['jenjang']          	= $jenjang;
+                            $data['peesbesar']          = strtoupper($ps);
+                            $data['pees']          		= $ps;
+                            $data['angkatan']          	= $angkatan;
+                            $data['tulispbimbing']     	= $tulispbimbing;
+                            $data['nama']          		= $mhs;
+                            $data['nim']          		= $nim;
+                            $data['kodejenjang']        = $kodejenjang;
+                            $data['tandatangan']        = $tuliskodettd;
+                            $data['setjen']				= $setjen;
+                            $data['periode']			= $periode;
+                            $data['tglujian']			= $tglujian;
+                            $data['setjenbesar']		= strtoupper($setjen);
+                            $data['dekanbesar']			= strtoupper($dekan);
+                            if ($jenjang == 'Doktor S3'){
+                                $text 					= view('cetak.akademik.skdospengujis3', $data);
+                            } else {
+                                $text 					= view('cetak.akademik.skdospenguji', $data);
+                            }
+                            PDFCREATOR::SetCreator(Session('nama'));
+                            PDFCREATOR::SetAuthor(Session('previlage'));
+                            PDFCREATOR::SetTitle($kodjenis);
+                            PDFCREATOR::SetSubject($mhs);
+                            PDFCREATOR::SetKeywords($nim);
+                            PDFCREATOR::setPrintHeader(false);
+                            PDFCREATOR::setPrintFooter(false);
+                            PDFCREATOR::SetMargins(5, 0, 5);
+                            PDFCREATOR::setFontSubsetting(true);
+                            PDFCREATOR::setImageScale(PDF_IMAGE_SCALE_RATIO);
+                            PDFCREATOR::AddPage('P', $page_format, false, false);
+                            $bMargin = PDFCREATOR::getBreakMargin();
+                            $auto_page_break = PDFCREATOR::getAutoPageBreak();
+                            PDFCREATOR::SetAutoPageBreak(false, 0);
+                            $img_file = 'bgbssn.png';
+                            PDFCREATOR::Image($img_file, 0, 0, 210, 330, '', '', '', false, 300, '', false, false, 0);
+                            PDFCREATOR::SetAutoPageBreak($auto_page_break, $bMargin);
+                            PDFCREATOR::setPageMark();
+                            PDFCREATOR::writeHTML($text, true, 0, true, 0);
+                            PDFCREATOR::setFooterMargin(0);
+                            $pdfdoc = PDFCREATOR::Output('', 'S');
+                            PDFCREATOR::reset();
+                            Storage::disk('local')->delete($output_file);
+                            Storage::disk('local')->put('/scan/files/'.$marking.'.pdf', $pdfdoc);
+                            $ceksek 	= Tabelskdanperaturan::where('marking', $marking)->count();
+                            if ($ceksek == 0){
+                                $kerjanya = Tabelskdanperaturan::create([
+                                    'kelompok'			=> 	'KEPUTUSAN',
+                                    'marking'			=> 	$marking,
+                                    'nomor' 			=>  $request->input('val02'),
+                                    'tahun' 			=>  $yy,
+                                    'tanggal' 			=>  $request->input('val03'),
+                                    'penandatangan' 	=>  $pejabat,
+                                    'nmpejabat' 		=>  $nmpejabat,
+                                    'nippejabat' 		=>  $nippejabat,
+                                    'judul' 			=>  $rom->kodjenis.' an. '.$rom->nama.' NIM '.$rom->nim,
+                                    'scansurat' 		=>  $marking,
+                                    'kodefas' 			=>  'HK.04.03',
+                                    'kodesub' 			=>  'TD.06.01',
+                                    'paraf1' 			=>  $request->input('val06'),
+                                    'paraf2' 			=>  $paraf2,
+                                    'paraf3' 			=>  $paraf3,
+                                    'paraf4' 			=>  $paraf4,
+                                    'fakultas' 			=>  Session('fakultas'),
+                                    'inputor' 			=>  Session('email'),
+                                    'updated_at'		=>	date("Y-m-d H:i:s")
+                                ]);
+                            } else {
+                                $kerjanya = Tabelskdanperaturan::where('marking', $marking)->update([
+                                    'kelompok'			=> 	'KEPUTUSAN',
+                                    'marking'			=> 	$marking,
+                                    'nomor' 			=>  $request->input('val02'),
+                                    'tahun' 			=>  $yy,
+                                    'tanggal' 			=>  $request->input('val03'),
+                                    'penandatangan' 	=>  $pejabat,
+                                    'nmpejabat' 		=>  $nmpejabat,
+                                    'nippejabat' 		=>  $nippejabat,
+                                    'judul' 			=>  $rom->kodjenis.' an. '.$rom->nama.' NIM '.$rom->nim,
+                                    'scansurat' 		=>  $marking,
+                                    'kodefas' 			=>  'HK.04.03',
+                                    'kodesub' 			=>  'TD.06.01',
+                                    'paraf1' 			=>  $request->input('val06'),
+                                    'paraf2' 			=>  $paraf2,
+                                    'paraf3' 			=>  $paraf3,
+                                    'paraf4' 			=>  $paraf4,
+                                    'fakultas' 			=>  Session('fakultas'),
+                                    'inputor' 			=>  Session('email'),
+                                    'updated_at'		=>	date("Y-m-d H:i:s")
+                                ]);
+                            }
+                            if ($kerjanya){
+                                Antrian::where('id', $idsurat)->update([
+                                    'nosurat'		=> $nomor,
+                                    'tglsurat'		=> $request->input('val03'),
+                                    'pejabat'		=> $pejabat,
+                                    'nmpejabat'		=> $nmpejabat,
+                                    'nippejabat'	=> $nippejabat,
+                                    'keterangan'	=> $marking.'.pdf'
+                                ]);
+                                Inboxsurat::where('marking', $marking)->where('catatan', 'SKDANPERATURAN')->delete();
+                                $qnamapjbt	= Pejabatsurat::where('pejabat', $request->input('val06'))->first();
+                                if (isset($qnamapjbt->pejabat)){
+                                    SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','SKDANPERATURAN','1');
+                                } else {
+                                    SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','SKDANPERATURAN','1');
+                                }
+                                return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tahun '.$yy.' Tanggal Penetapan '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+                                return back();
+                                
+                            } else{
+                                return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+                                return back();
+                            }
+                        }
+                    }
+                } else {
+                    if ($pejabat == 'DEKAN' AND $paraf1 == 'SELF'){
+                        return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Yang ditandatangani Dekan Tidak Boleh di Paraf Sendiri']);
+                        return back();
+                    } else if ($pejabat == 'WAKIL DEKAN' AND $paraf1 == 'SELF'){
+                        return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Yang ditandatangani Wakil Dekan Tidak Boleh di Paraf Sendiri']);
+                        return back();
+                    } else if ($pejabat == 'REKTOR' AND $paraf1 == 'SELF'){
+                        return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Yang ditandatangani Rektor Tidak Boleh di Paraf Sendiri']);
+                        return back();
+                    } else if ($pejabat == 'WAKIL REKTOR' AND $paraf1 == 'SELF'){
+                        return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Yang ditandatangani Wakil Rektor Tidak Boleh di Paraf Sendiri']);
+                        return back();
+                    } else {
+                        $sudah 			= '';
+                        $qdislws		= Suratkeluar::where('id', $idsurat)->first();
+                        $marking		= $qdislws->marking;
+                        $statfile		= $qdislws->paraf1;
+                        $fakultas		= $qdislws->fakultas;
+                        
+                        $kerjanya 		= Suratkeluar::where('id', $idsurat)->update([
+                            'jenissrt'		=> 	$request->input('val02'),
+                            'perihal' 		=>  $perihal,
+                            'dasarsurat' 	=>  $dasarsurat,
+                            'kodefak' 		=>  $kodefakultas,
+                            'kepada' 		=>  $kepada,
+                            'alamat' 		=>  $alamat,
+                            'idpejabat' 	=>  $idpejabat,
+                            'pejabat' 		=>  $pejabat,
+                            'namapejabat' 	=>  $setttd,
+                            'paraf1' 		=>  $paraf1,
+                            'paraf2' 		=>  $paraf2,
+                            'paraf3' 		=>  $paraf3,
+                            'paraf4' 		=>  $paraf4,
+                            'pembuat'		=> 	Session('email'),
+                            'kelompok'		=> 	Session('previlage'),
+                            'updated_at'	=>	date("Y-m-d H:i:s")
+                        ]);
+                        if ($perihal == 'SURAT PERJANJIAN BANTUAN BIAYA TUGAS/IJIN BELAJAR' OR $perihal == 'PERPANJANGAN SURAT PERJANJIAN BANTUAN BIAYA TUGAS/IJIN BELAJAR' OR $perihal =='SURAT KETERANGAN JAMINAN PEMBIAYAAN STUDI' OR $perihal == 'SURAT KETERANGAN PERPANJANGAN JAMINAN PEMBIAYAAN STUDI' OR $perihal == 'SURAT JAMINAN PEMBIAYAAN PERPANJANGAN MASA STUDI'){
+                            if ($request->hasFile('file')) {
+                                $ceksurat		= explode("-SCO-", $statfile);
+                                if (isset($ceksurat[1])){
+                                    return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+                                    return back();
+                                } else {
+                                    $ceksurat		= explode("-OUT-", $statfile);
+                                    if (isset($ceksurat[1])){
+                                        return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+                                        return back();
+                                    } else {
+                                        $output_file 	= '/scan/files/'. $marking.'.pdf';
+                                        if (file_exists(public_path($output_file))){
+                                            Storage::disk('local')->delete($output_file);
+                                        }
+                                        $namafile		= $marking.'.'.$request->file('file')->getClientOriginalExtension();
+                                        $request->file('file')->move(public_path('scan/files'), $namafile);
+                                        if ($kerjanya){
+                                            if (file_exists(public_path($output_file))){
+                                                if ($request->input('val02') != 'BIASA'){
+                                                    Inboxsurat::where('marking', $marking)->where('jenis', 'KELUAR')->delete();
+                                                    $qnamapjbt	= Pejabatsurat::where('pejabat', $paraf1)->first();
+                                                    if (isset($qnamapjbt->pejabat)){
+                                                        SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','','1');
+                                                    } else {
+                                                        SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','','1');
+                                                    }
+                                                }
+                                                return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tanggal '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+                                                return back();
+                                            } else {
+                                                return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+                                                return back();		
+                                            }
+                                        }else{
+                                            return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+                                            return back();
+                                        }
+                                    }
+                                }			
+                            } else {
+                                $ceksurat		= explode("-SCO-", $statfile);
+                                if (isset($ceksurat[1])){
+                                    return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+                                    return back();
+                                } else {
+                                    $ceksurat		= explode("-OUT-", $statfile);
+                                    if (isset($ceksurat[1])){
+                                        return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+                                        return back();
+                                    } else {
+                                        Inboxsurat::where('marking', $marking)->where('jenis', 'KELUAR')->delete();
+                                        $qnamapjbt	= Pejabatsurat::where('pejabat', $paraf1)->first();
+                                        if (isset($qnamapjbt->pejabat)){
+                                            SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','','1');
+                                        } else {
+                                            SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','','1');
+                                        }
+                                        return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tanggal '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+                                        return back();
+                                    }
+                                }
+                            }
+                        } else {
+                            $output_file 	= '/scan/generate/qrimg-'.$marking.'.png';
+                            Storage::disk('local')->delete($output_file);
+                            if ($request->hasFile('file')) {
+                                $ceksurat		= explode("-SCO-", $qdislws->paraf1);
+                                if (isset($ceksurat[1])){
+                                    return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+                                    return back();
+                                } else {
+                                    $ceksurat		= explode("-OUT-", $statfile);
+                                    if (isset($ceksurat[1])){
+                                        return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Surat Telah ditandatangani dan tidak bisa diubah kembali']);
+                                        return back();
+                                    } else {
+                                        $output_file 	= '/scan/files/'. $marking.'.pdf';
+                                        if (file_exists(public_path($output_file))){
+                                            Storage::disk('local')->delete($output_file);
+                                        }
+                                        $namafile		= $marking.'.'.$request->file('file')->getClientOriginalExtension();
+                                        $request->file('file')->move(public_path('scan/files'), $namafile);
+                                        if ($kerjanya){
+                                            if ($request->input('val02') != 'BIASA'){
+                                                Inboxsurat::where('marking', $marking)->where('jenis', 'KELUAR')->delete();
+                                                $qnamapjbt	= Pejabatsurat::where('pejabat', $paraf1)->first();
+                                                if (isset($qnamapjbt->pejabat)){
+                                                    SendMail::kiriminbox($marking,Session('nama'),$qnamapjbt->pejabat,$qnamapjbt->email,'KELUAR','PARAF','','1');
+                                                } else {
+                                                    SendMail::kiriminbox($marking,Session('nama'),$pejabat,$emailpenerima,'KELUAR','TTD','','1');
+                                                }
+                                            }
+                                            return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses with notice', 'message' => 'Surat Nomor '.$nomor.' Tanggal '.$tanggal.' Telah Kami Kirim ke '.$pejabat.' Untuk di Paraf/ditandatangani']);
+                                            return back();
+                                        } else {
+                                            return response()->json(['icon' => 'error', 'warna' => '#bf441d', 'status' => 'Error.!', 'message' => 'Gagal Upload File, Ulangi Beberapa Saat Lagi']);
+                                            return back();
+                                        }
+                                    }
+                                }
+                            } else {
+                                // ===== DIUBAH: sebelumnya selalu "Sukses" walau file tidak ada. Sekarang dikembalikan sebagai error agar tidak menyesatkan =====
+                                return response()->json([
+                                    'icon'    => 'error',
+                                    'warna'   => '#bf441d',
+                                    'status'  => 'Error.!',
+                                    'message' => 'File tidak terdeteksi oleh server. Kemungkinan ukuran melebihi batas post_max_size ('.ini_get('post_max_size').') / upload_max_filesize ('.ini_get('upload_max_filesize').') / client_max_body_size Nginx. Silakan periksa konfigurasi server.'
+                                ]);
+                                return back();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // ===== TAMBAHAN: helper konversi ukuran php.ini (M/G/K) ke bytes =====
+    private function parseSizeToBytes($size) {
+        if ($size == null OR $size == '') { return 0; }
+        $size = trim($size);
+        $unit = strtolower(substr($size, -1));
+        $value = (int) $size;
+        switch ($unit) {
+            case 'g': $value *= 1024 * 1024 * 1024; break;
+            case 'm': $value *= 1024 * 1024; break;
+            case 'k': $value *= 1024; break;
+        }
+        return $value;
+    }
+
 	public function exUploadKopsurat(Request $request) {
 		$jenis			= $request->input('val02');
 		if ($request->hasFile('file')) {
@@ -12863,6 +14679,8 @@ class DashbordsuratController extends Controller
 				],
 			];
 			try {
+                // dd('5');
+                // dd($authHeader);die;
 				$response 	= $client->post('https://esign.ub.ac.id/api/sign/verify', $authHeader);
 				$status		= (string)$response->getStatusCode();
 				$body		= (string)$response->getBody();
