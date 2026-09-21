@@ -4527,7 +4527,22 @@ class NotifikasiController extends Controller
 		} else if ($keterangan == 'disposisi' OR $keterangan == '94db1c8fae5b94957265aa3a335dfd3d' OR $keterangan == 'masuk' OR $keterangan == '7a07275b47504815818abc970da769fc'){
 			$alamatweb		= $homebase.'/viewsurat/94db1c8fae5b94957265aa3a335dfd3d-'.$idsurat;
 			$jinboxsrt		= Suratmasuk::where('id', $idsurat)->first();
-            // dd($jinboxsrt);
+            // Ambil host yang sedang diakses (otomatis IP/domain)
+            $newHost = request()->getSchemeAndHttpHost();
+
+            // Ganti domain di dalam string iframe
+            $jinboxsrt->ringkasan2 = preg_replace(
+                '/src="https?:\/\/[^\/]+/i',
+                'src="' . $newHost,
+                $jinboxsrt->ringkasan2
+            );
+            // preg_match('/src="([^"]+)"/', $jinboxsrt->ringkasan2, $matches);
+            // if (isset($matches[1])) {
+            //     $parsedUrl = parse_url($matches[1]);
+            //     $domain = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
+            //     // Hasil: http://surat-rsphs.rs-primahusada.id
+            //     dd($domain);die;
+            // }
 			if (isset($jinboxsrt->id)){
 				$marking		= $jinboxsrt->marking;
 				$noagenda		= $jinboxsrt->noagenda;
@@ -4782,6 +4797,7 @@ class NotifikasiController extends Controller
 						$data['scanfile']   	= '<iframe src="'.$scanfile.'" width="100%" height="780" style="border: none;" id="document-preview"></iframe>';
 						$cekjenis = explode("iframe", $jinboxsrt->ringkasan2);
 						if (isset($cekjenis[1])){
+                            // marking rexita
 							$data['scanfile']   	= $jinboxsrt->ringkasan2;
 						}
 						$cekjenis = explode("iframe", $jinboxsrt->ringkasan);
