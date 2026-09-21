@@ -4530,9 +4530,12 @@ class NotifikasiController extends Controller
             // Ambil host yang sedang diakses (otomatis IP/domain)
             $newHost = request()->getSchemeAndHttpHost();
 
-            // Ganti domain di dalam string iframe
+            // Pastikan pakai http (bukan https)
+            $newHost = preg_replace('/^https:\/\//i', 'http://', $newHost);
+
+            // Ganti domain di dalam string iframe (hanya match http://)
             $jinboxsrt->ringkasan2 = preg_replace(
-                '/src="https?:\/\/[^\/]+/i',
+                '/src="http:\/\/[^\/]+/i',
                 'src="' . $newHost,
                 $jinboxsrt->ringkasan2
             );
