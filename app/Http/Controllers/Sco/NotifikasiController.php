@@ -4527,25 +4527,18 @@ class NotifikasiController extends Controller
 		} else if ($keterangan == 'disposisi' OR $keterangan == '94db1c8fae5b94957265aa3a335dfd3d' OR $keterangan == 'masuk' OR $keterangan == '7a07275b47504815818abc970da769fc'){
 			$alamatweb		= $homebase.'/viewsurat/94db1c8fae5b94957265aa3a335dfd3d-'.$idsurat;
 			$jinboxsrt		= Suratmasuk::where('id', $idsurat)->first();
-            // Ambil host yang sedang diakses (otomatis IP/domain)
+            
             $newHost = request()->getSchemeAndHttpHost();
+            $jinboxsrt->ringkasan2 = preg_replace('/src="http:\/\/[^\/]+/i', 'src="' . $newHost, $jinboxsrt->ringkasan2);
 
-            // Pastikan pakai http (bukan https)
-            $newHost = preg_replace('/^https:\/\//i', 'http://', $newHost);
+            // // Ambil host yang sedang diakses (otomatis IP/domain)
+            // $newHost = request()->getSchemeAndHttpHost();
+            // // Pastikan pakai http (bukan https)
+            // $newHost = preg_replace('/^https:\/\//i', 'http://', $newHost);
+            // // Ganti domain di dalam string iframe (hanya match http://)
+            // $jinboxsrt->ringkasan2 = preg_replace('/src="http:\/\/[^\/]+/i','src="' . $newHost, $jinboxsrt->ringkasan2);
+            // dd($jinboxsrt->ringkasan2);die;
 
-            // Ganti domain di dalam string iframe (hanya match http://)
-            $jinboxsrt->ringkasan2 = preg_replace(
-                '/src="http:\/\/[^\/]+/i',
-                'src="' . $newHost,
-                $jinboxsrt->ringkasan2
-            );
-            // preg_match('/src="([^"]+)"/', $jinboxsrt->ringkasan2, $matches);
-            // if (isset($matches[1])) {
-            //     $parsedUrl = parse_url($matches[1]);
-            //     $domain = $parsedUrl['scheme'] . '://' . $parsedUrl['host'];
-            //     // Hasil: http://surat-rsphs.rs-primahusada.id
-            //     dd($domain);die;
-            // }
 			if (isset($jinboxsrt->id)){
 				$marking		= $jinboxsrt->marking;
 				$noagenda		= $jinboxsrt->noagenda;
