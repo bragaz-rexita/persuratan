@@ -344,6 +344,10 @@ class SendMail extends Controller
             ]);
             $string_enc = $email.'|'.$idinbox.'|VER';
             $url        = url('/openinbox').'?key='.self::enkrip($string_enc);
+
+            $app_host_public = rtrim(config('app.app_host_public'), '/');
+            $urlPublic = $app_host_public . '/openinbox?key=' . self::enkrip($string_enc);
+            // dd($url);die;
             if ($kerja == 'MASUK'){
                 if ($penerima == 'Arsiparis'){
                     Suratmasuk::where('marking', $marking)->update([
@@ -357,7 +361,19 @@ class SendMail extends Controller
                     ]);    
                 }
             }
-            $tuliskirim     = 'Dari '.$pengirim.' '.$jenis.' ('.$kerja.') <p><a href="'.$url.'" style="display:inline-block;background:#e85034;color:#ffffff;font-family:Ubuntu, Helvetica, Arial, sans-serif, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:100%;Margin:0;text-decoration:none;text-transform:none;padding:9px 26px 9px 26px;mso-padding-alt:0px;border-radius:24px;" target="_blank">Direct Open Mailbox</a></p> NB : Sebelum membuka link diatas, pastikan Bapak/Ibu sudah login ke aplikasi '.url('/');
+            // rexita
+            $tuliskirim     = 'Dari '.$pengirim.' '.$jenis.' ('.$kerja.') 
+                <p>Pilih salah satu tombol link dibawah.<br>
+                    <a href="'.$url.'" style="display:inline-block;background:#e85034;color:#ffffff;font-family:Ubuntu, Helvetica, Arial, sans-serif, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:100%;Margin:0;text-decoration:none;text-transform:none;padding:9px 26px 9px 26px;mso-padding-alt:0px;border-radius:24px;" target="_blank">
+                        Direct Open Mailbox Link Local
+                    </a>
+                    <br>
+                    <a href="'.$urlPublic.'" style="display:inline-block;background:#e85034;color:#ffffff;font-family:Ubuntu, Helvetica, Arial, sans-serif, Helvetica, Arial, sans-serif;font-size:13px;font-weight:normal;line-height:100%;Margin:0;text-decoration:none;text-transform:none;padding:9px 26px 9px 26px;mso-padding-alt:0px;border-radius:24px;" target="_blank">
+                        Direct Open Mailbox Link Public
+                    </a>
+                </p>
+                NB : Sebelum membuka link diatas, pastikan Bapak/Ibu sudah login ke aplikasi '.url('/').'/rsphportal'.'atau '.$app_host_public.'/rsphportal';
+            // dd($tuliskirim);die;
             $cariiduser 	= User::where('email', $email)->get();
             if (!empty($cariiduser)){
                 foreach($cariiduser as $riduser){

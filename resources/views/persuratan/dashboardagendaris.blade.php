@@ -1066,6 +1066,7 @@
 								<div class="form-group">
 									<div class="row">
 										<div class="col-md-8">
+                                            {{-- rexita --}}
 											<select id="kirim_idpeserta" size="1" class="form-control select2">
 												<option value="">Pilih Penerima</option>
 												@foreach($arrallpeg as $rows)

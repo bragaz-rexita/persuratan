@@ -3673,6 +3673,7 @@ class DashbordsuratController extends Controller
 		}
     }
 	public function extbhPenerimasurat(Request $request) {
+        $publicUrl          = rtrim(config('app.app_host_public'), '/');
 		$homebase			= url("/");
 		$idsurat			= $request->input('set01');
 		$idpegawai			= $request->input('set02');
@@ -3806,7 +3807,7 @@ class DashbordsuratController extends Controller
 								$cekemail 	= explode('@', $email);
 								if (isset($cekemail[1])){
 									$subject    = $request->input('set04');
-									$note       = 'Berikut Kami Kirimkan Surat Undangan '.$request->input('set04').' Pada Tanggal '.date('Y-m-d H:i:s').' Oleh '.Session('nama').'<p><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;"><a href="'.$homebase.'/viewsurat/keluar-'.$idsurat.'" target="_blank">DOWNLOAD SURAT</a></div></p>';
+									$note       = 'Berikut Kami Kirimkan Surat Undangan '.$request->input('set04').' Pada Tanggal '.date('Y-m-d H:i:s').' Oleh '.Session('nama').'<p><br><p>Pilih salah satu link dibawah.</p><br><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;">Link Local : <a href="'.$homebase.'/viewsurat/keluar-'.$idsurat.'" target="_blank">DOWNLOAD SURAT</a></div><br><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;">Link Public : <a href="'.$publicUrl.'/viewsurat/keluar-'.$idsurat.'" target="_blank">DOWNLOAD SURAT</a></div></p>';
 									SendMail::notif($getpegawai->nama_lengkap, $email, $subject, $note);
 								}
 								return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses', 'message' => 'Tambah Data Penerima Sukses']);
@@ -3953,7 +3954,7 @@ class DashbordsuratController extends Controller
 									$cekemail 	= explode('@', $email);
 									if (isset($cekemail[1])){
 										$subject    = $ceksuratkeluar->perihal;
-										$note       = 'Berikut Kami Kirimkan Surat '.$ceksuratkeluar->jenissrt.' Pada Tanggal '.date('Y-m-d H:i:s').' Oleh '.Session('nama').'<p><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;"><a href="'.$homebase.'/viewsurat/keluar-'.$ceksuratkeluar->id.'" target="_blank">DOWNLOAD SURAT</a></div></p>';
+										$note       = 'Berikut Kami Kirimkan Surat '.$ceksuratkeluar->jenissrt.' Pada Tanggal '.date('Y-m-d H:i:s').' Oleh '.Session('nama').'<p><br><p>Pilih salah satu link dibawah.</p><br><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;">Link Local : <a href="'.$homebase.'/viewsurat/keluar-'.$ceksuratkeluar->id.'" target="_blank">DOWNLOAD SURAT</a></div><br><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;">Link Public : <a href="'.$publicUrl.'/viewsurat/keluar-'.$idsurat.'" target="_blank">DOWNLOAD SURAT</a></div></p>';
 										SendMail::notif($getpegawai->nama_lengkap, $email, $subject, $note);
 									}
 									return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses', 'message' => $note]);
@@ -4452,7 +4453,7 @@ class DashbordsuratController extends Controller
 								$cekemail 	= explode('@', $email);
 								if (isset($cekemail[1])){
 									$subject    = $request->input('set04');
-									$note       = 'Berikut Kami Kirimkan Surat Undangan '.$request->input('set04').' Pada Tanggal '.date('Y-m-d H:i:s').' Oleh '.Session('nama').'<p><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;"><a href="'.$alamatsurat.'" target="_blank">DOWNLOAD SURAT</a></div></p>';
+									$note       = 'Berikut Kami Kirimkan Surat Undangan '.$request->input('set04').' Pada Tanggal '.date('Y-m-d H:i:s').' Oleh '.Session('nama').'<p><br><p>Pilih salah satu link dibawah.</p><br><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;">Link Local : <a href="'.$alamatsurat.'" target="_blank">DOWNLOAD SURAT</a></div><br><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;">Link Public : <a href="'.$publicUrl.'/viewsurat/keluar-'.$idsurat.'" target="_blank">DOWNLOAD SURAT</a></div></p>';
 									SendMail::notif($getpegawai->nama_lengkap, $email, $subject, $note);
 								}
 								return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses', 'message' => 'Tambah Data Penerima Sukses']);
@@ -4516,7 +4517,7 @@ class DashbordsuratController extends Controller
 									$cekemail 	= explode('@', $email);
 									if (isset($cekemail[1])){
 										$subject    = $request->input('set04');
-										$note       = 'Berikut Kami Kirimkan Surat '.$request->input('set04').' Pada Tanggal '.date('Y-m-d H:i:s').' Oleh '.Session('nama').'<p><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;"><a href="'.$alamatsurat.'" target="_blank">DOWNLOAD SURAT</a></div></p>';
+										$note       = 'Berikut Kami Kirimkan Surat '.$request->input('set04').' Pada Tanggal '.date('Y-m-d H:i:s').' Oleh '.Session('nama').'<p><br><p>Pilih salah satu link dibawah.</p><br><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;">Link Local : <a href="'.$alamatsurat.'" target="_blank">DOWNLOAD SURAT</a></div><br><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;">Link Public : <a href="'.$publicUrl.'/viewsurat/keluar-'.$idsurat.'" target="_blank">DOWNLOAD SURAT</a></div></p>';
 										SendMail::notif($getpegawai->nama_lengkap, $email, $subject, $note);
 									}
 									return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses', 'message' => 'Tambah Data Penerima Sukses']);
@@ -4530,7 +4531,7 @@ class DashbordsuratController extends Controller
 								$cekemail 	= explode('@', $email);
 								if (isset($cekemail[1])){
 									$subject    = $request->input('set04');
-									$note       = 'Berikut Kami Kirimkan Surat '.$request->input('set04').' Pada Tanggal '.date('Y-m-d H:i:s').' Oleh '.Session('nama').'<p><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;"><a href="'.$alamatsurat.'" target="_blank">DOWNLOAD SURAT</a></div></p>';
+									$note       = 'Berikut Kami Kirimkan Surat '.$request->input('set04').' Pada Tanggal '.date('Y-m-d H:i:s').' Oleh '.Session('nama').'<p><br><p>Pilih salah satu link dibawah.</p><br><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;">Link Local : <a href="'.$alamatsurat.'" target="_blank">DOWNLOAD SURAT</a></div><br><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;">Link Public : <a href="'.$publicUrl.'/viewsurat/keluar-'.$idsurat.'" target="_blank">DOWNLOAD SURAT</a></div></p>';
 									SendMail::notif($getpegawai->nama_lengkap, $email, $subject, $note);
 								}
 								return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses', 'message' => 'Tambah Data Penerima Sukses']);
@@ -4564,7 +4565,7 @@ class DashbordsuratController extends Controller
 									$cekemail 	= explode('@', $email);
 									if (isset($cekemail[1])){
 										$subject    = $request->input('set04');
-										$note       = 'Berikut Kami Kirimkan Surat '.$request->input('set04').' Pada Tanggal '.date('Y-m-d H:i:s').' Oleh '.Session('nama').'<p><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;"><a href="'.$alamatsurat.'" target="_blank">DOWNLOAD SURAT</a></div></p>';
+										$note       = 'Berikut Kami Kirimkan Surat '.$request->input('set04').' Pada Tanggal '.date('Y-m-d H:i:s').' Oleh '.Session('nama').'<p><br><p>Pilih salah satu link dibawah.</p><br><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;">Link Local : <a href="'.$alamatsurat.'" target="_blank">DOWNLOAD SURAT</a></div><br><div style="background:#eeeeee;border:1px solid #cccccc;padding:5px 10px;">Link Public : <a href="'.$publicUrl.'/viewsurat/keluar-'.$idsurat.'" target="_blank">DOWNLOAD SURAT</a></div></p>';
 										SendMail::notif($getpegawai->nama_lengkap, $email, $subject, $note);
 									}
 									return response()->json(['icon' => 'success', 'warna' => '#5ba035', 'status' => 'Sukses', 'message' => 'Tambah Data Penerima Sukses']);
