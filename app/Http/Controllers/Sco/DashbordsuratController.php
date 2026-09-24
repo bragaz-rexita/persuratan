@@ -1072,6 +1072,44 @@ class DashbordsuratController extends Controller
 							'footnote'		=> 'Missing ID Surat'
 						]);
 					} else {
+                        $currentHost = request()->getSchemeAndHttpHost();
+                        $urlfootnote = '';
+                        $cekfootnote = $rows->footnote;
+
+                        switch(true){
+                            case str_contains($cekfootnote, 'http://surat-ptdpm.rs-primahusada.id'):
+                                $urlfootnote = str_replace(
+                                    ['http://surat-ptdpm.rs-primahusada.id', 'https://surat-ptdpm.rs-primahusada.id'],
+                                    $currentHost,
+                                    $cekfootnote
+                                );
+                                break;
+                            case str_contains($cekfootnote, 'surat-rsphm.rs-primahusada.id'):
+                                $urlfootnote = str_replace(
+                                    ['http://surat-rsphm.rs-primahusada.id', 'https://surat-rsphm.rs-primahusada.id'],
+                                    $currentHost,
+                                    $cekfootnote
+                                );
+                                break;
+                            case str_contains($cekfootnote, 'surat-rsphs.rs-primahusada.id'):
+                                $urlfootnote = str_replace(
+                                    ['http://surat-rsphs.rs-primahusada.id', 'https://surat-rsphs.rs-primahusada.id'],
+                                    $currentHost,
+                                    $cekfootnote
+                                );
+                                break;
+                            case str_contains($cekfootnote, 'surat-pdp.rs-primahusada.id'):
+                                $urlfootnote = str_replace(
+                                    ['http://surat-pdp.rs-primahusada.id', 'https://surat-pdp.rs-primahusada.id'],
+                                    $currentHost,
+                                    $cekfootnote
+                                );
+                                break;
+                            default:
+                                $urlfootnote = $cekfootnote;
+                        }
+
+
 						$arrayiuser[] = array(
 							'id' 			=> $rows->id,
 							'marking' 		=> $rows->marking,
@@ -1088,12 +1126,12 @@ class DashbordsuratController extends Controller
 							'kepada' 		=> $kepada,
 							'perihal' 		=> $perihal,
 							'asalsurat' 	=> $asalsurat,
-							'footnote' 		=> $rows->footnote,
+							// 'footnote' 		=> $rows->footnote,
+                            'footnote' 		=> $urlfootnote,
 							'created_at' 	=> $rows->created_at,
 							'kelompok'		=> 'Surat Masuk'
 						);
 					}
-					
 				}
 			}
 			$response 	= [
