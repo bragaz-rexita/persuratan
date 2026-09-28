@@ -2194,52 +2194,76 @@ class ArsipdinamisController extends Controller
                             if ($tujuan != '' AND $tujuan != $pejabat){
                                 if ($tujuan == 'Arsiparis Umum'){
                                     $emailPembuat = $getdata->pembuat;
-
-                                    $getPembuat = Simpegpegawai::where('email_ub', $emailPembuat)
-                                        ->orWhere('email', $emailPembuat)
-                                        ->first();
-
+                                    $getPembuat = Simpegpegawai::where('email_ub', $emailPembuat)->orWhere('email', $emailPembuat)->first();
                                     if (isset($getPembuat->id)) {
                                         $namaPembuat = $getPembuat->nama_lengkap;
-
                                         if (!empty($getPembuat->email_ub)) {
                                             $emailPenerima = $getPembuat->email_ub;
                                         } else {
                                             $emailPenerima = $getPembuat->email;
                                         }
-
                                         $tulisanpenerima = $namaPembuat;
-
-                                        SendMail::kiriminbox(
-                                            $marking,
-                                            Session('nama'),
-                                            $namaPembuat,
-                                            $emailPenerima,
-                                            'MASUK',
-                                            'DISPOSISI',
-                                            $setdisposisi,
-                                            $idinbox
-                                        );
+                                        SendMail::kiriminbox($marking, Session('nama'), $namaPembuat, $emailPenerima, 'MASUK', 'DISPOSISI', $setdisposisi, $idinbox);
                                     } else {
                                         $tulisanpenerima = 'Arsiparis';
-
-                                        SendMail::kiriminbox(
-                                            $marking,
-                                            Session('nama'),
-                                            'Arsiparis',
-                                            'arsiparis@localhost.com',
-                                            'MASUK',
-                                            'DISPOSISI',
-                                            $setdisposisi,
-                                            '0'
-                                        );
+                                        SendMail::kiriminbox($marking, Session('nama'), 'Arsiparis', 'arsiparis@localhost.com', 'MASUK', 'DISPOSISI', $setdisposisi, '0');
                                     }
                                 } else {
-                                    // KODE LAMA ANDA TETAP DI SINI
+                                    $cekpejabat 	= Pejabatsurat::where('pejabat', $tujuan)->first();
+									$cekpejabat2 	= Pejabatsurat::where('id', $tujuan)->first();
+									$cekpejabat3 	= Pejabatsurat::where('kode', $tujuan)->first();
+									if (isset($cekpejabat->id)){
+										$email 			= $cekpejabat->email;
+										$namapenerima	= $cekpejabat->nama;
+										$jabatan		= $cekpejabat->pejabat;
+										$idpenerima		= $cekpejabat->id;
+										$getidpeg		= Simpegpegawai::where('email_ub', $email)->orwhere('email', $email)->first();
+										if (isset($getidpeg->id)){
+											$idpenerima = $getidpeg->id;
+										}
+									} else if (isset($cekpejabat2->id)){
+										$email 			= $cekpejabat2->email;
+										$namapenerima	= $cekpejabat2->nama;
+										$jabatan		= $cekpejabat2->pejabat;
+										$idpenerima		= $cekpejabat2->id;
+										$getidpeg		= Simpegpegawai::where('email_ub', $email)->orwhere('email', $email)->first();
+										if (isset($getidpeg->id)){
+											$idpenerima = $getidpeg->id;
+										}
+									} else if (isset($cekpejabat3->id)){
+										$email 			= $cekpejabat3->email;
+										$namapenerima	= $cekpejabat3->nama;
+										$jabatan		= $cekpejabat3->pejabat;
+										$idpenerima		= $cekpejabat3->id;
+										$getidpeg		= Simpegpegawai::where('email_ub', $email)->orwhere('email', $email)->first();
+										if (isset($getidpeg->id)){
+											$idpenerima = $getidpeg->id;
+										}
+									} else {
+										$getidpeg		= Simpegpegawai::where('email_ub', $tujuan)->orwhere('email', $tujuan)->first();
+										if (isset($getidpeg->id)){
+											$idpenerima 	= $getidpeg->id;
+											$email 			= $getidpeg->email_ub;
+											$email2 		= $getidpeg->email;
+											$namapenerima	= $getidpeg->nama_lengkap;
+											$jabatan		= $getidpeg->jabatan;
+											if (is_null($email) OR $email == ''){ $email = $email2; }
+										} else {
+											$idpenerima 	= 0;
+											$email 			= '';
+											$namapenerima	= '';
+											$jabatan		= '';
+										}
+									}
+									$tulisanpenerima = $namapenerima;
+									if ($email != ''){
+										SendMail::kiriminbox($marking,$getdata->penerima,$jabatan,$email,'MASUK','DISPOSISI',$setdisposisi,$idinbox);
+									} else {
+										SendMail::kiriminbox($marking,Session('nama'),'Arsiparis','arsiparis@localhost.com','MASUK','DISPOSISI',$setdisposisi,'0');
+									}
                                 }
                             }
-                        }
-                        else {
+                        } else {
 							foreach ( $arrkepada as $tujuan ){
 								if ($tujuan != '' AND $tujuan != $pejabat){
 									if ($tujuan == 'Arsiparis Umum'){
