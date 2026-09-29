@@ -6999,26 +6999,26 @@ class DashbordsuratController extends Controller
         // dd($alamatweb);
 		if (Session('fakultas') == 'DPM'){
 			// $qrcode = QrCode::format('png')->merge('http://127.0.0.1:8000/dist/img/pt.png', 0.2, true)->size(150)->generate($alamatweb);
-            $domainUrl = 'http://surat-ptdpm.rs-primahusada.id';
+            $domainUrl = 'https://surat-ptdpm.rs-primahusada.id';
             $alamatweb	= $domainUrl.'/trackingid/srtklr-'.$id;
             $qrcode = QrCode::format('png')->merge(public_path('dist/img/pt.png'), 0.2, true)->size(150)->generate($alamatweb);
 		} else if (Session('fakultas') == 'PDP'){
 			// $qrcode = QrCode::format('png')->merge($rexita_audio.'/dist/img/pdp.png', 0.2, true)->size(150)->generate($alamatweb);
-            $domainUrl = 'http://surat-pdp.rs-primahusada.id';
+            $domainUrl = 'https://surat-pdp.rs-primahusada.id';
             $alamatweb	= $domainUrl.'/trackingid/srtklr-'.$id;
             $qrcode = QrCode::format('png')->merge(public_path('dist/img/pdp.png'), 0.2, true)->size(150)->generate($alamatweb);
 		} else if (Session('fakultas') == 'RSPHSKR'){
 			// $qrcode = QrCode::format('png')->merge($rexita_audio.'/dist/img/rs.png', 0.2, true)->size(150)->generate($alamatweb);
-            $domainUrl = 'http://surat-rsphs.rs-primahusada.id';
+            $domainUrl = 'https://surat-rsphs.rs-primahusada.id';
             $alamatweb	= $domainUrl.'/trackingid/srtklr-'.$id;
             $qrcode = QrCode::format('png')->merge(public_path('dist/img/rs.png'), 0.2, true)->size(150)->generate($alamatweb);
 		} else if (Session('fakultas') == 'RSPHMLG'){
 			// $qrcode = QrCode::format('png')->merge($rexita_audio.'/dist/img/rs.png', 0.2, true)->size(150)->generate($alamatweb);
-            $domainUrl = 'http://surat-rsphm.rs-primahusada.id';
+            $domainUrl = 'https://surat-rsphm.rs-primahusada.id';
             $alamatweb	= $domainUrl.'/trackingid/srtklr-'.$id;
             $qrcode = QrCode::format('png')->merge(public_path('dist/img/rs.png'), 0.2, true)->size(150)->generate($alamatweb);
 		} else {
-            $domainUrl = 'http://surat-ptdpm.rs-primahusada.id';
+            $domainUrl = 'https://surat-ptdpm.rs-primahusada.id';
             $alamatweb	= $domainUrl.'/trackingid/srtklr-'.$id;
 			$qrcode = QrCode::format('png')->size(150)->generate($alamatweb);
 		}
