@@ -198,23 +198,23 @@ class AuthController extends Controller
 
         //  NEW  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         else if ($domain == 'surat-ptdpm.rs-primahusada.id' OR $domain == 'www.surat-ptdpm.rs-primahusada.id') {
-			$url = 'http://surat-ptdpm.rs-primahusada.id/rsphportal';
+			$url = 'https://surat-ptdpm.rs-primahusada.id/rsphportal';
 			return Redirect::to($url);
 		}
         else if ($domain == 'surat-rsphs.rs-primahusada.id' OR $domain == 'www.surat-rsphs.rs-primahusada.id') {
-			$url = 'http://surat-rsphs.rs-primahusada.id/rsphportal';
+			$url = 'https://surat-rsphs.rs-primahusada.id/rsphportal';
 			return Redirect::to($url);
 		}
         else if ($domain == 'surat-rsphm.rs-primahusada.id' OR $domain == 'www.surat-rsphm.rs-primahusada.id') {
-			$url = 'http://surat-rsphm.rs-primahusada.id/rsphportal';
+			$url = 'https://surat-rsphm.rs-primahusada.id/rsphportal';
 			return Redirect::to($url);
 		}
         else if ($domain == 'rekrutmen.rs-primahusada.id' OR $domain == 'www.rekrutmen.rs-primahusada.id') {
-			$url = 'http://rekrutmen.rs-primahusada.id/rekrutmen';
+			$url = 'https://rekrutmen.rs-primahusada.id/rekrutmen';
 			return Redirect::to($url);
 		}
         else if ($domain == 'surat-pdp.rs-primahusada.id' OR $domain == 'www.surat-pdp.rs-primahusada.id') {
-			$url = 'http://surat-pdp.rs-primahusada.id/rsphportal';
+			$url = 'https://surat-pdp.rs-primahusada.id/rsphportal';
 			return Redirect::to($url);
 		}
         else if ($domain == '172.100.0.18:80' OR $domain == '172.100.0.18') {
