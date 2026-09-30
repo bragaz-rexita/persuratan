@@ -2793,19 +2793,19 @@ class WebinarController extends Controller
 		$data			= [];
         switch ($kementerian) {
             case "DPM":
-                $publicUrl = "http://surat-ptdpm.rs-primahusada.id".'/hadir/'.$id;
+                $publicUrl = "https://surat-ptdpm.rs-primahusada.id".'/hadir/'.$id;
                 $publicqrcode 		= base64_encode(QrCode::format('png')->size(400)->generate($publicUrl));
                 break;
             case "RSPHSKR":
-                $publicUrl = "http://surat-rsphs.rs-primahusada.id".'/hadir/'.$id;
+                $publicUrl = "https://surat-rsphs.rs-primahusada.id".'/hadir/'.$id;
                 $publicqrcode 		= base64_encode(QrCode::format('png')->size(400)->generate($publicUrl));
                 break;
             case "RSPHMLG":
-                $publicUrl = "http://surat-rsphm.rs-primahusada.id".'/hadir/'.$id;
+                $publicUrl = "https://surat-rsphm.rs-primahusada.id".'/hadir/'.$id;
                 $publicqrcode 		= base64_encode(QrCode::format('png')->size(400)->generate($publicUrl));
                 break;
             default:
-                $publicUrl = "http://surat-pdp.rs-primahusada.id".'/hadir/'.$id;
+                $publicUrl = "https://surat-pdp.rs-primahusada.id".'/hadir/'.$id;
                 $publicqrcode 		= base64_encode(QrCode::format('png')->size(400)->generate($publicUrl));
         }
 		if (isset($getdata->nama)){
@@ -2904,7 +2904,12 @@ class WebinarController extends Controller
 								<td colspan="4">&nbsp;</td>
 							</tr>   
 							<tr>
-                                <td colspan="11" align="center"><img src="data:image/png;base64,'.$qrcode.'" width="200" /></td>
+                                <td colspan="11" align="center">
+                                    <img
+                                        src="data:image/png;base64,' . ($kementerian === 'RSPHSKR' ? $publicqrcode : $qrcode) . '"
+                                        width="200"
+                                    />
+                                </td>
                             </tr>
                             <tr><td colspan="11" align="center">&nbsp;</td></tr>
                             <tr>
