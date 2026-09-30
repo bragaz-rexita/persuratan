@@ -2923,7 +2923,7 @@ class WebinarController extends Controller
                             </tr>
                             <tr><td colspan="11" align="center">&nbsp;</td></tr>
 							<tr>
-                                <td colspan="11" align="center"><font color="blue" size="+2">'.$alamatweb.'</font></td>
+                                <td colspan="11" align="center"><font color="blue" size="+2">'.($kementerian === 'RSPHSKR' ? $publicUrl : $alamatweb).'</font></td>
                             </tr>
 							<tr><td colspan="11" align="center">&nbsp;</td></tr>
 							<tr><td colspan="11" align="center">&nbsp;</td></tr>
