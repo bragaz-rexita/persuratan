@@ -2904,25 +2904,21 @@ class WebinarController extends Controller
 								<td colspan="4">&nbsp;</td>
 							</tr>   
 							<tr>
-                                <td colspan="4" align="center"><img src="data:image/png;base64,'.$qrcode.'" width="200" /></td>
-                                <td colspan="7" align="center"><img src="data:image/png;base64,'.$publicqrcode.'" width="200" /></td>
+                                <td colspan="11" align="center"><img src="data:image/png;base64,'.$qrcode.'" width="200" /></td>
                             </tr>
                             <tr><td colspan="11" align="center">&nbsp;</td></tr>
                             <tr>
-                                <td colspan="4" align="center">QR Local</td>
-                                <td colspan="7" align="center">QR Public</td>
+                                <td colspan="11" align="center">QR-Code</td>
                             </tr>
 							<tr><td colspan="11" align="center">&nbsp;</td></tr>
-							<tr><td colspan="11" align="center">Silahkan pilih salah satu QR-Code diatas dan Gunakan Gawai Bapak/Ibu untuk memindai Kode QR diatas untuk melakukan presensi. Atau Ketik salah satu tautan dibawah ini di Laptop / Gawai Bapak/Ibu. Link Presensi :</td></tr>
+							<tr><td colspan="11" align="center">Gunakan Gawai Bapak/Ibu untuk memindai Kode QR diatas untuk melakukan presensi. Atau Ketik tautan dibawah ini di Laptop / Gawai Bapak/Ibu. Link Presensi :</td></tr>
 							<tr><td colspan="11" align="center">&nbsp;</td></tr>
                             <tr>
-                                <td colspan="2" align="center">Link Url Local :</td>
-                                <td colspan="15" align="center">Link Url Public :</td>
+                                <td colspan="11" align="center">Link Url :</td>
                             </tr>
                             <tr><td colspan="11" align="center">&nbsp;</td></tr>
 							<tr>
-                                <td colspan="2" align="center"><font color="blue" size="+2">'.$alamatweb.'</font></td>
-                                <td colspan="15" align="center" width="900"><font color="blue" size="+2">'.$publicUrl.'</font></td>
+                                <td colspan="11" align="center"><font color="blue" size="+2">'.$alamatweb.'</font></td>
                             </tr>
 							<tr><td colspan="11" align="center">&nbsp;</td></tr>
 							<tr><td colspan="11" align="center">&nbsp;</td></tr>
