@@ -1379,6 +1379,7 @@ $(document).ready(function () {
             form_data.append('id_catatan', set03);
             form_data.append('kelompok', set04);
             form_data.append('file', set05.files[0]);
+            form_data.append('disposisi', true)
             form_data.append('_token', '{{csrf_token()}}');
         $.ajax({
             url	: '{{ route("arsipfokerja") }}',
