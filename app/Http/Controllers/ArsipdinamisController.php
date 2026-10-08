@@ -2180,7 +2180,17 @@ class ArsipdinamisController extends Controller
 							Inboxsurat::where('id', $idinbox)->update([
 								'lampiran' 	=> $namafile,
 							]);
-							$setdisposisi 	= $setdisposisi.'<blockquote><p>Lampiran File aaaaa :</p><a href="'.$homebase.'/scan/files/'.$namafile.'" target="_blank">Download File Lampiran aaaa</a></blockquote>';
+                            // old
+							// $setdisposisi 	= $setdisposisi.'<blockquote><p>Lampiran File :</p><a href="'.$homebase.'/scan/files/'.$namafile.'" target="_blank">Download File Lampiran</a></blockquote>';\
+                            // new
+                            $downloadBase='';
+                            if ($homebase === 'http://172.100.0.23') {
+                                $downloadBase = 'https://surat-rsphs.rs-primahusada.id';
+                            } else {
+                                $downloadBase = $homebase;
+                            }
+
+                            $setdisposisi = $setdisposisi . '<blockquote><p>Lampiran File :</p><a href="' . $downloadBase . '/scan/files/' . $namafile . '" target="_blank">Download File Lampiran</a></blockquote>';
 						}
 						$marking = $getdata->marking;
                         if ($penerimatunggal == 'yes'){

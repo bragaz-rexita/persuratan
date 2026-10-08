@@ -3250,7 +3250,7 @@ class DashbordsuratController extends Controller
 					$timestamp			= $rdisposisi->updated_at;
 					$sifat				= $rdisposisi->lemari;
 					if ($lampiran != ''){
-						$isidisposisi 	= $isidisposisi.'<blockquote><p>Lampiran File : 1</p><a href="'.$homebase.'/viewdocbyname/'.$lampiran.'">Download File Lampiran1</a></blockquote>';
+						$isidisposisi 	= $isidisposisi.'<blockquote><p>Lampiran File : </p><a href="'.$homebase.'/viewdocbyname/'.$lampiran.'">Download File Lampiran</a></blockquote>';
 					}
 					if ($sifat == 'Rahasia'){
 						$cekorange = Inboxsurat::where('pengirim', $pemberi)
@@ -7113,7 +7113,7 @@ class DashbordsuratController extends Controller
 					$timestamp			= $rdisposisi->updated_at;
 					$sifat				= $rdisposisi->lemari;
 					if ($lampiran != ''){
-						$isidisposisi 	= $isidisposisi.'<blockquote><p>Lampiran File : 2</p><a href="'.$homebase.'/viewdocbyname/'.$lampiran.'">Download File Lampiran2</a></blockquote>';
+						$isidisposisi 	= $isidisposisi.'<blockquote><p>Lampiran File : </p><a href="'.$homebase.'/viewdocbyname/'.$lampiran.'">Download File Lampiran</a></blockquote>';
 					}
 					if ($sifat == 'Rahasia'){
 						$cekorange = Inboxsurat::where('pengirim', $pemberi)
