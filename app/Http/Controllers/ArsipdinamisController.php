@@ -2180,7 +2180,7 @@ class ArsipdinamisController extends Controller
 							Inboxsurat::where('id', $idinbox)->update([
 								'lampiran' 	=> $namafile,
 							]);
-							$setdisposisi 	= $setdisposisi.'<blockquote><p>Lampiran File :</p><a href="'.$homebase.'/scan/files/'.$namafile.'" target="_blank">Download File Lampiran</a></blockquote>';
+							$setdisposisi 	= $setdisposisi.'<blockquote><p>Lampiran File aaaaa :</p><a href="'.$homebase.'/scan/files/'.$namafile.'" target="_blank">Download File Lampiran aaaa</a></blockquote>';
 						}
 						$marking = $getdata->marking;
                         if ($penerimatunggal == 'yes'){
