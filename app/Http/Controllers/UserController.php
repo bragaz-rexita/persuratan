@@ -3293,6 +3293,10 @@ class UserController extends Controller
                                                 $img_file = public_path('kopfooterrsphm.png');
                                             } else if ($ceksek->fakultas == 'PDP') {
                                                 $img_file = public_path('kopfooterpdp.png');
+                                            } else if ($ceksek->fakultas == 'RSDH') {
+                                                $img_file = public_path('kopfooterrsdh.png');
+                                            } else if ($ceksek->fakultas == 'RSCK') {
+                                                $img_file = public_path('kopfooterrsCK.png');
                                             } else {
                                                 $img_file = public_path('kopfooterdpm.png');
                                             }
@@ -3487,6 +3491,10 @@ class UserController extends Controller
                                     $img_file = public_path('kopfooterrsphm.png');
                                 } else if ($ceksek->fakultas == 'PDP') {
                                     $img_file = public_path('kopfooterpdp.png');
+                                } else if ($ceksek->fakultas == 'RSDH') {
+                                    $img_file = public_path('kopfooterrsdh.png');
+                                } else if ($ceksek->fakultas == 'RSCK') {
+                                    $img_file = public_path('kopfooterrsck.png');
                                 } else {
                                     $img_file = public_path('kopfooterdpm.png');
                                 }

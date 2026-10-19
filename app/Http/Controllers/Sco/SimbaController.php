@@ -449,7 +449,7 @@ class SimbaController extends Controller
 			$tasks['koderumpunilmu'] 		= $koderumpunilmu;
 			$tasks['kodebidangilmu'] 		= $kodebidangilmu;
 			$tasks['sidebar'] 				= 'DataInduk';
-			if (Session('fakultas') == 'DPM' OR Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'RSPHMLG' OR Session('fakultas') == 'PDP'){
+			if (Session('fakultas') == 'DPM' OR Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'RSPHMLG' OR Session('fakultas') == 'PDP' OR Session('fakultas') == 'RSDH' OR Session('fakultas') == 'RSCK'){
 				$tasks['pejabats'] 			= Pejabatsurat::orderBy('kode', 'ASC')->get();
 				return view('users.riwayat', $tasks);
 			} else {

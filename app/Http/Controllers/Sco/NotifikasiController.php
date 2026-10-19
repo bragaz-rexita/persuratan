@@ -422,6 +422,10 @@ function getTextKepegawaian($id){
 					$qrcode = QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/pdp.png', 0.2, true)->size(150)->generate($alamatweb);
 				} else if (Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'RSPHMLG'){
 					$qrcode = QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rs.png', 0.2, true)->size(150)->generate($alamatweb);
+				} else if (Session('fakultas') == 'RSDH'){
+					$qrcode = QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rsdh.png', 0.2, true)->size(150)->generate($alamatweb);
+				} else if (Session('fakultas') == 'RSCK'){
+					$qrcode = QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rsck.png', 0.2, true)->size(150)->generate($alamatweb);
 				} else {
 					$qrcode = QrCode::format('png')->size(150)->generate($alamatweb);
 				}
@@ -1302,7 +1306,11 @@ function getTextKepegawaian($id){
 				$qrcode 	= QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/pdp.png', 0.2, true)->size(150)->generate($alamatweb);
 			} else if (Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'RSPHMLG'){
 				$qrcode 	= QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rs.png', 0.2, true)->size(150)->generate($alamatweb);
-			} else {
+			} else if (Session('fakultas') == 'RSDH'){
+                $qrcode = QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rsdh.png', 0.2, true)->size(150)->generate($alamatweb);
+            } else if (Session('fakultas') == 'RSCK'){
+                $qrcode = QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rsck.png', 0.2, true)->size(150)->generate($alamatweb);
+            } else {
 				$qrcode 	= QrCode::format('png')->size(150)->generate($alamatweb);
 			}
 			$output_file 	= '/scan/generate/qrimage-'.$getdatasrt->id.'.png';
@@ -3676,6 +3684,10 @@ function getTextKepegawaian($id){
 					$qrcode 	= QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/pdp.png', 0.2, true)->size(150)->generate($alamatweb);
 				} else if (Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'RSPHMLG'){
 					$qrcode 	= QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rs.png', 0.2, true)->size(150)->generate($alamatweb);
+				} else if (Session('fakultas') == 'RSDH'){
+					$qrcode = QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rsdh.png', 0.2, true)->size(150)->generate($alamatweb);
+				} else if (Session('fakultas') == 'RSCK'){
+					$qrcode = QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rsck.png', 0.2, true)->size(150)->generate($alamatweb);
 				} else {
 					$qrcode 	= QrCode::format('png')->size(150)->generate($alamatweb);
 				}
@@ -3812,12 +3824,16 @@ function getTextKepegawaian($id){
 					$statverifikator1alasan = $cekinboxatasan->tandatangan;
 					$persetujuan1					= $cekinboxatasan->catatan.' Oleh '.$jabatasanlangsung.' Pada '.$cekinboxatasan->created_at;
 					if (Session('fakultas') == 'DPM'){
-						$qrcode1 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/pt.png', 0.1, true)->size(150)->generate($persetujuan1));
+						$qrcode1 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/pt.png', 0.2, true)->size(150)->generate($persetujuan1));
 					} else if (Session('fakultas') == 'PDP'){
-						$qrcode1 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/pdp.png', 0.1, true)->size(150)->generate($persetujuan1));
+						$qrcode1 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/pdp.png', 0.2, true)->size(150)->generate($persetujuan1));
 					} else if (Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'RSPHMLG'){
-						$qrcode1 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rs.png', 0.1, true)->size(150)->generate($persetujuan1));
-					} else {
+						$qrcode1 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rs.png', 0.2, true)->size(150)->generate($persetujuan1));
+					} else if (Session('fakultas') == 'RSDH'){
+                        $qrcode1 = QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rsdh.png', 0.2, true)->size(150)->generate($persetujuan1);
+                    } else if (Session('fakultas') == 'RSCK'){
+                        $qrcode1 = QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rsck.png', 0.2, true)->size(150)->generate($persetujuan1);
+                    } else {
 						$qrcode1 	= base64_encode(QrCode::format('png')->size(150)->generate($persetujuan1));
 					}
 					$persetujuanatasanlangsung		= '<img src="data:image/png;base64,'.$qrcode1.'" width="100" height="100"/>';
@@ -3840,12 +3856,16 @@ function getTextKepegawaian($id){
 					$statverifikator1alasan = $cekinboxatasan->tandatangan;
 					$persetujuan1					= $cekinboxatasan->catatan.' Oleh '.$jabatasanlangsung.' Pada '.$cekinboxatasan->created_at;
 					if (Session('fakultas') == 'DPM'){
-						$qrcode1 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/pt.png', 0.1, true)->size(150)->generate($persetujuan1));
+						$qrcode1 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/pt.png', 0.2, true)->size(150)->generate($persetujuan1));
 					} else if (Session('fakultas') == 'PDP'){
-						$qrcode1 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/pdp.png', 0.1, true)->size(150)->generate($persetujuan1));
+						$qrcode1 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/pdp.png', 0.2, true)->size(150)->generate($persetujuan1));
 					} else if (Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'RSPHMLG'){
-						$qrcode1 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rs.png', 0.1, true)->size(150)->generate($persetujuan1));
-					} else {
+						$qrcode1 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rs.png', 0.2, true)->size(150)->generate($persetujuan1));
+					} else if (Session('fakultas') == 'RSDH'){
+                        $qrcode1 = QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rsdh.png', 0.2, true)->size(150)->generate($persetujuan1);
+                    } else if (Session('fakultas') == 'RSCK'){
+                        $qrcode1 = QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rsck.png', 0.2, true)->size(150)->generate($persetujuan1);
+                    } else {
 						$qrcode1 	= base64_encode(QrCode::format('png')->size(150)->generate($persetujuan1));
 					}
 					$persetujuanatasanlangsung		= '<img src="data:image/png;base64,'.$qrcode1.'" width="100" height="100"/>';
@@ -3861,12 +3881,16 @@ function getTextKepegawaian($id){
 					$statverifikator2alasan = $cekinboxpejabat->tandatangan;
 					$persetujuan2					= $cekinboxatasan->catatan.' Oleh '.$jabpejabat.' Pada '.$cekinboxatasan->created_at;
 					if (Session('fakultas') == 'DPM'){
-						$qrcode2 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/pt.png', 0.1, true)->size(150)->generate($persetujuan2));
+						$qrcode2 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/pt.png', 0.2, true)->size(150)->generate($persetujuan2));
 					} else if (Session('fakultas') == 'PDP'){
-						$qrcode2 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/pdp.png', 0.1, true)->size(150)->generate($persetujuan2));
+						$qrcode2 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/pdp.png', 0.2, true)->size(150)->generate($persetujuan2));
 					} else if (Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'RSPHMLG'){
-						$qrcode2 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rs.png', 0.1, true)->size(150)->generate($persetujuan2));
-					} else {
+						$qrcode2 	= base64_encode(QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rs.png', 0.2, true)->size(150)->generate($persetujuan2));
+					} else if (Session('fakultas') == 'RSDH'){
+                        $qrcode2 = QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rsdh.png', 0.2, true)->size(150)->generate($persetujuan2);
+                    } else if (Session('fakultas') == 'RSCK'){
+                        $qrcode2 = QrCode::format('png')->merge('https://surat-ptdpm.rs-primahusada.id/dist/img/rsck.png', 0.2, true)->size(150)->generate($persetujuan2);
+                    } else {
 						$qrcode2 	= base64_encode(QrCode::format('png')->size(150)->generate($persetujuan2));
 					}
 					$persetujuanpejabat				= '<img src="data:image/png;base64,'.$qrcode2.'" width="100" height="100"/>';
@@ -4176,6 +4200,10 @@ class NotifikasiController extends Controller
 			$img_file = public_path('kopfooterrsphm.png');
 		} else if (Session('fakultas') == 'PDP'){
 			$img_file = public_path('kopfooterpdp.png');
+		} else if (Session('fakultas') == 'RSDH'){
+			$img_file = public_path('kopfooterrsdh.png');
+		} else if (Session('fakultas') == 'RSCK'){
+			$img_file = public_path('kopfooterrsck.png');
 		} else {
 			$img_file = public_path('kopfooterdpm.png');
 		}
@@ -5251,7 +5279,11 @@ class NotifikasiController extends Controller
 					$img_file = public_path('kopfooterrsphm.png');
 				} else if (Session('fakultas') == 'PDP'){
 					$img_file = public_path('kopfooterpdp.png');
-				} else {
+				} else if (Session('fakultas') == 'RSDH'){
+                    $img_file = public_path('kopfooterrsdh.png');
+                } else if (Session('fakultas') == 'RSCK'){
+                    $img_file = public_path('kopfooterrsck.png');
+                } else {
 					$img_file = public_path('kopfooterdpm.png');
 				}
 				$gethalaman 	= explode('<div style="page-break-before: always"></div>', $generatesurat);

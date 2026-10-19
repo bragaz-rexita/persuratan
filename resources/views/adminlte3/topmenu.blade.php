@@ -1,4 +1,4 @@
-@if(Session('fakultas') == 'RSPHMLG' OR Session('fakultas') == 'DPM' OR Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'PDP')
+@if(Session('fakultas') == 'RSPHMLG' OR Session('fakultas') == 'DPM' OR Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'PDP' OR Session('fakultas') == 'RSDH' OR Session('fakultas') == 'RSCK')
     <li class="nav-item">
         <a class="nav-link" href="/" role="button"><i class="fa fa-dashboard"></i> Dashboard</a>
     </li>

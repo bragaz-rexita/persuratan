@@ -7017,6 +7017,16 @@ class DashbordsuratController extends Controller
             $domainUrl = 'https://surat-rsphm.rs-primahusada.id';
             $alamatweb	= $domainUrl.'/trackingid/srtklr-'.$id;
             $qrcode = QrCode::format('png')->merge(public_path('dist/img/rs.png'), 0.2, true)->size(150)->generate($alamatweb);
+		} else if (Session('fakultas') == 'RSDH'){
+			// $qrcode = QrCode::format('png')->merge($rexita_audio.'/dist/img/rs.png', 0.2, true)->size(150)->generate($alamatweb);
+            $domainUrl = 'https://surat-rsdh.rs-primahusada.id';
+            $alamatweb	= $domainUrl.'/trackingid/srtklr-'.$id;
+            $qrcode = QrCode::format('png')->merge(public_path('dist/img/rsdh.png'), 0.2, true)->size(150)->generate($alamatweb);
+		} else if (Session('fakultas') == 'RSCK'){
+			// $qrcode = QrCode::format('png')->merge($rexita_audio.'/dist/img/rs.png', 0.2, true)->size(150)->generate($alamatweb);
+            $domainUrl = 'https://surat-rsck.rs-primahusada.id';
+            $alamatweb	= $domainUrl.'/trackingid/srtklr-'.$id;
+            $qrcode = QrCode::format('png')->merge(public_path('dist/img/rsck.png'), 0.2, true)->size(150)->generate($alamatweb);
 		} else {
             $domainUrl = 'https://surat-ptdpm.rs-primahusada.id';
             $alamatweb	= $domainUrl.'/trackingid/srtklr-'.$id;

@@ -100,6 +100,16 @@
 										@else
 											<option value="CV Putra Disa Prima">PDP</option>
 										@endif
+                                        @if (Session('fakultas') == 'RSDH')
+											<option value="RS Dharma Husada Probolinggo" selected>RSDH</option>
+										@else
+											<option value="RS Dharma Husada Probolinggo">RSDH</option>
+										@endif
+                                        @if (Session('fakultas') == 'RSCK')
+											<option value="RS Citra Keluarga Kediri" selected>RSCK</option>
+										@else
+											<option value="RS Citra Keluarga Kediri">RSCK</option>
+										@endif
 										<option value="REKRUTMEN PT DISA PRIMA MEDIKA">REKRUTMEN</option>
 									</select>
 								</div>

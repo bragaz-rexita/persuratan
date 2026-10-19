@@ -593,7 +593,7 @@ class WebinarController extends Controller
 			if ($jenis == 'UNDANGAN'){
 				$jevent		= WebinarPartisipan::where('pekerjaan', 'UNDANGAN')->where('idevent', $idevent)->orderBy('id', 'ASC')->get();
 			} else if ($jenis == 'notulensi'){
-				$arrpartis	= DB::table('db_surat_production.webinar_participan')->join('db_surat_production.webinar_event', 'db_surat_production.webinar_participan.idevent', 'db_surat_production.webinar_event.id')->select('db_surat_production.webinar_participan.*', 'db_surat_production.webinar_event.nama as namaevent', 'db_surat_production.webinar_event.tempat as tempatevent', 'db_surat_production.webinar_event.tanggal as tglevent', 'db_surat_production.webinar_event.mulai as startevent')->where('db_surat_production.webinar_participan.email', $request->input('val01'))->orderBy('db_surat_production.webinar_event.mulai', 'DESC')->get();
+				$arrpartis	= DB::table('db_persuratan.webinar_participan')->join('db_persuratan.webinar_event', 'db_persuratan.webinar_participan.idevent', 'db_persuratan.webinar_event.id')->select('db_persuratan.webinar_participan.*', 'db_persuratan.webinar_event.nama as namaevent', 'db_persuratan.webinar_event.tempat as tempatevent', 'db_persuratan.webinar_event.tanggal as tglevent', 'db_persuratan.webinar_event.mulai as startevent')->where('db_persuratan.webinar_participan.email', $request->input('val01'))->orderBy('db_persuratan.webinar_event.mulai', 'DESC')->get();
         		$jevent		= [];
 			} else {
 				$jevent		= WebinarPartisipan::where('pekerjaan', '!=', 'UNDANGAN')->where('idevent', $idevent)->orderBy('id', 'ASC')->get();
@@ -1091,7 +1091,7 @@ class WebinarController extends Controller
 				'foto'			=> $foto
 			]);
 			if($input){
-				if (Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'RSPHMLG' OR Session('fakultas') == 'DPM'){
+				if (Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'RSPHMLG' OR Session('fakultas') == 'DPM' OR Session('fakultas') == 'RSDH' OR Session('fakultas') == 'RSCK'){
 					Chatting::insert([
 						'kelompok'  	=>  Session('previlage'),
 						'nama'  		=>  Session('nama'),
@@ -1152,7 +1152,7 @@ class WebinarController extends Controller
 				return back();
 			}
 		} else {
-			if (Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'RSPHMLG' OR Session('fakultas') == 'DPM'){
+			if (Session('fakultas') == 'RSPHSKR' OR Session('fakultas') == 'RSPHMLG' OR Session('fakultas') == 'DPM' OR Session('fakultas') == 'RSDH' OR Session('fakultas') == 'RSCK'){
 				Chatting::insert([
 					'kelompok'  	=>  Session('previlage'),
 					'nama'  		=>  Session('nama'),
@@ -2802,6 +2802,14 @@ class WebinarController extends Controller
                 break;
             case "RSPHMLG":
                 $publicUrl = "https://surat-rsphm.rs-primahusada.id".'/hadir/'.$id;
+                $publicqrcode 		= base64_encode(QrCode::format('png')->size(400)->generate($publicUrl));
+                break;
+            case "RSDH":
+                $publicUrl = "https://surat-rsdh.rs-primahusada.id".'/hadir/'.$id;
+                $publicqrcode 		= base64_encode(QrCode::format('png')->size(400)->generate($publicUrl));
+                break;
+            case "RSCK":
+                $publicUrl = "https://surat-rsck.rs-primahusada.id".'/hadir/'.$id;
                 $publicqrcode 		= base64_encode(QrCode::format('png')->size(400)->generate($publicUrl));
                 break;
             default:
