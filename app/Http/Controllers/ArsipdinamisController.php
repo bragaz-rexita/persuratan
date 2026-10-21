@@ -2184,7 +2184,9 @@ class ArsipdinamisController extends Controller
 							// $setdisposisi 	= $setdisposisi.'<blockquote><p>Lampiran File :</p><a href="'.$homebase.'/scan/files/'.$namafile.'" target="_blank">Download File Lampiran</a></blockquote>';\
                             // new
                             $downloadBase='';
-                            if ($homebase === 'http://172.100.0.23') {
+                            if ($homebase === 'http://172.100.0.18') {
+                                $downloadBase = 'https://surat-ptdpm.rs-primahusada.id';
+                            } else if ($homebase === 'http://172.100.0.23') {
                                 $downloadBase = 'https://surat-rsphs.rs-primahusada.id';
                             } else {
                                 $downloadBase = $homebase;

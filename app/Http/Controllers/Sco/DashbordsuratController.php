@@ -3250,7 +3250,16 @@ class DashbordsuratController extends Controller
 					$timestamp			= $rdisposisi->updated_at;
 					$sifat				= $rdisposisi->lemari;
 					if ($lampiran != ''){
-						$isidisposisi 	= $isidisposisi.'<blockquote><p>Lampiran File : </p><a href="'.$homebase.'/viewdocbyname/'.$lampiran.'">Download File Lampiran</a></blockquote>';
+                        $downloadBase='';
+                        if ($homebase === 'http://172.100.0.18') {
+                            $downloadBase = 'https://surat-ptdpm.rs-primahusada.id';
+                        } else if ($homebase === 'http://172.100.0.23') {
+                            $downloadBase = 'https://surat-rsphs.rs-primahusada.id';
+                        } else {
+                            $downloadBase = $homebase;
+                        }
+
+						$isidisposisi 	= $isidisposisi.'<blockquote><p>Lampiran File : </p><a href="'.$downloadBase.'/viewdocbyname/'.$lampiran.'">Download File Lampiran</a></blockquote>';
 					}
 					if ($sifat == 'Rahasia'){
 						$cekorange = Inboxsurat::where('pengirim', $pemberi)
@@ -3259,18 +3268,18 @@ class DashbordsuratController extends Controller
 						if ($cekorange == 0 OR $pemberi != $mkelompok){
 							$tulisdisposisi		= $tulisdisposisi.'
 							<tr>
-							  <td align="left" class="kiri atas kanan">'.$timestamp.'</td>
-							  <td colspan="3" align="left" class="kanan atas">Rahasia</td>
-							  <td colspan="3" align="left" class="kanan atas">'.$pemberi.'</td>
-							  <td align="left" class="kanan atas" colspan="2">'.$disposisikpd.'</td>
+                                <td align="left" class="kiri atas kanan">'.$timestamp.'</td>
+                                <td colspan="3" align="left" class="kanan atas">Rahasia</td>
+                                <td colspan="3" align="left" class="kanan atas">'.$pemberi.'</td>
+                                <td align="left" class="kanan atas" colspan="2">'.$disposisikpd.'</td>
 							</tr>';
 						}else {
 							$tulisdisposisi		= $tulisdisposisi.'
 							<tr>
-							  <td align="left" class="kiri atas kanan">'.$timestamp.'</td>
-							  <td colspan="3" align="left" class="kanan atas">'.$isidisposisi.'</td>
-							  <td colspan="3" align="left" class="kanan atas">'.$pemberi.'</td>
-							  <td align="left" class="kanan atas" colspan="2">'.$disposisikpd.'</td>
+                                <td align="left" class="kiri atas kanan">'.$timestamp.'</td>
+                                <td colspan="3" align="left" class="kanan atas">'.$isidisposisi.'</td>
+                                <td colspan="3" align="left" class="kanan atas">'.$pemberi.'</td>
+                                <td align="left" class="kanan atas" colspan="2">'.$disposisikpd.'</td>
 							</tr>';
 						}
 					}else {
@@ -7123,7 +7132,16 @@ class DashbordsuratController extends Controller
 					$timestamp			= $rdisposisi->updated_at;
 					$sifat				= $rdisposisi->lemari;
 					if ($lampiran != ''){
-						$isidisposisi 	= $isidisposisi.'<blockquote><p>Lampiran File : </p><a href="'.$homebase.'/viewdocbyname/'.$lampiran.'">Download File Lampiran</a></blockquote>';
+                        $downloadBase='';
+                        if ($homebase === 'http://172.100.0.18') {
+                            $downloadBase = 'https://surat-ptdpm.rs-primahusada.id';
+                        } else if ($homebase === 'http://172.100.0.23') {
+                            $downloadBase = 'https://surat-rsphs.rs-primahusada.id';
+                        } else {
+                            $downloadBase = $homebase;
+                        }
+
+						$isidisposisi 	= $isidisposisi.'<blockquote><p>Lampiran File : </p><a href="'.$downloadBase.'/viewdocbyname/'.$lampiran.'">Download File Lampiran</a></blockquote>';
 					}
 					if ($sifat == 'Rahasia'){
 						$cekorange = Inboxsurat::where('pengirim', $pemberi)
@@ -7132,18 +7150,18 @@ class DashbordsuratController extends Controller
 						if ($cekorange == 0 OR $pemberi != $mkelompok){
 							$tulisdisposisi		= $tulisdisposisi.'
 							<tr>
-							<td align="left" class="kiri atas kanan">'.$timestamp.'</td>
-							<td colspan="3" align="left" class="kanan atas">Rahasia</td>
-							<td colspan="3" align="left" class="kanan atas">'.$pemberi.'</td>
-							<td align="left" class="kanan atas" colspan="2">'.$disposisikpd.'</td>
+                                <td align="left" class="kiri atas kanan">'.$timestamp.'</td>
+                                <td colspan="3" align="left" class="kanan atas">Rahasia</td>
+                                <td colspan="3" align="left" class="kanan atas">'.$pemberi.'</td>
+                                <td align="left" class="kanan atas" colspan="2">'.$disposisikpd.'</td>
 							</tr>';
 						}else {
 							$tulisdisposisi		= $tulisdisposisi.'
 							<tr>
-							<td align="left" class="kiri atas kanan">'.$timestamp.'</td>
-							<td colspan="3" align="left" class="kanan atas">'.$isidisposisi.'</td>
-							<td colspan="3" align="left" class="kanan atas">'.$pemberi.'</td>
-							<td align="left" class="kanan atas" colspan="2">'.$disposisikpd.'</td>
+                                <td align="left" class="kiri atas kanan">'.$timestamp.'</td>
+                                <td colspan="3" align="left" class="kanan atas">'.$isidisposisi.'</td>
+                                <td colspan="3" align="left" class="kanan atas">'.$pemberi.'</td>
+                                <td align="left" class="kanan atas" colspan="2">'.$disposisikpd.'</td>
 							</tr>';
 						}
 					}else {
