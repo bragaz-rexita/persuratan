@@ -1075,32 +1075,19 @@ class DashbordsuratController extends Controller
                         $currentHost = request()->getSchemeAndHttpHost();
                         $urlfootnote = '';
                         $cekfootnote = $rows->footnote;
-
                         switch(true){
-                            case str_contains($cekfootnote, 'http://surat-ptdpm.rs-primahusada.id'):
+                            case str_contains($cekfootnote, 'http://172.100.0.18'):
                                 $urlfootnote = str_replace(
-                                    ['http://surat-ptdpm.rs-primahusada.id', 'https://surat-ptdpm.rs-primahusada.id'],
+                                    'http://172.100.0.18',
+                                    // 'https://surat-ptdpm.rs-primahusada.id',
                                     $currentHost,
                                     $cekfootnote
                                 );
                                 break;
-                            case str_contains($cekfootnote, 'surat-rsphm.rs-primahusada.id'):
+                            case str_contains($cekfootnote, 'http://172.100.0.23'):
                                 $urlfootnote = str_replace(
-                                    ['http://surat-rsphm.rs-primahusada.id', 'https://surat-rsphm.rs-primahusada.id'],
-                                    $currentHost,
-                                    $cekfootnote
-                                );
-                                break;
-                            case str_contains($cekfootnote, 'surat-rsphs.rs-primahusada.id'):
-                                $urlfootnote = str_replace(
-                                    ['http://surat-rsphs.rs-primahusada.id', 'https://surat-rsphs.rs-primahusada.id'],
-                                    $currentHost,
-                                    $cekfootnote
-                                );
-                                break;
-                            case str_contains($cekfootnote, 'surat-pdp.rs-primahusada.id'):
-                                $urlfootnote = str_replace(
-                                    ['http://surat-pdp.rs-primahusada.id', 'https://surat-pdp.rs-primahusada.id'],
+                                    'http://172.100.0.23',
+                                    // 'https://surat-rsphs.rs-primahusada.id',
                                     $currentHost,
                                     $cekfootnote
                                 );
@@ -1108,7 +1095,6 @@ class DashbordsuratController extends Controller
                             default:
                                 $urlfootnote = $cekfootnote;
                         }
-
 
 						$arrayiuser[] = array(
 							'id' 			=> $rows->id,
@@ -1131,6 +1117,8 @@ class DashbordsuratController extends Controller
 							'created_at' 	=> $rows->created_at,
 							'kelompok'		=> 'Surat Masuk'
 						);
+
+                        // dd($arrayiuser);
 					}
 				}
 			}
