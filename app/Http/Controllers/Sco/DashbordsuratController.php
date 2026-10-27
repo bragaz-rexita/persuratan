@@ -1092,6 +1092,22 @@ class DashbordsuratController extends Controller
                                     $cekfootnote
                                 );
                                 break;
+                            case str_contains($cekfootnote, 'https://surat-ptdpm.rs-primahusada.id'):
+                                $urlfootnote = str_replace(
+                                    'https://surat-ptdpm.rs-primahusada.id',
+                                    // 'https://surat-rsphs.rs-primahusada.id',
+                                    $currentHost,
+                                    $cekfootnote
+                                );
+                                break;
+                            case str_contains($cekfootnote, 'https://surat-rsphm.rs-primahusada.id'):
+                                $urlfootnote = str_replace(
+                                    'https://surat-rsphm.rs-primahusada.id',
+                                    // 'https://surat-rsphs.rs-primahusada.id',
+                                    $currentHost,
+                                    $cekfootnote
+                                );
+                                break;
                             default:
                                 $urlfootnote = $cekfootnote;
                         }
