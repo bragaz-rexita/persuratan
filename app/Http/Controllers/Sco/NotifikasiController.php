@@ -4619,9 +4619,7 @@ class NotifikasiController extends Controller
 						//	$isidisposisi 	= $isidisposisi.'<blockquote><p>Lampiran File :</p><a href="'.$homebase.'/scan/files/'.$lampiran.'" target="_blank">Download File Lampiran</a></blockquote>';
 						//}
 						if ($sifat == 'Rahasia'){
-							$cekorange = Inboxsurat::where('pengirim', $pemberi)
-											->where('penerima', $mkelompok)
-											->count();
+							$cekorange = Inboxsurat::where('pengirim', $pemberi)->where('penerima', $mkelompok)->count();
 							if ($cekorange == 0){
 								$tulisdisposisi		= $tulisdisposisi.'
 								<tr>
@@ -4642,11 +4640,23 @@ class NotifikasiController extends Controller
 								</tr>';
 							}
 						}else {
+                            // rexita
+                            $currentHost = request()->getSchemeAndHttpHost();
+                            $cari = [
+                                'http://172.100.0.18',
+                                'http://172.100.0.23'
+                            ];
+                            $isidisposisireplace = str_replace(
+                                $cari,
+                                $currentHost,
+                                $isidisposisi ?? ''
+                            );
+
 							$tulisdisposisi		= $tulisdisposisi.'
 							<tr>
 								<td align="left" class="kiri atas kanan">'.$timeterima.'</td>
 								<td align="left" class="kanan atas">'.$timestamp.'</td>
-								<td colspan="2" align="left" class="kanan atas">'.$isidisposisi.'</td>
+								<td colspan="2" align="left" class="kanan atas">'.$isidisposisireplace.'</td>
 								<td colspan="3" align="left" class="kanan atas">'.$pemberi.'</td>
 								<td align="left" class="kanan atas" colspan="2">'.$disposisikpd.'</td>
 							</tr>';
